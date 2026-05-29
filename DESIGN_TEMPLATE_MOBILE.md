@@ -582,7 +582,7 @@ states:
 icons:
   ios_default: "SF Symbols"        # native iOS — pairs with SF Pro, supports weight / scale axes
   android_default: "Material Symbols"  # native Android — supports weight / fill / grade axes
-  cross_platform_default: "Lucide" # use when consistent visual across both platforms is desired
+  cross_platform_default: "<Lucide (free default) | Phosphor (free, 6 weights) | HugeIcons (premium — 5K free / 51K Pro across 10 styles)>"  # use when consistent visual across both platforms is desired
   fill_style: "{options.icon_fill}"
   sizes:
     xs: 12
@@ -1254,7 +1254,7 @@ When generating any iOS or Android UI from this document, an AI agent **must** f
 
 **Audience:** `<brand.audience>`
 
-**Voice:** `<brand.voice>`
+**Voice:** `<brand.voice>` — *(if the project also has an `INFORMATION.md`, that file is the canonical source for brand voice; this slot becomes a brief restatement)*
 
 **Primary mode:** `<mode.primary>`
 
@@ -1453,12 +1453,18 @@ Same as web: explicit tokens, never opacity-based.
 
 # Iconography
 
-Three icon family options:
-- **iOS strict:** SF Symbols (paired with SF Pro). Supports weight + scale axes.
-- **Android strict:** Material Symbols. Supports weight + fill + grade + optical-size axes.
-- **Cross-platform:** Lucide / Phosphor. Use when consistent visual across both platforms is preferred.
+Three icon family strategies:
+- **iOS strict:** SF Symbols (paired with SF Pro). Supports weight + scale axes. Free, ships with the OS.
+- **Android strict:** Material Symbols. Supports weight + fill + grade + optical-size axes. Free, official.
+- **Cross-platform:** Use a single library across both platforms when consistent brand visual matters more than native fit.
 
-Per `options.platform_adherence`, pick one strategy. Same size scale and stroke-weight pairing rules as web.
+Cross-platform options (when chosen):
+- **Lucide** (free, 1.5-px stroke) — most ubiquitous
+- **Phosphor** (free, six weights)
+- **Heroicons** (free, outline + solid)
+- **HugeIcons** (premium tier — 5,100+ free / **51,000+ Pro** across 10 styles; React-first; tree-shakeable) — the premium choice for brand polish
+
+Per `options.platform_adherence`, pick one strategy. Same size scale and stroke-weight pairing rules as web. Never mix families on the same surface.
 
 ---
 

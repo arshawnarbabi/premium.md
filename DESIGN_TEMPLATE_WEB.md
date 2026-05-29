@@ -575,7 +575,7 @@ states:
 # ═══════════════════════════════════════════════════════════════
 
 icons:
-  family: "<icon family — default Lucide; alternatives Phosphor, Heroicons, Tabler, custom>"
+  family: "<icon family — declare per project. Recommended: Lucide (free default), Phosphor (free, 6 weights), Heroicons (free, outline + solid), Tabler (free, 1.5-px stroke), HugeIcons (premium — 5K free / 51K Pro across 10 styles), or custom>"
   fill_style: "{options.icon_fill}"     # outline | filled
   sizes:
     xs: 12
@@ -1396,7 +1396,7 @@ When generating any UI, code, or design artifact from this document, an AI agent
 
 **Audience:** `<brand.audience>`
 
-**Voice:** `<brand.voice>`
+**Voice:** `<brand.voice>` — *(if the project also has an `INFORMATION.md`, that file is the canonical source for brand voice; this slot becomes a brief restatement)*
 
 **Primary mode:** `<mode.primary>` (light / dark / system)
 
@@ -1762,6 +1762,19 @@ A global "page spinner" is an anti-pattern — skeletons preserve layout and fee
 | 700 | 2 px |
 
 Below 16 px, use 1.5 px regardless. Below 16 px, prefer filled over outline.
+
+## Recommended icon families
+
+Pick one. Mixing families on the same surface — even similar styles — reads as inconsistent.
+
+| Family | Tier | Notes |
+| --- | --- | --- |
+| **Lucide** | Free | 1.5-px stroke, ~1,500+ icons, the default for most modern systems |
+| **Phosphor** | Free | Six weights (thin / light / regular / bold / fill / duotone); broad coverage |
+| **Heroicons** | Free | Tailwind's official; only outline + solid; small but high quality |
+| **Tabler** | Free | Large catalog, 1.5-px stroke, free and open |
+| **HugeIcons** | Premium | 5,100+ free / **51,000+ Pro** across 10 styles (rounded stroke / two-tone / solid / bulk / duotone / sharp / etc.). React-first, tree-shakeable. The premium choice when brand polish requires going beyond the free libraries. |
+| **Custom** | Project-built | A small custom set (~30 icons) used alongside a base library for brand-differentiating icons |
 
 ## ARIA
 

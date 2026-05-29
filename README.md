@@ -1,163 +1,170 @@
-# premium-design.md
+# premium-website-templates
 
-> Two brand-agnostic design system templates — one for web, one for mobile — that turn any AI agent into a reliable premium-grade UI generator.
+> A six-file template system that turns any AI agent into a reliable premium-grade product builder. Brand identity slots into ~30 fields per project; the rest is pre-decided based on what premium design teams actually do.
 
-The templates encode roughly 3,800 lines of cross-referenced research on what makes premium product design measurably different from generic SaaS-template output. Brand identity slots into ~8 fields per project; everything else is pre-decided.
+The system is built from roughly 4,000 lines of cross-referenced research on what makes premium product design measurably different from generic SaaS-template output. Each template encodes universal rules + structural defaults + brand-specific slots — instantiated per project, then handed to AI tools (Claude, Cursor, etc.) as a single source of truth.
 
 ---
 
-## What's in this repo
+## The six templates
 
 | File | Purpose | Lines |
 | --- | --- | --- |
-| **`DESIGN_TEMPLATE_WEB.md`** | The web template — marketing sites + product (SaaS) websites | ~2,200 |
-| **`DESIGN_TEMPLATE_MOBILE.md`** | The mobile template — iOS HIG + Android Material 3 apps | ~1,650 |
-| `research.md` | Brand-agnostic premium-standard research (23 sections, ~3,800 lines) — the explanatory backing for everything in the templates | informational |
-| `template-plan.md` | How the templates are structured: 3-tier system (universal rules / profile presets / brand slots) | informational |
-| `plan.md` | The original research plan and phased checklist | informational |
+| **`PROJECT_TEMPLATE.md`** | Entry-point orchestration — tells the AI which other files matter and in what priority. Lightweight index. | ~300 |
+| **`INFORMATION_TEMPLATE.md`** | Brand identity, audience, business context. The "why" and "who". Shared between web and mobile. | ~500 |
+| **`DESIGN_TEMPLATE_WEB.md`** | Visual design system for web — colors, typography, spacing, components, motion, accessibility. | ~2,300 |
+| **`DESIGN_TEMPLATE_MOBILE.md`** | Visual design system for mobile — iOS HIG + Material 3 specs. | ~1,800 |
+| **`SPEC_TEMPLATE_WEB.md`** | Site map + per-page content/layout/copy + forms + notifications + transactional emails + SEO + legal + analytics. | ~950 |
+| **`SPEC_TEMPLATE_MOBILE.md`** | App map + per-screen content/copy/states + onboarding + auth + permissions + push notifications + app store metadata + settings. | ~860 |
+
+Plus three informational reference files:
+
+| File | Purpose |
+| --- | --- |
+| `research.md` | The brand-agnostic premium-standard research (23 sections, ~4,000 lines) — the explanatory backing for everything in the templates |
+| `project-templates-plan.md` | How the project templates were structured |
+| `plan.md` + `template-plan.md` | Original research plan + design-template plan |
 
 ---
 
-## What the templates handle
+## How the system works
 
-Each template is a complete operational ruleset across these dimensions:
+Each template follows the same pattern:
 
-- **Colors** — OKLCH authoring, 12-step Radix scale, APCA contrast, dark-mode strategy (perceptually mapped, not inverted), surface hierarchy
-- **Typography** — 8 semantic type roles, modular scale ratios, line-height + tracking inverse rules, variable fonts, fluid clamp sizing
-- **Spacing** — 4 px base, 18-step scale, inset/stack/inline pattern, container queries
-- **Shapes (radius)** — 6-step scale, nested-radius math, continuous corners on iOS
-- **Elevation & depth** — 6-level layered shadows (web) / materials + M3 elevation (mobile)
-- **Motion** — 5 duration tokens, 4 easings, 3 spring presets, FLIP technique, View Transitions API, spring physics for gestures, reduced-motion variants
-- **States** — 10 canonical states, focus-visible spec, touch states (iOS dim / Android ripple), disabled-without-opacity
-- **Iconography** — 6 sizes, stroke-to-text-weight pairing, optical alignment
-- **Imagery** — 6 aspect ratios, modern image loading (AVIF/WebP/JPG, srcset, fetchpriority, lazy), placeholder strategies
-- **Density & responsive** — 3 density modes, touch-target minimums per platform, breakpoints / size classes
-- **Accessibility** — WCAG 2.2 + APCA contrast targets, 6 preference media queries (including `forced-colors`), live regions, skip links
-- **~25 components** (web) / **~22 components** (mobile) — pixel-perfect specs with state matrices for every common atom and molecule
-- **Web patterns** — canonical landing page composition, hero variants, scroll-triggered animation framework, bento grids, command palette, code surfaces
-- **Mobile patterns** — iOS HIG + Material 3 native conventions, gestures, haptics (with platform API mappings), safe areas, permissions pre-prompting
-- **Data visualization** — three-palette system (categorical/sequential/diverging), chart-type conventions, viz accessibility
-- **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
-- **Microcopy & UX writing** — voice principles, banned-word list, length budgets, premium positioning structure
-- **AI Agent Contract** — 23 hard rules (web) / 16 hard rules (mobile) the AI must follow when consuming the document
-- **Anti-patterns** — ~80 explicit "never do this" items consolidated into the Do's-and-Don'ts section
+1. **YAML frontmatter** holds machine-readable design tokens, configuration, and content structures
+2. **Markdown body** holds the rules an AI agent must follow when consuming the file
+3. **Three tiers of content**:
+   - **Universal rules** — hardcoded; same for every project (accessibility floor, anti-patterns, scale systems)
+   - **Structural defaults** — pre-filled with the broad-premium-middle default; overridable per project
+   - **Brand-specific slots** — empty `<placeholder>` syntax; fill per project
+4. **AI Agent Contract** section — explicit hard rules the AI must follow
+5. **Cross-references** — files reference each other by name; PROJECT.md is the orchestration entry point
 
 ---
 
-## Quick start
+## Quick start (per new project)
 
-### Web project
+### For a web project
 
 ```bash
-# 1. Copy the web template into your project
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-design.md/main/DESIGN_TEMPLATE_WEB.md
+# 1. Copy the relevant templates to your project root
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/PROJECT_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/INFORMATION_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/DESIGN_TEMPLATE_WEB.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/SPEC_TEMPLATE_WEB.md
+
+# Rename to per-project files
+mv PROJECT_TEMPLATE.md PROJECT.md
+mv INFORMATION_TEMPLATE.md INFORMATION.md
 mv DESIGN_TEMPLATE_WEB.md DESIGN.md
+mv SPEC_TEMPLATE_WEB.md SPEC.md
 
-# 2. Fill the required slots (in your editor)
-#    - brand.name, brand.description, brand.audience, brand.voice
-#    - colors.primary.base (OKLCH)
-#    - colors.neutral.hue
-#    - typography.families.{display,body,mono}
-#
-# 3. Verify nothing is left blank:
-grep -n "<[^>]*>" DESIGN.md
-# Should return zero results
+# 2. Fill the brand-identity slots in each file
+#    Greppable: `grep -n "<[^>]*>" PROJECT.md INFORMATION.md DESIGN.md SPEC.md`
+#    Once zero matches remain, instantiation is complete.
 
-# 4. Generate the 12-step color palettes
-#    (run a small derivation script or ask an AI agent to expand the colors
-#     per the algorithm in §Colors → Generating the scale)
+# 3. For DESIGN.md, run color derivation:
+#    - Take your brand color (OKLCH)
+#    - Generate the 12-step palette using the algorithm in §Colors → Generating the scale
+#    - Fill the derived steps into the YAML
 
-# 5. Hand DESIGN.md to any AI coding assistant — they will produce
-#    consistent premium-grade UI from it
+# 4. Hand all four files to your AI tool. PROJECT.md is the entry point.
 ```
 
-### Mobile project
+### For a mobile project
 
-```bash
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-design.md/main/DESIGN_TEMPLATE_MOBILE.md
-mv DESIGN_TEMPLATE_MOBILE.md DESIGN_MOBILE.md
-# Same fill-in steps as web.
-```
+Same pattern but with `DESIGN_TEMPLATE_MOBILE.md` → `DESIGN_MOBILE.md` and `SPEC_TEMPLATE_MOBILE.md` → `SPEC_MOBILE.md`.
 
-### Both web AND mobile in one project
+### For a project that ships both web and mobile
 
-Use both files. Keep brand-identity slots (`brand`, `colors`, `typography.families`, `profiles`) **identical** between `DESIGN.md` and `DESIGN_MOBILE.md` so the brand reads the same cross-platform.
+Use all six files. The brand-identity slots in `INFORMATION.md` are shared — fill once. The visual / content templates split by platform.
 
 ---
 
-## How a fresh AI session uses this
+## How to point AI at this system
 
-Tell the AI exactly which file to consume. Example prompt:
+In your AI prompt, reference the entry-point file. The AI will discover the others through `PROJECT.md`'s declarations.
 
 ```
-Use the design system template at
-https://github.com/arshawnarbabi/premium-design.md/blob/main/DESIGN_TEMPLATE_WEB.md
-as your single source of truth. Reference tokens via {group.path} syntax;
-never invent values not present in the document. Honor every rule in the
-AI Agent Contract.
+Use the design and product templates in this project as your source of truth.
+Start by reading PROJECT.md, then consult the files it declares in the
+priority order it specifies. Reference tokens via {group.path} syntax;
+never invent values not in the documents.
 
-Build me a pricing page for [product description]...
+Now build me a [pricing page | onboarding flow | settings screen | …].
 ```
 
-The AI doesn't need the other template, the research, or the plan — just the one design template.
+Tools that auto-discover files (Claude Code reads `CLAUDE.md`; Cursor reads `.cursorrules`; many tools read `AGENTS.md`) — you can rename `PROJECT.md` to match the convention. Content stays the same.
 
 ---
 
-## What you actually decide per project
+## What you actually decide per new project
 
-**Required brand inputs (~8 fields, no defaults work):**
-1. Brand name
-2. Product description
-3. Audience
-4. Voice descriptor
-5. Brand primary color (OKLCH)
-6. Brand neutral hue (0–360°)
-7. Display font family
-8. Body font family
+**Required brand inputs (~10 fields — no defaults work):**
+- Brand name, description, audience, voice
+- Brand primary color (OKLCH)
+- Brand neutral hue
+- Display + body + mono font families
+- Project type (marketing site / product SaaS / mobile app / hybrid)
 
 **Profile selections (9 profiles — all have premium defaults):**
-Radius / type scale / density / motion / elevation / saturation / warmth / section padding / chart minimalism
+Radius, type scale ratio, density, motion personality, elevation depth, color saturation, brand warmth, section padding, chart minimalism.
 
-**Pick-one slots (~22 on web, ~14 on mobile — all have defaults):**
-Input style, tabs style, icon fill, avatar shape, modal backdrop, code surface, onboarding pattern, save model, settings IA, mobile nav style, platform adherence, haptic intensity, and others.
+**Pick-one slots (~22 web / ~14 mobile — all have defaults):**
+Input style, tabs style, icon fill, avatar shape, modal backdrop, code surface, onboarding pattern, save model, settings IA, command palette, RTL support, chart library, illustration style, and others.
 
-**Total decisions per project:** ~32 for web only, ~26 for mobile only, ~40 unique for both.
+**SPEC content (per-project, no defaults):**
+Site map / app map, page sections, copy, voice samples, forms, notifications, email templates, app store metadata.
 
-**Accepting all defaults** gives you a complete premium-grade design system out of the box — only the 8 brand-identity inputs are truly required.
+**INFORMATION content (per-project, no defaults):**
+Audience persona depth, market positioning, business model, brand story, social handles, legal jurisdiction.
 
----
-
-## Design system structure: three tiers
-
-1. **Universal rules** — hardcoded; same for every project. (Accessibility floor, anti-patterns, spacing scale values, token reference syntax, AI Agent Contract.)
-2. **Structural defaults** — pre-filled with the broad-premium-middle default; override only with intent. (Profiles, pick-one slots.)
-3. **Brand-specific slots** — empty `<placeholder>` syntax; fill per project. (Brand identity, colors, fonts.)
-
-This split makes the system reusable without being generic.
+**Total decisions to fully configure a project:** roughly 30 quick decisions + writing the actual content/copy. Most decisions take seconds; the content takes real time (as it should).
 
 ---
 
-## Where the rules came from
+## Design system structure: the three tiers in practice
 
-`research.md` documents the source for every rule:
+| Tier | What | How it appears |
+| --- | --- | --- |
+| **Universal** | Hardcoded; immutable per project | "Spacing values must be multiples of base"; "Use APCA for contrast"; "Touch targets ≥ 44 pt mobile" |
+| **Structural default** | Pre-filled, sensible, overridable | "Type scale ratio: balanced (1.200)"; "Modal backdrop: blur"; "Onboarding: empty-state-driven" |
+| **Brand-specific** | Empty `<slot>` per project | Brand colors, font families, audience, voice, page content |
 
-- Published premium design systems: Radix Colors, Material 3, Apple HIG, IBM Carbon, Atlassian Design System, Shopify Polaris, Geist (Vercel)
-- DTCG W3C Design Tokens Format Module (stable since Oct 2025)
-- Practitioner content: Karri Saarinen's 10 rules of craft, Rauno Freiberg's interaction principles ("Devouring Details")
-- Vercel's published "Web Interface Guidelines"
-- Production-site analysis across Linear, Vercel, Stripe, Notion, Anthropic, Mercury, Huly, Neon, Unkey, and Pixel Point's case-study portfolio
-- Modern standards: OKLCH color, APCA contrast, CSS logical properties, View Transitions API, container queries, modern image loading
+---
 
-The research file is informational — you don't need it to use the templates. But it's the explanatory backing if anyone asks "why this rule?"
+## Where the rules come from
+
+`research.md` documents the source for every rule. Key references:
+
+- **Published premium design systems:** Radix Colors, Material 3, Apple HIG, IBM Carbon, Atlassian Design System, Shopify Polaris, Geist (Vercel)
+- **Standards:** DTCG W3C Design Tokens Format Module (stable since Oct 2025), OKLCH color, APCA contrast, CSS logical properties, View Transitions API, container queries, modern image loading (AVIF/WebP/JPG fallback)
+- **Practitioner content:** Karri Saarinen's 10 rules of craft, Rauno Freiberg's interaction principles ("Devouring Details"), Vercel's published "Web Interface Guidelines"
+- **Production-site analysis:** Linear, Vercel, Stripe, Notion, Anthropic, Mercury, Huly, Neon, Unkey, and Pixel Point's case-study portfolio
+
+The research file is informational — you don't need it to use the templates. It's the explanatory backing if anyone asks "why this rule?"
+
+---
+
+## Recommended tech stack defaults (override per project in `PROJECT.md`)
+
+| Concern | Default |
+| --- | --- |
+| Framework (web) | React + Next.js (App Router) |
+| Styling | Tailwind v4 |
+| UI primitives | shadcn/ui (dashboards / product apps); custom for marketing |
+| Animation | Framer Motion |
+| Forms | React Hook Form + Zod |
+| Icons | Lucide (free default) / Phosphor / **HugeIcons** (premium tier — 51K icons, 10 styles) — declare per project, don't lock |
+| Deploy | Vercel |
+| Mobile native | SwiftUI / Jetpack Compose, or React Native (Expo) for cross-platform |
 
 ---
 
 ## Versioning
 
-Both templates carry `template_version: "1.0.0"` in their frontmatter. Per-project `DESIGN.md` instances should preserve this field so you can track which template version they were authored against.
-
----
+All templates carry `template_version: "1.0.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 ## License
 
-[Choose and add a LICENSE file — MIT, CC BY 4.0, or proprietary depending on how you want this used.]
+[Choose a LICENSE file: MIT, CC BY 4.0, or proprietary depending on use case. Recommend MIT for design templates intended for reuse.]
