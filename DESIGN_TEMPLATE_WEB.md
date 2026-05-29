@@ -78,7 +78,7 @@ options:
 colors:
   primary:
     base: "<oklch(L C H) — your brand color; anchored to step 9>"
-    # Derived 12-step scale (light mode). Generate at instantiation.
+    # Derived 12-step scale (light mode). Generate at instantiation per §Colors → Generating the scale.
     1:  "<derived>"   # app background
     2:  "<derived>"   # subtle bg / alt stripe
     3:  "<derived>"   # component background
@@ -93,36 +93,135 @@ colors:
     12: "<derived>"   # high-contrast text (APCA Lc 90 vs step 2)
     # Dark-mode counterpart — separately derived (NOT inverted; see §Colors → Dark mode):
     dark:
-      1: "<derived>"
-      # ... through 12
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
 
   neutral:
     hue: "<0–360 hue angle — slight tint toward brand warmth>"
-    # 12 steps + alpha pairs. Chroma is very low (~0.01–0.03) so neutrals read as gray.
+    # 12 steps + dark counterpart. Chroma is very low (~0.01–0.03) so neutrals read as gray.
     1:  "<derived>"
-    # ... through 12
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
     dark:
-      1: "<derived>"
-      # ... through 12
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
 
   # Optional secondary brand color. Leave commented unless brand truly uses two accents.
   # secondary:
   #   base: "<oklch(L C H)>"
-  #   ... etc.
+  #   1: "<derived>"  # ... through 12 + dark counterpart, same shape as primary
 
   # Semantic palettes — pre-anchored to conventional hues. Override `base` only if brand requires.
   success:
     base: "oklch(0.55 0.13 145)"   # green
-    1: "<derived>"
-    # ... through 12
+    1:  "<derived>"
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived = base>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
+    dark:
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
   warning:
     base: "oklch(0.72 0.15 75)"    # amber
-    1: "<derived>"
-    # ... through 12
+    1:  "<derived>"
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived = base>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
+    dark:
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
   danger:
     base: "oklch(0.55 0.20 25)"    # red
-    1: "<derived>"
-    # ... through 12
+    1:  "<derived>"
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived = base>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
+    dark:
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
 
   # Surface role tokens — reference the underlying neutral steps
   surface:

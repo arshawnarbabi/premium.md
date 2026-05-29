@@ -84,20 +84,128 @@ colors:
     11: "<derived>"
     12: "<derived>"
     dark:
-      1: "<derived>"
-      # ... through 12 (separately authored, NOT inverted)
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
 
   neutral:
     hue: "<0–360 hue angle>"
     1:  "<derived>"
-    # ... through 12
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
     dark:
-      1: "<derived>"
-      # ... through 12
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
 
-  success: { base: "oklch(0.55 0.13 145)" }
-  warning: { base: "oklch(0.72 0.15 75)" }
-  danger:  { base: "oklch(0.55 0.20 25)" }
+  success:
+    base: "oklch(0.55 0.13 145)"
+    1:  "<derived>"
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived = base>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
+    dark:
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
+  warning:
+    base: "oklch(0.72 0.15 75)"
+    1:  "<derived>"
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived = base>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
+    dark:
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
+  danger:
+    base: "oklch(0.55 0.20 25)"
+    1:  "<derived>"
+    2:  "<derived>"
+    3:  "<derived>"
+    4:  "<derived>"
+    5:  "<derived>"
+    6:  "<derived>"
+    7:  "<derived>"
+    8:  "<derived>"
+    9:  "<derived = base>"
+    10: "<derived>"
+    11: "<derived>"
+    12: "<derived>"
+    dark:
+      1:  "<derived>"
+      2:  "<derived>"
+      3:  "<derived>"
+      4:  "<derived>"
+      5:  "<derived>"
+      6:  "<derived>"
+      7:  "<derived>"
+      8:  "<derived>"
+      9:  "<derived>"
+      10: "<derived>"
+      11: "<derived>"
+      12: "<derived>"
 
   surface:
     canvas: "{colors.neutral.1}"
@@ -239,6 +347,14 @@ typography:
 
   font_features:
     tabular: "tnum, lnum"
+
+  # Premium published craft details (universal copy conventions — same as web)
+  craft:
+    quotes: "typographic"          # use “ ” (curly), never " " (straight)
+    ellipsis: "…"                  # use the ellipsis character, never three periods
+    units_use_nbsp: true           # "10 MB" / "⌘ K" use non-breaking space
+    rag_target: "balanced"         # avoid widows / orphans in headlines and body
+    optical_alignment_tolerance_pt: 1  # adjust ±1 pt when perception beats geometry
 
 # ═══════════════════════════════════════════════════════════════
 # SPACING (pt on iOS, dp on Android — both use 4-base scale)
@@ -454,6 +570,11 @@ states:
     border: "{colors.neutral.6}"
     # NEVER use opacity to derive disabled state
 
+  # Loading-state visibility (prevents flicker — same rule as web)
+  loading_visibility:
+    show_delay_ms: [150, 300]      # don't show spinner if action completes < 150 ms
+    minimum_visible_ms: [300, 500] # once shown, keep visible at least 300 ms
+
 # ═══════════════════════════════════════════════════════════════
 # ICONOGRAPHY (SF Symbols / Material Symbols / cross-platform alternatives)
 # ═══════════════════════════════════════════════════════════════
@@ -475,6 +596,7 @@ icons:
     "500": 1.5
     "600": 1.75
     "700": 2.0
+  optical_alignment_offset_pt: -1   # icons sit 1 pt above cap-height baseline by default (same rule as web)
 
 # ═══════════════════════════════════════════════════════════════
 # IMAGERY
@@ -545,6 +667,7 @@ a11y:
     non_text_apca_min: 30
     wcag_normal_text_min: "4.5:1"
     wcag_large_text_min: "3:1"
+  focus_visible_required: true   # for external keyboard / accessibility focus on mobile too
   ios:
     voiceover: "required — set accessibilityLabel, accessibilityTraits, accessibilityHint"
     dynamic_type: "required — use preferredFont(forTextStyle:)"
