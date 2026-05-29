@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.2"
+template_version: "1.2.3"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -262,6 +262,25 @@ typography:
     display: "<font family — default SF Pro (iOS) / Roboto (Android) / Inter (cross-platform)>"
     body: "<font family — default same as display>"
     mono: "<font family — default SF Mono (iOS) / Roboto Mono (Android) / JetBrains Mono>"
+
+  # ── Fallback strategy ──────────────────────────────────────────
+  # Native mobile handles fallback differently than web:
+  # - iOS: register custom fonts via Info.plist UIAppFonts. If a glyph is
+  #   missing from the custom font, iOS auto-falls-back to PingFang (CJK),
+  #   Hiragino (Japanese), Noto (everything else). Never call UIFont init
+  #   with a single family — use UIFont.preferredFont(forTextStyle:) or
+  #   UIFontDescriptor with fallback cascade.
+  # - Android: declare custom fonts as a font-family resource (res/font/)
+  #   with <font-family> elements. Set fallback chain via android:fallback
+  #   or use Typeface.CustomFallbackBuilder (API 29+). For pre-29, declare
+  #   alternates via android:fontProviderFetchTimeout in downloadable fonts.
+  # - If the custom font fails to load entirely (font file missing, bundle
+  #   stripped, or Downloadable Fonts timeout), the OS falls back to
+  #   SF Pro (iOS) / Roboto (Android) automatically — no broken state.
+  fallbacks:
+    ios_system: "SF Pro"          # iOS system font — final fallback
+    android_system: "Roboto"      # Android system font — final fallback
+    cjk_strategy: "PingFang (iOS) / Noto Sans CJK (Android) — auto, no config needed"
 
   # The 8 semantic roles mapped to platform text styles
   # Use platform APIs (UIFontMetrics, MaterialTypography) to allow Dynamic Type / sp scaling

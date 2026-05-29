@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.2"
+template_version: "1.2.3"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 

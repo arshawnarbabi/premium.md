@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.2"
+template_version: "1.2.3"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════

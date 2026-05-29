@@ -18,7 +18,7 @@
 #    must follow. The YAML frontmatter contains the values. Both are normative.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.2"
+template_version: "1.2.3"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -275,8 +275,34 @@ typography:
     display: "<font family — default 'Geist Sans' or 'Inter'>"
     body: "<font family — default 'Geist Sans' or 'Inter' (often same as display)>"
     mono: "<font family — default 'Geist Mono' or 'JetBrains Mono'>"
-  # The system stack fallback applied automatically:
-  fallback_stack: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+
+  # ── Fallback stacks ────────────────────────────────────────────
+  # Each custom font resolves to "<family>, <matching fallback>" in generated CSS.
+  # The fallback renders instantly while the custom font loads — and if the
+  # custom font fails entirely (CDN outage, blocked, slow connection), the
+  # site still looks coherent.
+  fallbacks:
+    sans: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    serif: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif"
+    mono: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace"
+
+  # Assign a fallback category to each family. Override only if your custom
+  # font is a different category than the default assignment.
+  fallback_assignments:
+    display: "sans"   # "sans" | "serif" — set to "serif" if display is a serif face
+    body: "sans"      # usually matches display
+    mono: "mono"      # always "mono"
+
+  # ── Font loading strategy ──────────────────────────────────────
+  # Minimizes CLS (Cumulative Layout Shift — a Core Web Vital).
+  loading:
+    font_display: "swap"
+    # ^ Show fallback immediately; swap to custom when loaded.
+    #   Alternatives: "optional" (skip custom if not cached after 100ms — best for body),
+    #   "block" (block render up to 3s — avoid; hurts LCP).
+    preload_strategy: "Preload ONLY critical above-the-fold weights — typically body 400 + display 600. Each <link rel='preload'> adds a connection; preloading every weight is an anti-pattern."
+    metric_overrides: "On @font-face, add ascent-override + descent-override + line-gap-override + size-adjust matched to the assigned fallback stack. This makes the fallback render at exactly the custom font's metrics so swapping causes ZERO layout shift. Generate values via fontsource.org (each font has them) or Font Style Matcher (https://meowni.ca/font-style-matcher)."
+    subset: "When self-hosting, subset to the Latin glyphs you actually use. Default: latin + latin-ext for ~80% of Western brands. Cyrillic/Greek/CJK add 200-500KB each — load only if your audience needs them (declare via unicode-range on @font-face)."
 
   # 8 semantic roles. Sizes shown for ratio=1.200 (balanced profile).
   # Use clamp() for fluid sizing across viewport widths.
@@ -1503,6 +1529,7 @@ When generating any UI, code, or design artifact from this document, an AI agent
 21. **Optical alignment trumps strict geometry.** Adjust ±1 px when perception beats the math (icons that sit lower than they look; text that needs a 1-px raise to align with adjacent labels). Document the adjustment on the component.
 22. **Performance is design.** Operations slower than 500 ms (POST/PATCH/DELETE) require a designed loading state. LCP target ≤ 2.5 s; INP target ≤ 200 ms.
 23. **Details are the product.** Every micro-interaction, every edge-case copy, every focus ring, every loading state must be authored with the same care as the primary flow. Premium is felt in the corners, not the headlines.
+24. **Always resolve `{typography.families.*}` together with its fallback stack.** When emitting CSS `font-family`, the value is `<families.X>, <fallbacks[fallback_assignments.X]>` — never the custom family alone. Apply `font-display: swap` and metric overrides (`ascent-override`, `descent-override`, `line-gap-override`, `size-adjust`) on `@font-face` so the fallback renders at the custom font's metrics and the swap causes zero CLS.
 
 ---
 
