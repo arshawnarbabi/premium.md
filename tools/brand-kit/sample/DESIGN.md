@@ -9,26 +9,24 @@
 # 1. Copy this file to your project as `DESIGN.md`.
 # 2. Fill every `<slot>` value. Greppable: `grep -n "<[^>]*>" DESIGN.md` should
 #    return zero results once instantiation is complete.
-# 3. Run the color-derivation step. EASIEST: use the bundled generator —
-#    `tools/brand-kit` → `npm run gen -- --base "oklch(L C H)" [--neutral-hue H] [--neutral-chroma S]`
-#    — it derives all 12 steps × light + dark for every palette, gamut-clamped + APCA-verified, and
-#    prints the `colors:` block to paste in. (Or derive by hand per `§Colors → Generating the scale`.)
+# 3. Run the color-derivation step: given `colors.primary.base` (OKLCH), generate
+#    all 12 steps per the algorithm in `§Colors → Generating the scale`. Repeat
+#    for `colors.neutral` using `colors.neutral.hue`. Semantic palettes are
+#    pre-derived from common anchor hues; override if your brand requires.
 # 4. Profiles and pick-one slots have safe defaults. Override only with intent.
 # 5. The Markdown body below contains the rules an AI consuming this file
 #    must follow. The YAML frontmatter contains the values. Both are normative.
-# 6. FINAL STEP: review the result in the brand-kit viewer (`tools/brand-kit`, `npm run dev`).
-#    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.3.0"
+template_version: "1.2.4"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
 brand:
-  name: "<Brand Name>"
-  description: "<one-line product description — what it is, what it does>"
-  audience: "<primary persona — who uses this every day, in one sentence>"
-  voice: "<1–2 sentence voice descriptor — tone, energy, formality, what to avoid>"
+  name: "Northstar"
+  description: "Northstar is a sample product used to demo the brand kit."
+  audience: "Anyone evaluating the design system at a glance."
+  voice: "Clear, confident, and calm. Plain-spoken, never salesy."
 
 # ─── Mode declaration ───
 mode:
@@ -43,7 +41,7 @@ profiles:
   motion: "default"           # subtle | default | expressive
   elevation: "default"        # flat (border-only) | default (subtle shadows) | dimensional (richer shadows)
   saturation: "default"       # muted (×0.7 chroma) | default (×1.0) | vivid (×1.3)
-  warmth: "neutral"           # cool (hue ≈ 240) | neutral (≈ 60) | warm (≈ 40)
+  warmth: "warm"           # cool (hue ≈ 240) | neutral (≈ 60) | warm (≈ 40)
   section_padding: "default"  # compact (~96 px) | default (~128 px) | generous (~160 px)
   chart_minimalism: "default" # tufte (minimal) | default | carbon (full axes/gridlines)
 
@@ -79,63 +77,63 @@ options:
 
 colors:
   primary:
-    base: "<oklch(L C H) — your brand color; anchored to step 9>"
+    base: "oklch(0.55 0.17 255)"
     # Derived 12-step scale (light mode). Generate at instantiation per §Colors → Generating the scale.
-    1:  "<derived>"   # app background
-    2:  "<derived>"   # subtle bg / alt stripe
-    3:  "<derived>"   # component background
-    4:  "<derived>"   # hovered component bg
-    5:  "<derived>"   # active/pressed bg
-    6:  "<derived>"   # subtle border
-    7:  "<derived>"   # interactive border
-    8:  "<derived>"   # focus ring / strong border
-    9:  "<derived = base>"  # solid CTA background
-    10: "<derived>"   # hovered solid
-    11: "<derived>"   # low-contrast text (APCA Lc 60 vs step 2)
-    12: "<derived>"   # high-contrast text (APCA Lc 90 vs step 2)
+    1:  "oklch(0.99 0.005 255)"   # app background
+    2:  "oklch(0.97 0.015 255)"   # subtle bg / alt stripe
+    3:  "oklch(0.95 0.024 255)"   # component background
+    4:  "oklch(0.92 0.039 255)"   # hovered component bg
+    5:  "oklch(0.88 0.06 255)"   # active/pressed bg
+    6:  "oklch(0.83 0.086 255)"   # subtle border
+    7:  "oklch(0.75 0.128 255)"   # interactive border
+    8:  "oklch(0.66 0.153 255)"   # focus ring / strong border
+    9:  "oklch(0.55 0.17 255)"  # solid CTA background
+    10: "oklch(0.49 0.161 255)"   # hovered solid
+    11: "oklch(0.38 0.094 255)"   # low-contrast text (APCA Lc 60 vs step 2)
+    12: "oklch(0.22 0.051 255)"   # high-contrast text (APCA Lc 90 vs step 2)
     # Dark-mode counterpart — separately derived (NOT inverted; see §Colors → Dark mode):
     dark:
-      1:  "<derived>"
-      2:  "<derived>"
-      3:  "<derived>"
-      4:  "<derived>"
-      5:  "<derived>"
-      6:  "<derived>"
-      7:  "<derived>"
-      8:  "<derived>"
-      9:  "<derived>"
-      10: "<derived>"
-      11: "<derived>"
-      12: "<derived>"
+      1:  "oklch(0.17 0.012 255)"
+      2:  "oklch(0.21 0.012 255)"
+      3:  "oklch(0.24 0.022 255)"
+      4:  "oklch(0.28 0.037 255)"
+      5:  "oklch(0.32 0.055 255)"
+      6:  "oklch(0.37 0.073 255)"
+      7:  "oklch(0.44 0.092 255)"
+      8:  "oklch(0.53 0.11 255)"
+      9:  "oklch(0.62 0.122 255)"
+      10: "oklch(0.68 0.116 255)"
+      11: "oklch(0.79 0.067 255)"
+      12: "oklch(0.93 0.034 255)"
 
   neutral:
-    hue: "<0–360 hue angle — slight tint toward brand warmth>"
+    hue: 255
     # 12 steps + dark counterpart. Chroma is very low (~0.01–0.03) so neutrals read as gray.
-    1:  "<derived>"
-    2:  "<derived>"
-    3:  "<derived>"
-    4:  "<derived>"
-    5:  "<derived>"
-    6:  "<derived>"
-    7:  "<derived>"
-    8:  "<derived>"
-    9:  "<derived>"
-    10: "<derived>"
-    11: "<derived>"
-    12: "<derived>"
+    1:  "oklch(0.99 0.004 255)"
+    2:  "oklch(0.97 0.005 255)"
+    3:  "oklch(0.95 0.005 255)"
+    4:  "oklch(0.92 0.006 255)"
+    5:  "oklch(0.88 0.006 255)"
+    6:  "oklch(0.83 0.005 255)"
+    7:  "oklch(0.75 0.005 255)"
+    8:  "oklch(0.66 0.004 255)"
+    9:  "oklch(0.55 0.003 255)"
+    10: "oklch(0.49 0.003 255)"
+    11: "oklch(0.38 0.003 255)"
+    12: "oklch(0.22 0.002 255)"
     dark:
-      1:  "<derived>"
-      2:  "<derived>"
-      3:  "<derived>"
-      4:  "<derived>"
-      5:  "<derived>"
-      6:  "<derived>"
-      7:  "<derived>"
-      8:  "<derived>"
-      9:  "<derived>"
-      10: "<derived>"
-      11: "<derived>"
-      12: "<derived>"
+      1:  "oklch(0.17 0.003 255)"
+      2:  "oklch(0.21 0.003 255)"
+      3:  "oklch(0.24 0.003 255)"
+      4:  "oklch(0.28 0.004 255)"
+      5:  "oklch(0.32 0.004 255)"
+      6:  "oklch(0.37 0.003 255)"
+      7:  "oklch(0.44 0.003 255)"
+      8:  "oklch(0.53 0.003 255)"
+      9:  "oklch(0.62 0.003 255)"
+      10: "oklch(0.68 0.003 255)"
+      11: "oklch(0.79 0.002 255)"
+      12: "oklch(0.93 0.002 255)"
 
   # Optional secondary brand color. Leave commented unless brand truly uses two accents.
   # secondary:
@@ -149,85 +147,85 @@ colors:
   # Never use semantic colors decoratively or as accents. Only `primary` + `neutral` are general-purpose.
   success:
     base: "oklch(0.55 0.13 145)"   # green
-    1:  "<derived>"
-    2:  "<derived>"
-    3:  "<derived>"
-    4:  "<derived>"
-    5:  "<derived>"
-    6:  "<derived>"
-    7:  "<derived>"
-    8:  "<derived>"
-    9:  "<derived = base>"
-    10: "<derived>"
-    11: "<derived>"
-    12: "<derived>"
+    1:  "oklch(0.99 0.013 145)"
+    2:  "oklch(0.97 0.013 145)"
+    3:  "oklch(0.95 0.023 145)"
+    4:  "oklch(0.92 0.039 145)"
+    5:  "oklch(0.88 0.059 145)"
+    6:  "oklch(0.83 0.078 145)"
+    7:  "oklch(0.75 0.098 145)"
+    8:  "oklch(0.66 0.117 145)"
+    9:  "oklch(0.55 0.13 145)"
+    10: "oklch(0.49 0.123 145)"
+    11: "oklch(0.38 0.072 145)"
+    12: "oklch(0.22 0.039 145)"
     dark:
-      1:  "<derived>"
-      2:  "<derived>"
-      3:  "<derived>"
-      4:  "<derived>"
-      5:  "<derived>"
-      6:  "<derived>"
-      7:  "<derived>"
-      8:  "<derived>"
-      9:  "<derived>"
-      10: "<derived>"
-      11: "<derived>"
-      12: "<derived>"
+      1:  "oklch(0.17 0.009 145)"
+      2:  "oklch(0.21 0.009 145)"
+      3:  "oklch(0.24 0.017 145)"
+      4:  "oklch(0.28 0.028 145)"
+      5:  "oklch(0.32 0.042 145)"
+      6:  "oklch(0.37 0.056 145)"
+      7:  "oklch(0.44 0.07 145)"
+      8:  "oklch(0.53 0.084 145)"
+      9:  "oklch(0.62 0.094 145)"
+      10: "oklch(0.68 0.089 145)"
+      11: "oklch(0.79 0.051 145)"
+      12: "oklch(0.93 0.028 145)"
   warning:
     base: "oklch(0.72 0.15 75)"    # amber
-    1:  "<derived>"
-    2:  "<derived>"
-    3:  "<derived>"
-    4:  "<derived>"
-    5:  "<derived>"
-    6:  "<derived>"
-    7:  "<derived>"
-    8:  "<derived>"
-    9:  "<derived = base>"
-    10: "<derived>"
-    11: "<derived>"
-    12: "<derived>"
+    1:  "oklch(0.99 0.008 75)"
+    2:  "oklch(0.97 0.015 75)"
+    3:  "oklch(0.94 0.027 75)"
+    4:  "oklch(0.91 0.045 75)"
+    5:  "oklch(0.88 0.068 75)"
+    6:  "oklch(0.84 0.09 75)"
+    7:  "oklch(0.8 0.112 75)"
+    8:  "oklch(0.76 0.135 75)"
+    9:  "oklch(0.72 0.15 75)"
+    10: "oklch(0.64 0.135 75)"
+    11: "oklch(0.5 0.083 75)"
+    12: "oklch(0.34 0.045 75)"
     dark:
-      1:  "<derived>"
-      2:  "<derived>"
-      3:  "<derived>"
-      4:  "<derived>"
-      5:  "<derived>"
-      6:  "<derived>"
-      7:  "<derived>"
-      8:  "<derived>"
-      9:  "<derived>"
-      10: "<derived>"
-      11: "<derived>"
-      12: "<derived>"
+      1:  "oklch(0.18 0.011 75)"
+      2:  "oklch(0.22 0.011 75)"
+      3:  "oklch(0.26 0.019 75)"
+      4:  "oklch(0.31 0.032 75)"
+      5:  "oklch(0.37 0.049 75)"
+      6:  "oklch(0.44 0.065 75)"
+      7:  "oklch(0.52 0.081 75)"
+      8:  "oklch(0.62 0.097 75)"
+      9:  "oklch(0.72 0.108 75)"
+      10: "oklch(0.78 0.103 75)"
+      11: "oklch(0.85 0.059 75)"
+      12: "oklch(0.93 0.032 75)"
   danger:
     base: "oklch(0.55 0.20 25)"    # red
-    1:  "<derived>"
-    2:  "<derived>"
-    3:  "<derived>"
-    4:  "<derived>"
-    5:  "<derived>"
-    6:  "<derived>"
-    7:  "<derived>"
-    8:  "<derived>"
-    9:  "<derived = base>"
-    10: "<derived>"
-    11: "<derived>"
-    12: "<derived>"
+    1:  "oklch(0.99 0.005 25)"
+    2:  "oklch(0.97 0.015 25)"
+    3:  "oklch(0.95 0.025 25)"
+    4:  "oklch(0.92 0.041 25)"
+    5:  "oklch(0.88 0.064 25)"
+    6:  "oklch(0.83 0.095 25)"
+    7:  "oklch(0.75 0.15 25)"
+    8:  "oklch(0.66 0.18 25)"
+    9:  "oklch(0.55 0.2 25)"
+    10: "oklch(0.49 0.19 25)"
+    11: "oklch(0.38 0.11 25)"
+    12: "oklch(0.22 0.06 25)"
     dark:
-      1:  "<derived>"
-      2:  "<derived>"
-      3:  "<derived>"
-      4:  "<derived>"
-      5:  "<derived>"
-      6:  "<derived>"
-      7:  "<derived>"
-      8:  "<derived>"
-      9:  "<derived>"
-      10: "<derived>"
-      11: "<derived>"
-      12: "<derived>"
+      1:  "oklch(0.17 0.014 25)"
+      2:  "oklch(0.21 0.014 25)"
+      3:  "oklch(0.24 0.026 25)"
+      4:  "oklch(0.28 0.043 25)"
+      5:  "oklch(0.32 0.065 25)"
+      6:  "oklch(0.37 0.086 25)"
+      7:  "oklch(0.44 0.108 25)"
+      8:  "oklch(0.53 0.13 25)"
+      9:  "oklch(0.62 0.144 25)"
+      10: "oklch(0.68 0.137 25)"
+      11: "oklch(0.79 0.079 25)"
+      12: "oklch(0.93 0.036 25)"
 
   # Surface role tokens — reference the underlying neutral steps
   surface:
@@ -278,9 +276,9 @@ colors:
 
 typography:
   families:
-    display: "<font family — default 'Geist Sans' or 'Inter'>"
-    body: "<font family — default 'Geist Sans' or 'Inter' (often same as display)>"
-    mono: "<font family — default 'Geist Mono' or 'JetBrains Mono'>"
+    display: "Inter"
+    body: "Inter"
+    mono: "JetBrains Mono"
 
   # ── Fallback stacks ────────────────────────────────────────────
   # Each custom font resolves to "<family>, <matching fallback>" in generated CSS.
@@ -295,9 +293,9 @@ typography:
   # Assign a fallback category to each family. Override only if your custom
   # font is a different category than the default assignment.
   fallback_assignments:
-    display: "sans"   # "sans" | "serif" — set to "serif" if display is a serif face
-    body: "sans"      # usually matches display
-    mono: "mono"      # always "mono"
+    display: "sans"
+    body: "sans"      # DM Sans
+    mono: "sans"   # DM Sans is used everywhere; no monospace face      # always "mono"
 
   # ── Font loading strategy ──────────────────────────────────────
   # Minimizes CLS (Cumulative Layout Shift — a Core Web Vital).
@@ -607,8 +605,8 @@ states:
 # ═══════════════════════════════════════════════════════════════
 
 icons:
-  family: "<icon family — declare per project. Recommended: Lucide (free default), Phosphor (free, 6 weights), Heroicons (free, outline + solid), Tabler (free, 1.5-px stroke), HugeIcons (free Stroke-Rounded / 51K Pro across 10 styles), or custom>"
-  library: "<lucide | phosphor | heroicons | tabler | hugeicons | custom — the normalized key the brand-kit viewer uses to render this project's real icons (see §Brand Kit). Must match `family`.>"
+  family: "Lucide (free)"
+  library: "lucide"
   fill_style: "{options.icon_fill}"     # outline | filled
   sizes:
     xs: 12
@@ -654,7 +652,7 @@ images:
     avatar: "initials-svg"
 
   illustration_style: "{options.illustration_style}"
-  photography_style: "<descriptor — e.g., 'natural light, real people, no stock-photo headsets'>"
+  photography_style: "Calm, natural light; real everyday people in unstaged moments; warm and unfussy. No stock-photo cliches, no headset/call-center shots."
 
 # ═══════════════════════════════════════════════════════════════
 # DENSITY & RESPONSIVE
@@ -1292,9 +1290,9 @@ viz:
   library: "{options.chart_library}"
   minimalism: "{profiles.chart_minimalism}"
   palettes:
-    categorical: ["<color1>", "<color2>", "<color3>", "<color4>", "<color5>", "<color6>", "<color7>", "<color8>"]
-    sequential: ["<derived 9 steps>"]
-    diverging: ["<derived 11 steps>"]
+    categorical: ["oklch(0.62 0.136 162)", "oklch(0.62 0.14 28)", "oklch(0.62 0.14 255)", "oklch(0.62 0.14 300)", "oklch(0.62 0.131 75)", "oklch(0.62 0.105 200)", "oklch(0.62 0.14 130)", "oklch(0.62 0.14 330)"]
+    sequential: ["oklch(0.95 0.04 162)", "oklch(0.88 0.06 162)", "oklch(0.8 0.08 162)", "oklch(0.72 0.1 162)", "oklch(0.64 0.11 162)", "oklch(0.56 0.12 162)", "oklch(0.48 0.105 162)", "oklch(0.39 0.086 162)", "oklch(0.3 0.066 162)"]
+    diverging: ["oklch(0.45 0.13 255)", "oklch(0.57 0.12 255)", "oklch(0.69 0.09 255)", "oklch(0.8 0.06 255)", "oklch(0.89 0.035 255)", "oklch(0.96 0.012 80)", "oklch(0.89 0.045 55)", "oklch(0.8 0.08 55)", "oklch(0.69 0.11 55)", "oklch(0.58 0.14 55)", "oklch(0.48 0.119 55)"]
   axis:
     line_color: "{colors.border.subtle}"
     line_width: 1
@@ -1328,7 +1326,7 @@ viz:
 i18n:
   rtl_support: "{mode.rtl_support}"
   use_logical_properties: true
-  target_locales: ["<en, …>"]
+  target_locales: ["en"]
   script_line_height_multipliers:
     latin: 1.0
     arabic: 1.30
@@ -1355,25 +1353,18 @@ i18n:
 # ═══════════════════════════════════════════════════════════════
 
 derivation:
-  # Color generation curves. The bundled generator (tools/brand-kit → `npm run gen`) implements these
-  # exactly; see body §Colors → Generating the scale. Step 9 = the brand L (the scale rebuilds around it).
-  lightness_curve_light:       [0.99, 0.97, 0.95, 0.92, 0.88, 0.83, 0.75, 0.66, "L_brand", "L_brand-0.06", 0.38, 0.22]
-  # High-lightness variant — use when base L > 0.66 (amber / yellow) so the ramp stays monotonic:
-  lightness_curve_light_high:  [0.99, 0.97, 0.94, 0.91, 0.88, 0.84, 0.80, 0.76, "L_brand", 0.64, 0.50, 0.34]
-  chroma_curve:                [0.10, 0.10, 0.18, 0.30, 0.45, 0.60, 0.75, 0.90, 1.00, 0.95, 0.55, 0.30]
-  lightness_curve_dark:        [0.17, 0.21, 0.24, 0.28, 0.32, 0.37, 0.44, 0.53, 0.62, 0.68, 0.79, 0.93]
-  lightness_curve_dark_high:   [0.18, 0.22, 0.26, 0.31, 0.37, 0.44, 0.52, 0.62, "L_brand", 0.78, 0.85, 0.93]
+  # Color generation curves (used at instantiation; see body §Colors → Generating the scale)
+  lightness_curve_light:  [0.99, 0.97, 0.95, 0.92, 0.88, 0.83, 0.75, 0.66, "L_brand", "L_brand-0.06", 0.38, 0.22]
+  chroma_curve:           [0.10, 0.10, 0.18, 0.30, 0.45, 0.60, 0.75, 0.90, 1.00, 0.95, 0.55, 0.30]
+  lightness_curve_dark:   [0.18, 0.22, 0.26, 0.30, 0.34, 0.40, 0.48, 0.56, "L_brand", "L_brand+0.06", 0.78, 0.95]
   saturation_multipliers:
     muted: 0.7
     default: 1.0
     vivid: 1.3
-  # Neutrals: tinted toward the BRAND hue by default. `warmth` is an optional override that pushes the
-  # neutral hue cooler/warmer; `neutral_chroma` sets the tint intensity. (Generator: --neutral-hue / --neutral-chroma.)
   warmth_neutral_hue:
     cool: 240
     neutral: 60
     warm: 40
-  neutral_chroma_default: 0.25   # × the cream base curve; lower = closer to a clean off-white
 
 ---
 
@@ -1601,11 +1592,6 @@ When generating any UI, code, or design artifact from this document, an AI agent
 | 12 | High-contrast accessible text (APCA Lc 90+ on step 2) |
 
 ## Generating the scale
-
-> **Canonical implementation: the generator.** Don't hand-roll the OKLCH/APCA math — run
-> `tools/brand-kit` → `npm run gen -- --base "oklch(L C H)" [--neutral-hue H] [--neutral-chroma S]`.
-> It produces the full `colors:` block (5 palettes × light + dark, gamut-clamped + APCA-verified) and is
-> the single source of truth for these curves. The steps below document what it does.
 
 Given the brand color at step 9 in OKLCH (`L_brand`, `C_brand`, `H_brand`):
 
@@ -2490,49 +2476,10 @@ A consolidated list of the most important Do / Don't rules. The full anti-patter
 
 ---
 
-# Brand Kit
-
-**Rule:** the standard FINAL step of filling out `DESIGN.md` is to review the result in the **brand-kit
-viewer** (`tools/brand-kit`). It is a static page that reads this `DESIGN.md` + `INFORMATION.md` and
-renders the whole system so a human can judge harmony before any product code is written.
-
-```bash
-cd tools/brand-kit && npm install
-npm run load -- --root <your project>   # or --design <path> --information <path>
-npm run dev                              # review;  npm run build → static export to share
-```
-
-The kit has two sections:
-
-- **Specimen (raw values)** — logos, all 5 color palettes (12 steps, light + dark, with live APCA
-  badges), the type roles at real size/weight, the spacing / radius / elevation scales, and a sample of
-  the project's icon family.
-- **Composition (harmony)** — the components assembled (buttons in every variant/state, inputs, cards,
-  badges, tabs, table, toast) plus a marketing composition and an app-screen mock, all driven by the
-  tokens. Light/dark toggle; hover states. (No font-comparison toggle — the viewer renders the chosen
-  display font.)
-
-Icons come from the project's chosen family via `icons.library` (lucide / phosphor / heroicons / tabler /
-hugeicons; `custom` → graceful fallback). Fonts load from `typography.families`.
-
-## Token contract
-
-The viewer relies on these token paths being present. An AI filling this template MUST keep them intact
-so every project routes cleanly into the kit:
-
-- `brand.name`, `brand.description`, `brand.voice` · `INFORMATION.md → project.tagline`, `assets.logo.*`
-- `colors.{primary,neutral,success,warning,danger}.{1..12}` and `.dark.{1..12}`
-- `colors.shadow_tint`; role tokens under `colors.{surface,border,text,semantic}`
-- `typography.families.{display,body,mono}` and `typography.roles.*.{size,weight,line_height,letter_spacing,text_transform}`
-- `spacing.scale.*` · `radius.scale.*` · `elevation.scale.*`
-- `icons.family`, `icons.library`
-
----
-
 # Versioning
 
-This template is on `template_version: 1.3.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.0.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
-This template is generated from the brand-agnostic research in `research.md` (3,800+ lines covering 23 design dimensions plus measured production-site analysis). The companion mobile template `DESIGN_TEMPLATE_MOBILE.md` shares brand-identity values and applies the same rules to iOS HIG + Material 3 conventions. The optional `tools/brand-kit` package provides the palette generator + the brand-kit viewer.
+This template is generated from the brand-agnostic research in `research.md` (3,800+ lines covering 23 design dimensions plus measured production-site analysis). The companion mobile template `DESIGN_TEMPLATE_MOBILE.md` shares brand-identity values and applies the same rules to iOS HIG + Material 3 conventions.

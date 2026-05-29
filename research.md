@@ -422,7 +422,9 @@ Use the same token names; the underlying palette differs per mode.
 
 **For neutrals:** the same algorithm applies, but `C_brand` is ~0.01–0.03 (a very low chroma — give the neutrals a slight tint toward the brand hue rather than pure grayscale). Pure-grayscale neutrals (`C = 0`) feel sterile against a warm brand.
 
-**Tools that implement this:** Radix Colors generator, Tailwind 4's `oklch()` palette utility, Anna Filou's CSS-only generator, the Observable OKLCH palette notebook, Leonardo (Adobe). Manual implementation is straightforward — a 30-line CSS custom-property generator.
+**Tools that implement this:** the **bundled generator** in `tools/brand-kit` (`npm run gen` — the canonical implementation for these templates; gamut-clamps + APCA-verifies); also Radix Colors generator, Tailwind 4's `oklch()` palette utility, Anna Filou's CSS-only generator, the Observable OKLCH palette notebook, Leonardo (Adobe).
+
+**Refinements the bundled generator applies (template canon):** step 9 = the chosen brand L (the scale rebuilds around it); a **high-lightness curve variant** for amber/yellow bases (base L > 0.66) so the ramp stays monotonic; a fixed dark step-9 of L≈0.62 (brighter on near-black); and neutrals tinted toward the brand hue by default with a `--neutral-chroma` intensity knob (lower → cleaner off-white).
 
 ---
 

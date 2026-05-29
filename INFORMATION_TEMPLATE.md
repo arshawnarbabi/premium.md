@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.4"
+template_version: "1.3.0"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -324,6 +324,10 @@ resources:
 # ═══════════════════════════════════════════════════════════════
 
 assets:
+  # Paths below are resolved relative to this base. Default: the project root. The brand-kit viewer
+  # uses it to find the logo files; if INFORMATION.md lives in a subfolder, set this so paths still
+  # resolve from the right place (e.g., "." for repo-root, "../" if assets sit a level up).
+  assets_base_path: "<. | path the logo paths below are relative to — default: project root>"
   logo:
     primary: "<path/url — the main logo>"
     wordmark: "<path/url — text-only version>"

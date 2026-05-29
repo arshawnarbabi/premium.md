@@ -4,7 +4,7 @@
 
 > A six-file template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.0.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.3.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -38,6 +38,12 @@ Plus one reference file:
 | File | Purpose |
 | --- | --- |
 | `research.md` | The brand-agnostic premium-standard research (23 sections, ~4,000 lines) — the explanatory backing for everything in the templates. DESIGN templates cite specific sections. |
+
+Plus optional tooling (the six markdown templates stay dependency-free):
+
+| Folder | Purpose |
+| --- | --- |
+| `tools/brand-kit/` | An OKLCH **palette generator** (model-only) + a **brand-kit viewer** that reads a project's `DESIGN.md` + `INFORMATION.md` and renders the whole design system (specimen + composition, light/dark, the project's real fonts + icon family). Run `npm run dev` to review before building. See `tools/brand-kit/README.md`. |
 
 ---
 
@@ -99,10 +105,13 @@ mv SPEC_TEMPLATE_WEB.md SPEC.md
 # 3. Fill the brand-identity slots. Greppable until clean:
 grep -n "<[^>]*>" PROJECT.md INFORMATION.md DESIGN.md SPEC.md
 
-# 4. For DESIGN.md, generate the 12-step color palette from your brand color
-#    (algorithm in §Colors → Generating the scale). Or ask your AI to do it.
+# 4. For DESIGN.md, generate the color palette with the bundled generator:
+#    cd tools/brand-kit && npm install && npm run gen -- --base "oklch(L C H)"
+#    (or ask your AI; algorithm in §Colors → Generating the scale).
 
 # 5. Hand all four files to your AI tool. PROJECT.md is the entry point.
+
+# 6. Review the result in the brand-kit viewer: cd tools/brand-kit && npm run dev
 ```
 
 ### Mobile project

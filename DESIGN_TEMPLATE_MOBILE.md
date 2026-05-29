@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.4"
+template_version: "1.3.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -601,7 +601,8 @@ states:
 icons:
   ios_default: "SF Symbols"        # native iOS — pairs with SF Pro, supports weight / scale axes
   android_default: "Material Symbols"  # native Android — supports weight / fill / grade axes
-  cross_platform_default: "<Lucide (free default) | Phosphor (free, 6 weights) | HugeIcons (premium — 5K free / 51K Pro across 10 styles)>"  # use when consistent visual across both platforms is desired
+  cross_platform_default: "<Lucide (free default) | Phosphor (free, 6 weights) | HugeIcons (free Stroke-Rounded / 51K Pro)>"  # use when consistent visual across both platforms is desired
+  library: "<lucide | phosphor | heroicons | tabler | hugeicons | custom — normalized key for the brand-kit viewer; match the web DESIGN.md>"
   fill_style: "{options.icon_fill}"
   sizes:
     xs: 12
@@ -1216,11 +1217,15 @@ i18n:
 # ═══════════════════════════════════════════════════════════════
 
 derivation:
+  # IDENTICAL algorithm to web — use the same generator (tools/brand-kit → `npm run gen`) and copy the
+  # `colors:` block from your web DESIGN.md so the two match exactly. Canonical curves are the web
+  # template's (dark step 9 = 0.62; high-L/amber variant; `--neutral-chroma` knob); see DESIGN_TEMPLATE_WEB.md.
   lightness_curve_light:  [0.99, 0.97, 0.95, 0.92, 0.88, 0.83, 0.75, 0.66, "L_brand", "L_brand-0.06", 0.38, 0.22]
   chroma_curve:           [0.10, 0.10, 0.18, 0.30, 0.45, 0.60, 0.75, 0.90, 1.00, 0.95, 0.55, 0.30]
-  lightness_curve_dark:   [0.18, 0.22, 0.26, 0.30, 0.34, 0.40, 0.48, 0.56, "L_brand", "L_brand+0.06", 0.78, 0.95]
+  lightness_curve_dark:   [0.17, 0.21, 0.24, 0.28, 0.32, 0.37, 0.44, 0.53, 0.62, 0.68, 0.79, 0.93]
   saturation_multipliers: { muted: 0.7, default: 1.0, vivid: 1.3 }
   warmth_neutral_hue:     { cool: 240, neutral: 60, warm: 40 }
+  # Brand-kit viewer: web-only in v1.3.0 (review mobile tokens via the web kit, since they share values).
 
 ---
 

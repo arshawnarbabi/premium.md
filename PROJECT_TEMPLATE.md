@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.4"
+template_version: "1.3.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -190,6 +190,10 @@ workflow:
 
   ai_collaboration_pattern:
     # How the human + AI typically work together on this project
+    design_system_workflow:
+      - "Fill INFORMATION.md + DESIGN.md (brand identity + visual tokens)"
+      - "Generate the color palette with the bundled generator: tools/brand-kit → `npm run gen -- --base \"oklch(L C H)\"` (do NOT hand-roll the OKLCH math)"
+      - "FINAL STEP: review in the brand-kit viewer — `tools/brand-kit` → `npm run dev` — and iterate before building product code"
     new_page_workflow:
       - "Add page entry to SPEC.md (sitemap + page block with sections)"
       - "Hand SPEC.md + DESIGN.md + INFORMATION.md to AI"

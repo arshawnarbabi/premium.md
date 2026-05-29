@@ -32,7 +32,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.4"
+template_version: "1.3.0"
 file_role: "spec"
 platform: "mobile"
 

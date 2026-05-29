@@ -1,0 +1,26 @@
+{
+  "name": "Northstar",
+  "tagline": "A premium product, by default.",
+  "description": "Northstar is a sample product used to demonstrate the brand kit viewer.",
+  "archetype": "Sage",
+  "toneDescriptors": [
+    "clear",
+    "calm",
+    "confident"
+  ],
+  "values": [
+    "Sample value one",
+    "Sample value two"
+  ],
+  "voice": "Clear, confident, and calm. Plain-spoken, never salesy.",
+  "voiceSamples": [
+    "Plain-spoken and direct.",
+    "Confident without being loud."
+  ],
+  "logos": {
+    "lockup": null,
+    "brandmark": null,
+    "darkVariant": null
+  },
+  "markColor": "#00150b"
+}
