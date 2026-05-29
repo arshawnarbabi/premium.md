@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.1.0"
+template_version: "1.2.1"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1219,11 +1219,101 @@ This is the **mobile sibling** of `DESIGN_TEMPLATE_WEB.md`. The two files share 
 
 **Platform philosophy:** mobile defaults to **platform-native conventions**. iOS UI follows Apple Human Interface Guidelines; Android UI follows Material 3. Brand differentiation lives in color, typography, illustration, motion personality, and microcopy — NOT in navigation patterns, sheet behaviors, gestures, or haptics.
 
-## Guided fill-in mode (v1.2+)
+## Guided fill-in mode (v1.2+) — deterministic intake protocol
 
-Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+> **AI behavior rule — read carefully.**
+> When the user asks ANY of the following (or close variations), STOP, do NOT summarize, do NOT give a status report, do NOT improvise your own question list. OUTPUT THE BLOCK BELOW VERBATIM with `?` markers left as-is for the user to fill:
+>
+> - *"help me populate this"* / *"help me fill this in"*
+> - *"what do you need to know?"* / *"what do I need to tell you?"*
+> - *"run the intake"* / *"give me the questions"*
+> - *"walk me through this"* / *"how do I fill this in?"*
+> - *"what's missing in this file?"* / *"what's left to fill in?"* / *"what else needs to be done?"*
+> - any close variation indicating the user wants to know what to populate
+>
+> If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `DESIGN_MOBILE.md` alone.
+>
+> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+>
+> **No brand context provided:** Still produce the intake exactly as below — leave `?` markers. The user will provide context in their reply.
 
-The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
+### OUTPUT THIS BLOCK VERBATIM when triggered (do not paraphrase, do not summarize, do not rewrite)
+
+```
+# Intake — DESIGN_MOBILE.md
+
+This is everything you need to decide to fully populate your mobile design system file (iOS + Android).
+
+Reply with answers to PART 1. For PART 2, either accept the defaults ("looks good, accept all") or list overrides. I'll fill the template as your answers come in and run final verification at the end.
+
+## PART 1 — Must Fill (no defaults possible)
+
+### Brand identity (Overview section)
+1. **Brand name**: ?
+2. **One-line product description**: ?
+3. **Primary audience persona** — name + one-sentence portrait: ?
+4. **Voice descriptor** (1-2 sentences on tone, energy, formality, what to avoid): ?
+
+### Platform scope
+5. **Target platform(s)**: iOS-only / Android-only / both — drives which sub-sections of mobile spec apply: ?
+
+### Color foundation
+6. **Brand primary color** — hex or OKLCH or descriptive ("warm forest green"). I'll convert to OKLCH and generate the 12-step palette (light + dark): ?
+7. **Brand neutral hue** (0-360, optional): ?
+
+### Typography
+8. **Display font family** for mobile (defaults: SF Pro on iOS / Roboto on Android / Inter cross-platform): ?
+9. **Body font family** (often same as display): ?
+10. **Mono font family** for code (defaults: SF Mono / Roboto Mono / JetBrains Mono; skip if no code surfaces): ?
+
+### Iconography
+11. **Icon strategy**: SF Symbols (iOS-strict) / Material Symbols (Android-strict) / Lucide / Phosphor / HugeIcons (premium tier — Pro license required for full library) / custom — pick per platform_adherence: ?
+
+### Imagery
+12. **Photography style descriptor** (e.g., "natural light, real people"): ?
+13. **Illustration style** preferences (vector / 3D / abstract / mixed / none): ?
+
+## PART 2 — Customizable Defaults (accept or override)
+
+All defaults are premium-grade. Skim and tell me which to change.
+
+### Profiles (preset bundles — each shifts multiple coordinated values)
+- **Radius profile:** default ← (sharp / default / soft / pill)
+- **Type scale ratio:** balanced (1.200) ← (compact / balanced / spacious / dramatic / editorial)
+- **Density:** comfortable ← (compact / comfortable / spacious)
+- **Motion personality:** default ← (subtle / default / expressive)
+- **Elevation depth:** default ← (flat / default / dimensional) — mobile maps `default` flatter than web
+- **Color saturation:** default ← (muted / default / vivid)
+- **Brand warmth:** neutral ← (cool / neutral / warm)
+- **Chart minimalism:** default ← (tufte / default / carbon)
+
+### Mobile-specific pick-one slots
+- **Mobile nav style:** tab-bar ← (tab-bar / navigation-bar / nav-rail / hybrid)
+- **Platform adherence:** cross-platform-hybrid ← (ios-strict / material-strict / cross-platform-hybrid)
+- **Haptic intensity:** default ← (subtle / default / expressive) — subtle recommended for meditation / wellness contexts
+- **Bottom sheet detents:** medium-large ← (medium-large / small-medium-large / custom)
+- **Icon fill style:** outline ← (outline / filled)
+- **Avatar shape:** circle ← (circle / squircle / rounded-square)
+
+### Color-mode + accessibility
+- **Primary mode:** light ← (light / dark / system)
+- **RTL support:** disabled ← (enabled / disabled)
+- **Capitalization style:** sentence case ← (sentence case / title case)
+
+## PART 3 — When you reply
+
+I'll:
+1. Apply your answers to DESIGN_MOBILE.md
+2. Generate the 12-step color palette via the OKLCH algorithm (DESIGN_TEMPLATE_WEB.md §Colors → Generating the scale references it), applying saturation and warmth profile multipliers
+3. Verify APCA contrast: step 11 vs step 2 ≥ Lc 60; step 12 vs step 2 ≥ Lc 90. Adjust L by 0.02 increments if it fails. Mobile body text floor is APCA Lc 75 due to outdoor readability
+4. Generate dark-mode counterpart with chroma reduced 20-40% and lightness compressed (NOT inversion)
+5. Set platform-appropriate icon family + nav style based on platform_adherence
+6. Map type roles to iOS Dynamic Type / Android Material 3 sp scale
+7. Run `grep -n "<[^>]*>" DESIGN_MOBILE.md` — zero matches confirms complete
+8. Offer next steps (populate companion INFORMATION.md / SPEC_MOBILE.md, generate iOS asset catalog colors, Material 3 ColorScheme, etc.)
+```
+
+The AI MUST produce this output in full (or, if filling a partially-populated DESIGN_MOBILE.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.
 
 ---
 

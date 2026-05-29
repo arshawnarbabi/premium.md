@@ -32,7 +32,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.0"
+template_version: "1.2.1"
 file_role: "spec"
 platform: "mobile"
 
@@ -775,11 +775,102 @@ a11y_notes:
 6. Verify with `grep -n "<[^>]*>" SPEC_MOBILE.md` — zero matches.
 7. Hand alongside `DESIGN_MOBILE.md` and `INFORMATION.md` to any AI tool building the app.
 
-## Guided fill-in mode (v1.2+)
+## Guided fill-in mode (v1.2+) — deterministic intake protocol
 
-Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+> **AI behavior rule — read carefully.**
+> When the user asks ANY of the following (or close variations), STOP, do NOT summarize, do NOT give a status report, do NOT improvise your own question list. OUTPUT THE BLOCK BELOW VERBATIM with `?` markers left as-is for the user to fill:
+>
+> - *"help me populate this"* / *"help me fill this in"*
+> - *"what do you need to know?"* / *"what do I need to tell you?"*
+> - *"run the intake"* / *"give me the questions"*
+> - *"walk me through this"* / *"how do I fill this in?"*
+> - *"what's missing in this file?"* / *"what's left to fill in?"* / *"what else needs to be done?"*
+> - any close variation indicating the user wants to know what to populate
+>
+> If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `SPEC_MOBILE.md` alone.
+>
+> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+>
+> **No brand context provided:** Still produce the intake exactly as below — leave `?` markers.
+>
+> **Special note for SPEC_MOBILE.md:** This file is the canonical source of every word that appears in the app. The intake covers structural decisions; the actual per-screen copy is gathered through a follow-up loop — too much content for a single intake form.
 
-The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
+### OUTPUT THIS BLOCK VERBATIM when triggered (do not paraphrase, do not summarize, do not rewrite)
+
+```
+# Intake — SPEC_MOBILE.md
+
+This is everything you need to decide to fully populate your app content + screen-flow spec.
+
+Reply with answers to PART 1. For PART 2, accept defaults or list overrides. After we lock the structure, I'll loop with you screen-by-screen to collect actual copy.
+
+## PART 1 — Must Fill (no defaults possible)
+
+### Brand essentials
+1. **Brand name**: ?
+2. **One-line product description**: ?
+3. **Primary audience persona name** (cross-references INFORMATION.md if present): ?
+
+### App map
+4. **Tab bar destinations** (3-5 top-level — e.g., home, search, library, profile): ?
+5. **Screen list organized by tab** (e.g., Home → feed + item_detail; Profile → profile + settings + billing): ?
+6. **Deep link URL conventions** — universal link domain + custom scheme: ?
+7. **Modal screens** (e.g., new_item, share_sheet): ?
+
+### Onboarding
+8. **Onboarding goal** (e.g., "user completes first meaningful action within 60 seconds"): ?
+9. **Onboarding step sequence** (welcome → permissions intro → profile setup → first action; or your own sequence): ?
+
+### Authentication
+10. **Sign-up methods** — social (Apple/Google/etc.) / magic link / email+password — which to support: ?
+11. **Sign-in copy** — headline + body for sign-in screen: ?
+12. **MFA?** (yes/no — if yes, 6-digit code with auto-advance and auto-submit): ?
+
+### Permissions (mobile-specific — pre-prompts are mandatory)
+13. **Permissions the app needs** — notifications / camera / photos / location / contacts / mic / Bluetooth. For each: explain why in user-friendly terms: ?
+
+### Push notifications
+14. **Push notification templates** — which types does the app send (welcome / mention / daily digest / reminder / re-engagement)? Title + body + actions for each: ?
+15. **Frequency rules** — max per day, quiet hours (default 22:00 – 08:00 user local): ?
+
+### Settings architecture
+16. **Settings sections** — Account / Notifications / Appearance / Privacy / Billing / Support / About / Danger zone — accept defaults or customize: ?
+
+### Voice + vocabulary
+17. **5-10 voice samples** — actual button labels / empty-state messages / error messages / onboarding sentences / push bodies. (Or "draft them" for AI to propose from INFORMATION.md voice for your approval): ?
+18. **Brand vocabulary preferences**: ?
+
+### App store metadata
+19. **iOS App Store**: name (max 30 chars), subtitle (max 30), promotional text (max 170), short description, long description, keywords (100 chars total), primary + secondary category, age rating: ?
+20. **Android Play Store**: name (max 50), short description (max 80), full description, category, content rating: ?
+
+### Analytics
+21. **Analytics provider**: PostHog / Mixpanel / Amplitude / Firebase / n/a: ?
+22. **Conversion funnels** to track — onboarding completion + user activation steps: ?
+23. **iOS App Tracking Transparency required?** (cross-app tracking → yes): ?
+
+## PART 2 — Customizable Defaults (accept or override)
+
+Most SPEC defaults flow from DESIGN_MOBILE.md (already token-referenced). The few SPEC-specific options:
+
+- **Toast position:** top-center ← (top-right / top-center / bottom-right / bottom-center) — mobile typically top-center
+- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
+- **Number abbreviation:** contextual ← (short / long / contextual)
+- **Onboarding pattern:** empty-state-driven ← (empty-state-driven / progressive / coach-marks / step-by-step-modal / milestone-checklist)
+- **Save model:** auto-save ← (auto-save / explicit-save)
+
+## PART 3 — When you reply (and what happens after)
+
+I'll:
+1. Apply your PART 1 + PART 2 answers to SPEC_MOBILE.md structurally
+2. If you said "draft them" for voice samples, draft 8-10 from INFORMATION.md (or your provided voice descriptor) and surface for approval BEFORE committing
+3. Generate permission pre-prompt copy from your product description (drafts only — surface for approval)
+4. Then loop with you **screen-by-screen** to collect actual copy (headline + body + CTAs + states for each screen). I'll go in priority order: onboarding → home → core feature screens → auth → settings → utility screens.
+5. Run `grep -n "<[^>]*>" SPEC_MOBILE.md` — zero matches confirms complete
+6. Offer next steps (generate iOS asset catalog entries, scaffold SwiftUI / Compose screen files matching the layout sections, etc.)
+```
+
+The AI MUST produce this output in full (or, if filling a partially-populated SPEC_MOBILE.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.
 
 ---
 

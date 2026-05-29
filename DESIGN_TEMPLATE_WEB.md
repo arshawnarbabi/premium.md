@@ -18,7 +18,7 @@
 #    must follow. The YAML frontmatter contains the values. Both are normative.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.1.0"
+template_version: "1.2.1"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1354,11 +1354,113 @@ This file is the **single source of truth** for the visual design system of any 
 
 The companion file `DESIGN_TEMPLATE_MOBILE.md` covers iOS + Android apps. Shared brand-identity values (color, typography, voice) should match identically between web and mobile instances.
 
-## Guided fill-in mode (v1.2+)
+## Guided fill-in mode (v1.2+) — deterministic intake protocol
 
-Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+> **AI behavior rule — read carefully.**
+> When the user asks ANY of the following (or close variations), STOP, do NOT summarize, do NOT give a status report, do NOT improvise your own question list. OUTPUT THE BLOCK BELOW VERBATIM with `?` markers left as-is for the user to fill:
+>
+> - *"help me populate this"* / *"help me fill this in"*
+> - *"what do you need to know?"* / *"what do I need to tell you?"*
+> - *"run the intake"* / *"give me the questions"* / *"what are the questions?"*
+> - *"walk me through this"* / *"how do I fill this in?"*
+> - *"what's missing in this file?"* / *"what's left to fill in?"* / *"what else needs to be done?"*
+> - any close variation indicating the user wants to know what to populate
+>
+> If `PROJECT.md` is present in the project, use its full Interactive Population Protocol instead (which orchestrates intake across all 6 templates). The block below is the single-template fallback scoped to `DESIGN.md` alone.
+>
+> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list the remaining unfilled items. Still produce the same structured format with header / PART 1 / PART 2 / PART 3, just with fewer questions.
+>
+> **No brand context provided:** Still produce the intake exactly as below — leave `?` markers. The user will provide context in their reply.
 
-The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
+### OUTPUT THIS BLOCK VERBATIM when triggered (do not paraphrase, do not summarize, do not rewrite)
+
+```
+# Intake — DESIGN.md (web)
+
+This is everything you need to decide to fully populate your web design system file.
+
+Reply with answers to PART 1. For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft"). I'll fill the template as your answers come in and run final verification at the end.
+
+## PART 1 — Must Fill (no defaults possible)
+
+### Brand identity (Overview section)
+1. **Brand name**: ?
+2. **One-line product description**: ?
+3. **Primary audience persona** — name + one-sentence portrait: ?
+4. **Voice descriptor** (1-2 sentences on tone, energy, formality, what to avoid): ?
+
+### Color foundation
+5. **Brand primary color** — hex or OKLCH or descriptive ("warm forest green"). I'll convert to OKLCH and generate the 12-step palette (light + dark): ?
+6. **Brand neutral hue** (0-360, optional; defaults auto-set by warmth profile): ?
+7. **Optional secondary brand color** (most projects skip this): ?
+
+### Typography
+8. **Display font family** (defaults: Geist Sans / Inter): ?
+9. **Body font family** (often same as display): ?
+10. **Mono font family** for code (defaults: Geist Mono / JetBrains Mono; skip if no code surfaces): ?
+
+### Iconography
+11. **Icon family**: Lucide (free default) / Phosphor / Heroicons / Tabler / HugeIcons (premium tier — Pro license required for full library) / custom: ?
+
+### Imagery
+12. **Photography style descriptor** (e.g., "natural light, real people, no stock-photo headsets"): ?
+
+## PART 2 — Customizable Defaults (accept or override)
+
+All defaults are premium-grade. Skim and tell me which to change.
+
+### Profiles (preset bundles — each shifts multiple coordinated values)
+- **Radius profile:** default ← (sharp / default / soft / pill) — controls all component corner rounding
+- **Type scale ratio:** balanced (1.200) ← (compact / balanced / spacious / dramatic / editorial) — multiplier between text sizes
+- **Density:** comfortable ← (compact / comfortable / spacious) — between-component spacing
+- **Motion personality:** default ← (subtle / default / expressive) — stagger and spring stiffness
+- **Elevation depth:** default ← (flat / default / dimensional) — separation strategy
+- **Color saturation:** default ← (muted / default / vivid) — chroma multiplier on palettes
+- **Brand warmth:** neutral ← (cool / neutral / warm) — neutral palette hue tint
+- **Section padding** (web only): default ← (compact / default / generous) — vertical padding between page sections
+- **Chart minimalism:** default ← (tufte / default / carbon) — chart axis/gridline visibility
+
+### Pick-one slots (web)
+- **Input style:** outlined ← (outlined / filled / underlined)
+- **Tabs style:** underline ← (underline / filled)
+- **Icon fill style:** outline ← (outline / filled)
+- **Avatar shape:** circle ← (circle / squircle / rounded-square)
+- **Modal backdrop:** blur ← (scrim / blur)
+- **Code block surface:** always-dark ← (match-page / always-dark)
+- **Onboarding pattern:** empty-state-driven ← (empty-state-driven / progressive / coach-marks / step-by-step-modal / milestone-checklist)
+- **Save model:** auto-save ← (auto-save / explicit-save)
+- **Settings IA:** sidebar ← (sidebar / tabs / single-page)
+- **Container width:** lg (1280 px) ← (md 1024 / lg 1280 / xl 1440)
+- **Heading weight:** 600 ← (600 / 700)
+- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
+- **Number abbreviation:** contextual ← (short / long / contextual)
+- **Product nav style:** sidebar ← (top-bar / sidebar / hybrid / none)
+- **Hero variant default:** split-asymmetric ← (centered / split-asymmetric / background-led)
+- **Toast position:** top-right ← (top-right / top-center / bottom-right / bottom-center)
+- **Footer style:** multi-column ← (multi-column / minimal)
+- **Command palette (⌘K):** enabled ← (enabled / disabled)
+- **RTL support:** disabled ← (enabled / disabled)
+- **Chart library:** recharts ← (recharts / visx / tremor / echarts / custom)
+- **Illustration style:** vector ← (vector / 3D / abstract / mixed / none)
+
+### Color-mode + accessibility
+- **Primary mode:** light ← (light / dark / system)
+- **Capitalization style:** sentence case ← (sentence case / title case)
+
+## PART 3 — When you reply
+
+I'll:
+1. Apply your answers to DESIGN.md
+2. Generate the 12-step color palette via the OKLCH algorithm in §Colors → Generating the scale, applying saturation chroma multiplier and warmth hue tint
+3. Verify APCA contrast: step 11 vs step 2 ≥ Lc 60; step 12 vs step 2 ≥ Lc 90. Adjust L by 0.02 increments if it fails
+4. Generate dark-mode counterpart with chroma reduced 20-40% and lightness compressed (NOT inversion)
+5. Derive shadow tint = neutral.12, surface roles, border roles
+6. Apply HTML mapping defaults appropriate to project type
+7. Run `grep -n "<[^>]*>" DESIGN.md` — zero matches confirms complete
+8. Offer next steps (populate companion INFORMATION.md / SPEC.md, generate Tailwind config from tokens)
+```
+
+The AI MUST produce this output in full (or, if filling a partially-populated DESIGN.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.
 
 ---
 

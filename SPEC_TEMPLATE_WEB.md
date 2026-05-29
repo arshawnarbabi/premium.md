@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.0"
+template_version: "1.2.1"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -871,11 +871,100 @@ a11y_notes:
 6. Verify with `grep -n "<[^>]*>" SPEC.md` — zero matches.
 7. Hand `SPEC.md` alongside `DESIGN.md` and `INFORMATION.md` to any AI tool building your site.
 
-## Guided fill-in mode (v1.2+)
+## Guided fill-in mode (v1.2+) — deterministic intake protocol
 
-Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+> **AI behavior rule — read carefully.**
+> When the user asks ANY of the following (or close variations), STOP, do NOT summarize, do NOT give a status report, do NOT improvise your own question list. OUTPUT THE BLOCK BELOW VERBATIM with `?` markers left as-is for the user to fill:
+>
+> - *"help me populate this"* / *"help me fill this in"*
+> - *"what do you need to know?"* / *"what do I need to tell you?"*
+> - *"run the intake"* / *"give me the questions"*
+> - *"walk me through this"* / *"how do I fill this in?"*
+> - *"what's missing in this file?"* / *"what's left to fill in?"* / *"what else needs to be done?"*
+> - any close variation indicating the user wants to know what to populate
+>
+> If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `SPEC.md` alone.
+>
+> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+>
+> **No brand context provided:** Still produce the intake exactly as below — leave `?` markers.
+>
+> **Special note for SPEC.md:** This file is the canonical source of every word that appears on the website. The intake covers structural decisions; the actual per-page copy is gathered through a follow-up loop after intake — too much content for a single form.
 
-The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
+### OUTPUT THIS BLOCK VERBATIM when triggered (do not paraphrase, do not summarize, do not rewrite)
+
+```
+# Intake — SPEC.md (web)
+
+This is everything you need to decide to fully populate your site content + layout spec.
+
+Reply with answers to PART 1. For PART 2, accept the defaults or list overrides. After we lock the structure, I'll loop with you page-by-page to collect the actual copy.
+
+## PART 1 — Must Fill (no defaults possible)
+
+### Brand essentials (for references throughout SPEC)
+1. **Brand name**: ?
+2. **One-line product description** (used as default OG description): ?
+3. **Primary audience persona name** (cross-references INFORMATION.md if present; otherwise just a name): ?
+
+### Sitemap
+4. **Pages list** — top-level pages reachable from URL or nav (e.g., home, pricing, about, blog, contact, plus any product/feature pages). Mark which appear in top nav and footer: ?
+5. **Authentication area?** (yes/no — if yes, add /login, /signup, /password/reset): ?
+6. **Blog?** (yes/no — if yes, add /blog index + /blog/[slug] dynamic): ?
+
+### Global elements
+7. **Top nav link labels** in order: ?
+8. **Primary CTA label + destination URL** (e.g., "Start free → /signup"): ?
+9. **Secondary CTA label + destination URL** (e.g., "Sign in → /login"): ?
+10. **Footer columns** — heading + 3-6 link labels per column (typical: Product / Company / Resources / Legal): ?
+
+### Voice + vocabulary (the "AI mimics these" inputs)
+11. **5-10 voice samples** — actual marketing headlines / button labels / error messages / long-form prose in the brand voice. (Or say "draft them from INFORMATION.md voice principles and archetype" if you'd rather I propose drafts for approval.): ?
+12. **Vocabulary preferences** — preferred terms (e.g., "members" not "users") + project-specific banned terms beyond DESIGN.md universal banned list: ?
+13. **Brand capitalization rules** (e.g., "GitHub not Github"; "API all caps"; "{brand} never abbreviated"): ?
+
+### Proof points
+14. **3-5 trust metrics** — real, verifiable numbers (e.g., "10,000+ teams", "$1.9T processed"). Or "none yet": ?
+15. **Notable customers / logos** (with permission): ?
+16. **Testimonial library** — approved customer quotes with attribution: ?
+
+### Forms
+17. **Forms on the site** — for each (contact, newsletter, sign-up, sign-in, password-reset, custom): fields + validation + success + error copy. (Defaults provided in template for common forms; tell me which to use as-is and which to customize): ?
+
+### Transactional emails (if applicable)
+18. **Email templates** to include — welcome / password-reset / email-verification / invoice-receipt / trial-ending / account-deleted. Mark which apply: ?
+19. **From-address** (default email) + **support email**: ?
+
+### Legal pages
+20. **Legal entity name** for copyright: ?
+21. **Jurisdiction-driven compliance** — GDPR (EU) / CCPA (California) / both / neither — drives cookie banner: ?
+
+### Analytics
+22. **Analytics provider**: PostHog / Plausible / Mixpanel / GA4 / n/a: ?
+23. **Conversion events to track** — primary funnel steps (e.g., homepage_viewed → signup_started → signup_completed → first_action): ?
+
+## PART 2 — Customizable Defaults (accept or override)
+
+Most SPEC defaults flow from DESIGN.md and INFORMATION.md (already token-referenced). The few SPEC-specific options:
+
+- **Hero variant default:** split-asymmetric ← (centered / split-asymmetric / background-led)
+- **Toast position:** top-right ← (top-right / top-center / bottom-right / bottom-center)
+- **Footer style:** multi-column ← (multi-column / minimal)
+- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
+- **Number abbreviation:** contextual ← (short / long / contextual)
+
+## PART 3 — When you reply (and what happens after)
+
+I'll:
+1. Apply your PART 1 + PART 2 answers to SPEC.md structurally
+2. If you said "draft them" for voice samples, draft 8-10 from INFORMATION.md (or your provided voice descriptor) and surface for approval BEFORE committing
+3. Fill default form / system message / email copy from the template's library
+4. Then loop with you **page-by-page** to collect the actual copy (hero headline + subhead + CTAs, narrative section content, bento cells, testimonials, etc.). I'll go in priority order: homepage → pricing → about → contact → blog → others.
+5. Run `grep -n "<[^>]*>" SPEC.md` — zero matches confirms complete
+6. Offer next steps (write the legal page outlines, generate Next.js page scaffolds matching the section sequence, etc.)
+```
+
+The AI MUST produce this output in full (or, if filling a partially-populated SPEC.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.
 
 ---
 

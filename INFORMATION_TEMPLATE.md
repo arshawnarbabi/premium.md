@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.1.0"
+template_version: "1.2.1"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -354,11 +354,120 @@ assets:
 4. Treat the **Audience** section as the most important. Premium products are built on deep audience understanding. Spend disproportionate time here.
 5. Hand `INFORMATION.md` alongside `DESIGN.md` and `SPEC.md` to any AI tool building your product.
 
-## Guided fill-in mode (v1.2+)
+## Guided fill-in mode (v1.2+) — deterministic intake protocol
 
-Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+> **AI behavior rule — read carefully.**
+> When the user asks ANY of the following (or close variations), STOP, do NOT summarize, do NOT give a status report, do NOT improvise your own question list. OUTPUT THE BLOCK BELOW VERBATIM with `?` markers left as-is for the user to fill:
+>
+> - *"help me populate this"* / *"help me fill this in"*
+> - *"what do you need to know?"* / *"what do I need to tell you?"*
+> - *"run the intake"* / *"give me the questions"*
+> - *"walk me through this"* / *"how do I fill this in?"*
+> - *"what's missing in this file?"* / *"what's left to fill in?"* / *"what else needs to be done?"*
+> - any close variation indicating the user wants to know what to populate
+>
+> If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `INFORMATION.md` alone.
+>
+> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+>
+> **No brand context provided:** Still produce the intake exactly as below — leave `?` markers. The user will provide context in their reply.
 
-The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
+### OUTPUT THIS BLOCK VERBATIM when triggered (do not paraphrase, do not summarize, do not rewrite)
+
+```
+# Intake — INFORMATION.md
+
+This is everything you need to decide to fully populate your brand / business / audience context file.
+
+Reply with answers numbered, freeform, or both — I'll figure it out. Say "skip [section]" for anything that doesn't apply. I'll fill the template as your answers come in and run final verification at the end.
+
+## PART 1 — Must Fill (no defaults possible)
+
+### Project basics
+1. **Brand name** + legal entity name (if different): ?
+2. **Tagline** (5-9 word memorable line): ?
+3. **One-line description** (what it is, what it does): ?
+4. **Elevator pitch** (2-3 sentences — problem + solution + who it's for): ?
+5. **Mission** (the why — what change you're creating): ?
+6. **Vision** (long-term north star): ?
+7. **Stage** (idea / pre-launch / beta / launched / scaling / mature): ?
+8. **Founded** date (YYYY-MM) + HQ location (or "remote-first"): ?
+
+### People
+9. **Founders** — for each: full name, role, 1-2 sentence bio, LinkedIn + Twitter: ?
+10. **Team members** (optional — name, role, 1-2 sentence bio): ?
+11. **Advisors** (optional — name + focus area): ?
+
+### Audience (the most important section)
+12. **Primary persona** — name + one-line portrait + demographics + psychographics + jobs-to-be-done + pains + current alternatives + triggers + success definition + where they hang out + voice they respond to: ?
+13. **Secondary personas** (optional, 1-2): ?
+14. **Anti-personas** — at least one: who this is explicitly NOT for + why not: ?
+
+### Market
+15. **Industry + segment**: ?
+16. **Direct + indirect + adjacent competitors** (with URLs + how you differ): ?
+17. **Positioning statement** (For [audience] who [pain], [product] is the [category] that [unique benefit] unlike [alternatives] because [reason]): ?
+18. **Differentiation axis** (speed / depth / price / UX / philosophy / etc.): ?
+
+### Business model
+19. **Type** (SaaS / marketplace / freemium / etc.): ?
+20. **Pricing tiers** (name, price, target, key features for each): ?
+21. **Revenue streams** + **key metrics tracked**: ?
+
+### Brand
+22. **Values** (3-5 max): ?
+23. **Brand archetype** (Sage / Hero / Creator / Caregiver / Innocent / Explorer / Rebel / Magician / Ruler / Lover / Jester / Everyman): ?
+24. **Tone descriptors** (3-5 adjectives) + formality + energy + serious-to-playful axis (0-10): ?
+25. **Voice principles** — concrete example sentences for active voice, conciseness, humanity, specificity: ?
+26. **Vocabulary** — preferred terms + project-specific banned terms beyond DESIGN.md universal list: ?
+27. **Brand story** (origin, why now, why us): ?
+
+### Product
+28. **Core capabilities** (3-7 things the product does): ?
+29. **Current features** (everything shipping today): ?
+30. **Roadmap** (next 3 months + 12 months): ?
+31. **Non-features** — at least 2 things you explicitly will NOT build: ?
+
+### Operations
+32. **Domain(s)** — primary, docs, blog, status: ?
+33. **Hosting** (web framework + db + storage): ?
+34. **Email infrastructure** (transactional + marketing): ?
+35. **Support channel** + response SLA: ?
+36. **Integrations** with other services: ?
+
+### Legal
+37. **Entity type + jurisdiction**: ?
+38. **Privacy + terms + cookie policy URLs** (or "TBD"): ?
+39. **Compliance requirements** (GDPR / CCPA / HIPAA / SOC2 / none): ?
+
+### Social presence
+40. **Handles + URLs** for Twitter, LinkedIn, Instagram, YouTube, GitHub, Product Hunt: ?
+41. **Posting norms** (frequency + voice match): ?
+
+### SEO defaults
+42. **Default page title pattern** (e.g., "{page} — {brand}"): ?
+43. **Default meta description** (150-160 chars): ?
+44. **Default OG image path** (1200×630): ?
+45. **Canonical domain + sitemap URL**: ?
+
+### External resources + brand assets
+46. **Resource URLs** (Figma / Notion / Drive / Slack / Linear / staging / analytics / monitoring): ?
+47. **Logo + favicon + social-share image paths**: ?
+
+## PART 2 — Customizable Defaults
+INFORMATION.md has no defaults to customize — every slot is project-specific. Skip directly to answers.
+
+## PART 3 — When you reply
+
+I'll:
+1. Apply your answers to INFORMATION.md
+2. If you said "draft them" for voice principles, draft 4 example sentences from your archetype + tone descriptors and surface for approval
+3. Run grep verification: `grep -n "<[^>]*>" INFORMATION.md` — zero matches confirms complete
+4. Surface any remaining `<TBD>` placeholders for follow-up
+5. Offer next steps (populate companion DESIGN.md / SPEC.md, generate sitemap from product description, etc.)
+```
+
+The AI MUST produce this output in full (or, if filling a partially-populated INFORMATION.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.
 
 ---
 

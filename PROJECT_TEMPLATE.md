@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.1.0"
+template_version: "1.2.1"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -268,9 +268,24 @@ When working on this project, an AI agent **must** follow these rules:
 
 ## When to use this protocol
 
-When the user lands in a new project that uses these templates and asks the AI to help them populate things, the AI must produce a **deterministic, structured intake form** rather than improvising a question list. Same shape every time. Comprehensive. No missed slots. Clearly separating must-fill items from customizable defaults.
-
-This applies whether the user wants to populate one template (DESIGN.md alone) or the full system (all 6 templates). The protocol auto-scopes to whichever templates are present.
+> **AI behavior rule — read carefully.**
+> When the user asks ANY trigger phrase (listed below), STOP, do NOT summarize what's in the templates, do NOT give a status report listing what's missing, do NOT improvise your own question list. Produce the structured intake form EXACTLY as specified in the "Output format" section. Same shape every time. No paraphrasing. No restructuring.
+>
+> **Partial-fill state:** If the user has already filled some `<slot>` values across the templates, read the files first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items. Still produce the same PART 1 / PART 2 / PART 3 structure.
+>
+> **No brand context provided:** Still produce the intake. Leave `?` markers as-is. The user will provide context in their reply.
+>
+> **Scope:** if the user mentions a specific template ("DESIGN.md") or platform ("mobile"), scope to that. Otherwise scope to all templates with `source_files.*.exists: true`.
+>
+> **Anti-patterns — DO NOT produce any of these instead of the intake form, even if the user's phrasing sounds like a status query:**
+> - ❌ A narrative "TIER 1 / TIER 2 / TIER 3" or "CRITICAL / IMPORTANT / NICE-TO-HAVE" prioritization
+> - ❌ Time estimates ("4-6 hours", "this week / next week / week 3-4")
+> - ❌ Project-management roadmaps ("First, fill X. Then, lock Y. After launch, do Z.")
+> - ❌ Bulleted summaries of what each template contains
+> - ❌ "Quick wins" lists or "minimum viable" subsets
+> - ❌ Closing with "What should we tackle first?" instead of "When you reply, I'll..."
+>
+> Status-sounding triggers ("what else needs to be done?", "what's missing?", "what's left?") are intake triggers, not project-management questions. The deterministic intake form IS the answer — list the remaining `?` markers as PART 1 questions, list applicable defaults as PART 2, list the fill workflow as PART 3.
 
 ## Trigger phrases
 
@@ -283,7 +298,8 @@ The AI invokes this protocol when the user says any of (case-insensitive, paraph
 - "Run the intake" / "Start the intake" / "Begin the intake"
 - "Give me the questions" / "What are the questions?"
 - "How do I fill this in?"
-- Any close variation indicating the user wants guided fill-in mode
+- "What's missing in this file?" / "What's missing here?" / "What's left?" / "What else needs to be done?"
+- Any close variation indicating the user wants to know what to populate
 
 When ambiguous (e.g., user says "what does this template do?"), the AI explains and offers: *"Want me to walk you through filling it in? Say 'run the intake' and I'll give you the structured question list."*
 
