@@ -17,13 +17,11 @@ The system is built from roughly 4,000 lines of cross-referenced research on wha
 | **`SPEC_TEMPLATE_WEB.md`** | Site map + per-page content/layout/copy + forms + notifications + transactional emails + SEO + legal + analytics. | ~950 |
 | **`SPEC_TEMPLATE_MOBILE.md`** | App map + per-screen content/copy/states + onboarding + auth + permissions + push notifications + app store metadata + settings. | ~860 |
 
-Plus three informational reference files:
+Plus one informational reference file:
 
 | File | Purpose |
 | --- | --- |
-| `research.md` | The brand-agnostic premium-standard research (23 sections, ~4,000 lines) — the explanatory backing for everything in the templates |
-| `project-templates-plan.md` | How the project templates were structured |
-| `plan.md` + `template-plan.md` | Original research plan + design-template plan |
+| `research.md` | The brand-agnostic premium-standard research (23 sections, ~4,000 lines) — the explanatory backing for everything in the templates. The DESIGN templates cite specific sections of this file. |
 
 ---
 
