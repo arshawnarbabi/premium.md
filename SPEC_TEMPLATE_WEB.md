@@ -969,4 +969,4 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Source
 
-Part of the `premium-website-templates` family. Companion files: `PROJECT.md` (orchestration), `DESIGN.md` (visual system), `INFORMATION.md` (brand / business context).
+Part of the `premium-product-templates` family. Companion files: `PROJECT.md` (orchestration), `DESIGN.md` (visual system), `INFORMATION.md` (brand / business context).

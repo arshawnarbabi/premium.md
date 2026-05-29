@@ -1,4 +1,4 @@
-# premium-website-templates
+# premium-product-templates
 
 > A six-file template system that turns any AI agent into a reliable premium-grade product builder.
 
@@ -83,10 +83,10 @@ Each template is operational, not aspirational. Specifically:
 
 ```bash
 # 1. Get the templates
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/PROJECT_TEMPLATE.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/INFORMATION_TEMPLATE.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/DESIGN_TEMPLATE_WEB.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-website-templates/main/SPEC_TEMPLATE_WEB.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/PROJECT_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/INFORMATION_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/DESIGN_TEMPLATE_WEB.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/SPEC_TEMPLATE_WEB.md
 
 # 2. Rename to project files
 mv PROJECT_TEMPLATE.md PROJECT.md
