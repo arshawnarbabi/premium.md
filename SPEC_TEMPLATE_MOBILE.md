@@ -1,20 +1,38 @@
 ---
 # ─────────────────────────────────────────────────────────────
-# SPEC_TEMPLATE_MOBILE.md — App map + screen content/copy/states
-# Version: 1.0.0
+# SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
+# Version: 1.1.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
+# WHAT THIS FILE IS:
+# This file is the CANONICAL SOURCE OF EVERY WORD that appears in the app.
+# Every screen, every button label, every empty-state title, every error
+# message, every onboarding sentence, every permission pre-prompt, every
+# push notification body, every settings label, every app store description —
+# all the final copy lives here. Not summaries. Not "TBD." The literal text
+# that will display in the app.
+#
+# The <slot> placeholders inside `content:` blocks include guidance about
+# what kind of copy to write. REPLACE each one with the actual final
+# sentence. The guidance describes the slot; the value you put there IS
+# the copy.
+#
 # HOW TO USE:
 # 1. Copy this file to your project as `SPEC_MOBILE.md`.
-# 2. Fill every `<slot>`. Greppable: `grep -n "<[^>]*>" SPEC_MOBILE.md`.
-# 3. The `screens.*` map is where most work happens. Duplicate the screen
-#    template for every screen in the app.
-# 4. Reference DESIGN_MOBILE.md vocabulary for layout sections and components.
-# 5. Reference INFORMATION.md for brand voice, audience, business context.
+# 2. Update `app_map` to match every screen in your app.
+# 3. For each screen, duplicate the screen template under `screens.*` and
+#    fill EVERY content + states slot with the actual final copy.
+# 4. Fill the `auth`, `onboarding`, `permissions`, `push_notifications`,
+#    `settings`, `app_store` blocks with the actual final copy.
+# 5. Verify with `grep -n "<[^>]*>" SPEC_MOBILE.md` — zero matches means complete.
+# 6. Reference DESIGN_MOBILE.md vocabulary for layout sections and components.
+# 7. Reference INFORMATION.md for brand voice and audience.
+# 8. Hand SPEC_MOBILE.md alongside DESIGN_MOBILE.md and INFORMATION.md to
+#    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.0.0"
+template_version: "1.1.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -428,9 +446,18 @@ settings:
         - { type: "action-destructive", label: "<Delete account>", action: "delete_account_with_typed_confirmation" }
 
 # ═══════════════════════════════════════════════════════════════
-# SCREENS — content + states per screen
+# SCREENS — every screen's exact copy, layout, and all 4 states
 # ═══════════════════════════════════════════════════════════════
-# Repeat the screen template for every screen in `app_map.screens`.
+# This is where the entire app's screen-level text lives. For each screen in
+# `app_map.screens`, duplicate the screen template below and fill EVERY
+# content + state slot with the final, brand-voice copy. The AI consuming
+# this file renders copy exactly as written — no paraphrasing, no summarizing.
+#
+# Every screen declares all four state variants (loaded / loading / empty /
+# error). Each state needs its real microcopy filled in.
+#
+# Guidance inside slots describes what KIND of copy to write. Replace it
+# with the actual final sentence the user will read on the screen.
 
 screens:
 
@@ -754,7 +781,7 @@ a11y_notes:
 
 When generating any screen, copy, or interaction from this document, an AI agent **must** follow these rules:
 
-1. **`SPEC_MOBILE.md` is canonical for screen content + microcopy.** Layouts declared here override DESIGN_MOBILE.md's defaults.
+1. **`SPEC_MOBILE.md` is canonical for screen content, layout, AND every word of copy.** Every screen's layout and every word that appears in the app lives here. Layouts declared here override DESIGN_MOBILE.md's defaults. **Copy declared here is the final text that ships** — never paraphrase, summarize, rewrite, or "improve" it. Render it exactly as written, character-for-character. If a content slot still contains placeholder guidance (e.g., `"<≤44 chars, brand voice>"`), surface the gap to the human — don't invent the copy yourself.
 2. **Reference DESIGN_MOBILE.md vocabulary** for component names, state styles, and platform conventions.
 3. **Reference INFORMATION.md for brand voice and audience.** Anchor all new copy to voice principles + primary persona.
 4. **Mimic voice_samples for any generated copy.** Don't average toward generic app copy.

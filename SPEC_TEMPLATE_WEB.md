@@ -1,21 +1,36 @@
 ---
 # ─────────────────────────────────────────────────────────────
-# SPEC_TEMPLATE_WEB.md — Site map + content/layout/copy for a web project
-# Version: 1.0.0
+# SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
+# Version: 1.1.0
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
+# WHAT THIS FILE IS:
+# This file is the CANONICAL SOURCE OF EVERY WORD that appears on the website.
+# Every page, every section, every headline, every body paragraph, every button
+# label, every form placeholder, every email subject, every error message —
+# all the final copy lives here. Not summaries of copy. Not descriptions of
+# what copy should say. The literal text that will display on the rendered site.
+#
+# The <slot> placeholders inside `content:` blocks include guidance about what
+# to write (e.g., "<≤44 chars, brand voice, one sharp value claim>"). REPLACE
+# each one with the actual final sentence. The guidance describes the slot;
+# the value you put there IS the copy.
+#
 # HOW TO USE:
 # 1. Copy this file to your project as `SPEC.md`.
-# 2. Fill every `<slot>` value. Greppable: `grep -n "<[^>]*>" SPEC.md`
-#    should return zero results once instantiation is complete.
-# 3. The `pages.*` map is where most work happens. Duplicate the page template
-#    for every page on your site.
-# 4. Reference DESIGN.md vocabulary for section types and component names.
-# 5. Reference INFORMATION.md for brand voice, audience, defaults.
+# 2. Update `sitemap` to list every page on your site.
+# 3. For each page, duplicate the page template under `pages.*` and fill
+#    EVERY content slot with the actual final copy. No "to be written later"
+#    placeholders should remain.
+# 4. Verify with `grep -n "<[^>]*>" SPEC.md` — zero matches means complete.
+# 5. Reference DESIGN.md vocabulary for section types and component names.
+# 6. Reference INFORMATION.md for brand voice, audience, defaults.
+# 7. Hand SPEC.md alongside DESIGN.md and INFORMATION.md to any AI tool
+#    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.0.0"
+template_version: "1.1.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -123,11 +138,20 @@ global:
     actions: ["Accept all", "Reject non-essential", "Manage preferences"]
 
 # ═══════════════════════════════════════════════════════════════
-# PAGES — content + layout per page
+# PAGES — every page's exact copy, layout, and section sequence
 # ═══════════════════════════════════════════════════════════════
-# Repeat the `page` template (below) for every page in `sitemap`.
+# This is where the entire website's text lives. For each page in `sitemap`,
+# duplicate the page template below and fill EVERY content slot with the
+# final, brand-voice copy. The AI consuming this file renders the copy
+# exactly as written — no paraphrasing, no summarizing, no "improving."
+#
+# Guidance inside slots (e.g., "≤44 chars, one sharp value claim") describes
+# what KIND of copy to write. Replace it with the actual sentence the user
+# will read on the page.
+#
 # Use DESIGN.md vocabulary for section types and component names.
-# Use INFORMATION.md audience to write copy that resonates with the primary persona.
+# Use INFORMATION.md audience to write copy that resonates with the primary
+# persona, and INFORMATION.md voice principles to maintain consistency.
 
 pages:
 
@@ -853,7 +877,7 @@ a11y_notes:
 
 When generating any page, copy, form, email, or content from this document, an AI agent **must** follow these rules:
 
-1. **`SPEC.md` is canonical for page content and layout.** Section sequences declared here override DESIGN.md's canonical defaults. Copy declared here is final — don't paraphrase it without explicit instruction.
+1. **`SPEC.md` is canonical for page content, layout, AND every word of copy.** Every page's section sequence and every word that appears on the website lives here. Section sequences declared here override DESIGN.md's canonical defaults. **Copy declared here is the final text that ships** — never paraphrase, summarize, rewrite, or "improve" declared copy. Render it exactly as written, character-for-character. If a content slot still contains placeholder guidance (e.g., `"<≤44 chars, one sharp value claim>"`), surface the gap to the human — don't invent the copy yourself.
 2. **Reference DESIGN.md vocabulary for visual choices.** When a section type is named (`hero`, `bento-grid`, `narrative-pair`), look up its spec in DESIGN.md. Don't invent new section types.
 3. **Reference INFORMATION.md for brand voice and audience.** When generating new copy that isn't pre-written here, anchor to the brand voice principles and primary persona declared there.
 4. **Mimic voice_samples.** When generating new copy, the cadence, vocabulary, and tone must match the `voice_samples`. Don't invent a different voice.
