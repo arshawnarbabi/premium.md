@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.0.0"
+template_version: "1.1.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -260,6 +260,349 @@ When working on this project, an AI agent **must** follow these rules:
 6. **Respect `agent_constraints.must_not`.** These are project-level red lines.
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
+9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → DESIGN web/mobile → SPEC web/mobile), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all three final verification checks (slot fill, cross-template consistency, YAML validity). The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
+
+---
+
+# Interactive Population Protocol
+
+## When to use this protocol
+
+When the user lands in a new project that uses these templates and asks the AI to help them populate things, the AI must produce a **deterministic, structured intake form** rather than improvising a question list. Same shape every time. Comprehensive. No missed slots. Clearly separating must-fill items from customizable defaults.
+
+This applies whether the user wants to populate one template (DESIGN.md alone) or the full system (all 6 templates). The protocol auto-scopes to whichever templates are present.
+
+## Trigger phrases
+
+The AI invokes this protocol when the user says any of (case-insensitive, paraphrases accepted):
+
+- "Help me populate this" / "Help me fill this in" / "Help me complete this"
+- "What do I need to tell you (to populate this / to fill this in / for X)?"
+- "What do you need to know (to populate this / to fill this in / for X)?"
+- "Walk me through this" / "Walk me through filling this in"
+- "Run the intake" / "Start the intake" / "Begin the intake"
+- "Give me the questions" / "What are the questions?"
+- "How do I fill this in?"
+- Any close variation indicating the user wants guided fill-in mode
+
+When ambiguous (e.g., user says "what does this template do?"), the AI explains and offers: *"Want me to walk you through filling it in? Say 'run the intake' and I'll give you the structured question list."*
+
+The AI does NOT silently railroad into intake mode — it either gets an explicit trigger phrase, or it asks before starting.
+
+## Output format
+
+When triggered, the AI produces a **single response** containing exactly this structure (same shape every time, scoped to whichever templates the project uses):
+
+### Header
+
+```
+# Intake — <Project Name or "Premium Product Templates">
+
+This is everything you need to decide to fully populate <scope: e.g., "your design template" / "your full project (PROJECT + INFORMATION + DESIGN + SPEC)">.
+
+Reply with answers to PART 1 (numbered, freeform, or both — I'll figure it out). For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft"). Say "skip [section]" for anything that doesn't apply.
+
+I'll fill the templates as your answers come in and surface gaps at the end.
+```
+
+### PART 1 — Must Fill (no defaults possible)
+
+Numbered list, grouped by source template. Each question is one line, clear, concrete:
+
+```
+## PART 1 — Must Fill (no defaults possible)
+
+### Scope (PROJECT.md) — answer this first, it determines which other questions apply
+0. **Project type:** marketing-site / product-saas / mobile-app / hybrid-web-plus-mobile — ?
+
+### Brand identity (INFORMATION.md)
+1. **Brand name:** ?
+2. **One-line product description** (what it is, what it does): ?
+3. **Primary audience persona** — name + one-sentence portrait: ?
+4. **Secondary personas** — optional, 1-2: name + one-line portrait each (or "none"): ?
+5. **At least one anti-persona** — who this is explicitly NOT for: ?
+6. **Voice descriptor** (1-2 sentences on tone, energy, formality, what to avoid): ?
+7. **Mission** (why this exists, the change in the world): ?
+8. **Brand story** — origin in 2-3 sentences: ?
+9. **Brand archetype** (Sage / Hero / Creator / Caregiver / Innocent / Explorer / Rebel / Magician / Ruler / Lover / Jester / Everyman): ?
+10. **Stage** (idea / pre-launch / beta / launched / scaling / mature): ?
+11. **Founder(s)** — for each: full name, role, 1-2 sentence bio: ?
+12. **At least 2 non-features** — things you explicitly will NOT build: ?
+13. **Business model type** (freemium / subscription / one-time / usage-based / marketplace / not-yet-decided) — tier details can come later: ?
+14. **Target geography** (US-only / EU-only / global / specific list) — drives compliance + locale defaults: ?
+
+### Visual foundation (DESIGN.md / DESIGN_MOBILE.md — only if project type includes web or mobile)
+15. **Brand primary color** — hex or OKLCH or descriptive ("warm forest green") — I'll convert and generate the 12-step palette + dark mode counterpart: ?
+16. **Display font family** (or accept default "Geist Sans" or "Inter"): ?
+17. **Body font family** (often same as display; accept default): ?
+18. **Mono font family** for code surfaces (accept default "Geist Mono" / "JetBrains Mono", or skip if no code surfaces): ?
+19. **Icon family** (Lucide free default / Phosphor free / HugeIcons — Pro license required for full library / custom): ?
+
+### Site structure (SPEC.md — only if project type is web or hybrid)
+20. **Sitemap** — list of pages (e.g., home, pricing, about, blog, contact, plus any product pages); mark which appear in top nav: ?
+
+### App structure (SPEC_MOBILE.md — only if project type is mobile or hybrid)
+21. **Tab bar destinations** (3-5 top-level) + **screen list organized by tab**: ?
+
+### Tech stack confirmation (PROJECT.md) — defaults shown; override only if different
+22. **Web framework**: Next.js (App Router) ← override or accept
+23. **Mobile approach**: SwiftUI / Jetpack Compose / React Native (Expo) ← pick one or "n/a"
+24. **Deployment**: Vercel ← override or accept
+25. **Primary domain URL** (e.g., example.com): ?
+
+### Operations + Legal (INFORMATION.md)
+26. **Support channel** (email address / Intercom / community Discord / etc.): ?
+27. **Legal entity type + jurisdiction** (e.g., "LLC, Delaware") — or "not-yet-incorporated": ?
+28. **Compliance requirements** — auto-derived from target geography above; confirm: ?
+
+### Content fundamentals (SPEC.md / SPEC_MOBILE.md)
+29. **5-10 voice samples** — actual sentences in the brand voice. (I can also DRAFT these from your voice descriptor + archetype and you can edit — say "draft them" if you prefer.): ?
+30. **3-5 proof points** — concrete metrics, customer logos, or quotes (real, not invented; or "none yet"): ?
+```
+
+### PART 2 — Customizable Defaults (accept or override)
+
+Each as `label: default ← (full options list) — brief explanation`:
+
+```
+## PART 2 — Customizable Defaults (accept or override)
+
+All defaults are premium-grade and I'll apply them unless you override. Skim and tell me which (if any) to change.
+
+### Profiles (preset bundles — each shifts multiple coordinated values)
+- **Radius profile:** default ← (sharp / default / soft / pill) — controls all component corner rounding
+- **Type scale ratio:** balanced (1.200) ← (compact / balanced / spacious / dramatic / editorial) — controls multiplier between text sizes
+- **Density:** comfortable ← (compact / comfortable / spacious) — controls between-component spacing
+- **Motion personality:** default ← (subtle / default / expressive) — controls animation stagger and spring stiffness
+- **Elevation depth:** default ← (flat / default / dimensional) — controls separation strategy
+- **Color saturation:** default ← (muted / default / vivid) — controls chroma multiplier on palettes
+- **Brand warmth:** neutral ← (cool / neutral / warm) — controls neutral palette hue tint
+- **Section padding** (web only): default ← (compact / default / generous) — controls vertical padding between page sections
+- **Chart minimalism:** default ← (tufte / default / carbon) — controls chart axis and gridline visibility
+
+### Pick-one slots — Web (DESIGN.md + SPEC.md)
+- **Input style:** outlined ← (outlined / filled / underlined)
+- **Tabs style:** underline ← (underline / filled)
+- **Icon fill style:** outline ← (outline / filled)
+- **Avatar shape:** circle ← (circle / squircle / rounded-square)
+- **Modal backdrop:** blur ← (scrim / blur)
+- **Code block surface:** always-dark ← (match-page / always-dark)
+- **Onboarding pattern:** empty-state-driven ← (empty-state-driven / progressive / coach-marks / step-by-step-modal / milestone-checklist)
+- **Save model:** auto-save ← (auto-save / explicit-save)
+- **Settings IA:** sidebar ← (sidebar / tabs / single-page)
+- **Container width:** lg (1280 px) ← (md 1024 / lg 1280 / xl 1440)
+- **Heading weight:** 600 ← (600 / 700)
+- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
+- **Number abbreviation:** contextual ← (short / long / contextual)
+- **Product nav style:** sidebar ← (top-bar / sidebar / hybrid / none)
+- **Hero variant default:** split-asymmetric ← (centered / split-asymmetric / background-led)
+- **Toast position:** top-right ← (top-right / top-center / bottom-right / bottom-center)
+- **Footer style:** multi-column ← (multi-column / minimal)
+- **Command palette (⌘K):** enabled ← (enabled / disabled)
+- **RTL support:** disabled ← (enabled / disabled)
+- **Chart library:** recharts ← (recharts / visx / tremor / echarts / custom)
+- **Illustration style:** vector ← (vector / 3D / abstract / mixed / none)
+
+### Pick-one slots — Mobile (DESIGN_MOBILE.md + SPEC_MOBILE.md)
+- **Mobile nav style:** tab-bar ← (tab-bar / navigation-bar / nav-rail / hybrid)
+- **Platform adherence:** cross-platform-hybrid ← (ios-strict / material-strict / cross-platform-hybrid)
+- **Haptic intensity:** default ← (subtle / default / expressive)
+- **Bottom sheet detents:** medium-large ← (medium-large / small-medium-large / custom)
+
+### Color-mode + accessibility (DESIGN.md)
+- **Primary mode:** light ← (light / dark / system)
+- **Capitalization style:** sentence case ← (sentence case / title case)
+```
+
+### PART 3 — What happens next
+
+```
+## PART 3 — When you reply
+
+I'll:
+1. Apply your answers to the relevant templates (in order: PROJECT → INFORMATION → DESIGN → SPEC)
+2. Generate derived values (12-step color palette from your primary color with APCA verification, dark-mode counterpart, semantic palette dark variants, shadow tint)
+3. Propagate shared values across templates (voice descriptor → DESIGN voice slot + SPEC voice samples; brand color → DESIGN palettes + DESIGN_MOBILE; primary persona name → SPEC page references)
+4. If you asked me to draft voice samples, I'll show you 8-10 drafted from your voice descriptor + archetype for your approval BEFORE committing to SPEC.md (voice mimicry is high-stakes)
+5. Run final verification: slot fill check (`grep -n "<[^>]*>" *.md`), cross-template consistency check, and YAML validity
+6. Report what was filled, what's still open, and what's marked `<TBD>` for your follow-up
+7. Offer next steps (draft page copy, scaffold code, etc.) — your choice
+```
+
+## Behavioral protocol — the 11 steps the AI follows
+
+### Step 1: Verify template files present
+Before producing intake, read PROJECT.md (if present) to learn which sibling files exist via `source_files.*.exists`. If PROJECT.md isn't present, scan the directory for the recognized template filenames (`DESIGN.md`, `DESIGN_MOBILE.md`, `SPEC.md`, `SPEC_MOBILE.md`, `INFORMATION.md`).
+
+### Step 2: Determine scope
+If the user's trigger was about a specific template ("what do you need for DESIGN.md?"), scope to that template only. If general ("what do you need?"), scope to all present templates.
+
+### Step 3: Produce intake — deterministic format
+Output follows the structure in the "Output format" section above. Same headers, same ordering, same labels every time. Skip sections that don't apply to the scoped templates.
+
+### Step 4: Wait for user response
+Don't proceed until the user replies. If they go silent, don't fabricate answers.
+
+### Step 5: Parse user response flexibly
+Users will answer in many shapes:
+- Numbered ("1. Acme. 2. We're a billing platform. ...")
+- Free-form prose ("So Acme is a billing platform for ...")
+- Markdown / bulleted lists
+- "Skip 3 and 7"
+- "Accept all defaults"
+- "Override radius to soft, saturation to vivid, everything else default"
+
+Parse all of these and map to the right slots. If a response is ambiguous, ask one targeted follow-up — don't guess.
+
+**Natural-language overrides** — map fuzzy user preferences to the right enum value:
+- "softer corners" / "rounder" / "warmer feel" → radius profile `soft`
+- "sharper" / "more engineered" / "Stripe-like" → radius profile `sharp`
+- "more space" / "more breathing room" / "spacious" → density `spacious` or section_padding `generous`
+- "tighter" / "denser" / "compact" → density `compact`
+- "more saturated" / "punchier color" / "vivid" → saturation `vivid`
+- "muted" / "subtler" / "institutional" → saturation `muted`
+- "more polished motion" / "expressive" → motion `expressive`
+- "calmer" / "less animation" → motion `subtle`
+- "flatter" / "minimal depth" → elevation `flat`
+- "more dimensional" / "richer shadows" → elevation `dimensional`
+
+When in doubt, confirm before applying: "I'm reading 'softer corners' as radius profile `soft` — confirm or correct?"
+
+**Partial answers + deferral:**
+If the user gives partial answers and says "let me come back later" / "I'll do the rest tomorrow":
+1. Apply what was given
+2. Summarize remaining open items (with their PART 1 / PART 2 numbers)
+3. Confirm they can resume by saying "continue the intake" or "resume the intake"
+4. Don't pressure them to finish
+
+**Intake mode persists across ad-hoc questions:**
+If during intake the user asks a side question ("wait, what does 'profile' mean again?"), answer it briefly and then return to intake — don't drop the form. Re-show the remaining open items if it's been a while since the form was displayed.
+
+### Step 6: Fill templates progressively, in the right order
+As you parse answers, edit the relevant template files directly. **Fill order matters** because later files reference earlier ones:
+
+1. **PROJECT.md** first (project type + tech stack + file existence flags — sets scope for everything else)
+2. **INFORMATION.md** next (brand identity is foundational; DESIGN voice slot, SPEC voice samples, SPEC primary_persona all reference INFORMATION values)
+3. **DESIGN.md** + **DESIGN_MOBILE.md** in parallel (visual decisions; share brand identity values from INFORMATION)
+4. **SPEC.md** + **SPEC_MOBILE.md** last (content + layout; reference DESIGN vocabulary and INFORMATION audience)
+
+Show the user a compact summary of what you filled per file after each batch.
+
+### Step 7: Derive automatically (in this order)
+For values that can be computed from user inputs, derive without asking. **Order matters** — later derivations depend on earlier ones.
+
+1. **Resolve all profile selections first** (saturation, warmth, radius, type-scale, etc.). User-provided overrides win; defaults apply otherwise.
+2. **Generate 12-step color palettes** via the OKLCH algorithm in DESIGN §C.15:
+   - Apply the saturation profile's chroma multiplier (muted ×0.7, default ×1.0, vivid ×1.3)
+   - Apply warmth profile to neutral hue (cool ≈ 240, neutral ≈ 60, warm ≈ 40)
+   - Generate primary, neutral, success, warning, danger palettes
+   - **APCA verification step:** for each palette, check step 11 vs step 2 clears Lc 60; step 12 vs step 2 clears Lc 90. If either fails, lower the step's L by 0.02 increments until it passes. Surface to user only if a palette fails after 5 retries.
+3. **Generate dark-mode counterparts** for all 5 palettes per §C.10 perceptual mapping rules (not inversion):
+   - Lower lightness floor and raise ceiling
+   - Reduce chroma 20-40% for accents
+   - Verify APCA targets against dark step 2
+4. **Set derived neutral-dependent tokens**:
+   - Shadow tint = `neutral.12`
+   - Surface roles map to neutral steps per §C.6
+   - Border roles map per §C.7
+5. **Propagate brand identity to all templates** (per Cross-template consistency table below).
+6. **Apply HTML mapping defaults** in DESIGN typography appropriate to the project type.
+7. **Generate voice samples (with approval gate)**:
+   - Draft 8-10 voice samples for SPEC.md `voice_samples` inspired by INFORMATION.md `brand.voice_principles` + archetype
+   - Present them to the user for review BEFORE committing
+   - Voice mimicry is high-stakes; treat this as the most important approval gate in the intake
+8. **Generate placeholder paths** for OG image, favicon, logo (mark with `<TBD: replace with actual asset>` so user remembers).
+
+### Step 8: Propagate shared values
+See "Cross-template consistency" table below.
+
+### Step 9: Surface ambiguities and gaps
+If the user couldn't answer something ("I don't have a brand color yet"), offer three options:
+- I can generate one based on your brand archetype and voice
+- We can mark it `<TBD: brand primary color>` and circle back
+- We can skip if you don't need visual decisions yet
+
+Never silently fabricate brand decisions.
+
+### Step 10: Final verification
+After all edits, perform three checks and report results:
+
+**Check A — slot fill:**
+Run `grep -n "<[^>]*>" *.md` across all template files. Report:
+- ✅ X slots filled
+- ⚠️ Y remaining slots (list them; explain why each is still open)
+- ⚠️ Z slots marked `<TBD: ...>` (intentional placeholders user needs to fill later)
+
+**Check B — cross-template consistency:**
+Verify each propagation rule from the table below. Report ✅ rules verified + ⚠️ any inconsistencies.
+
+**Check C — YAML validity (when AI has shell access):**
+Run `yaml.safe_load` on each frontmatter. Surface and offer to fix any errors.
+
+### Step 11: Offer next steps
+After completion, proactively offer (don't wait for user to ask):
+- "Want me to draft v1 copy for any specific page (home / pricing / about)?"
+- "Want me to draft auth flow copy, transactional emails, or system messages?"
+- "Want me to scaffold the actual code structure (Next.js app router pages, component skeletons matching DESIGN tokens)?"
+- "Want a final read-through of the filled templates?"
+
+Frame these as menu options. Wait for the user to choose.
+
+## Cross-template consistency rules
+
+| Field | Lives in | Propagates to |
+| --- | --- | --- |
+| Brand name | `INFORMATION.project.name` | DESIGN.md Overview, DESIGN_MOBILE.md Overview, SPEC voice samples context, PROJECT.md `project.name` |
+| Voice descriptor | `INFORMATION.brand.voice_principles` | DESIGN.md voice slot (brief restatement), SPEC voice_samples generation seed |
+| Primary persona name | `INFORMATION.audience.primary_persona.name` | SPEC.md `pages.*.primary_persona` slots |
+| Brand primary color | DESIGN.md `colors.primary.base` | DESIGN_MOBILE.md identical value |
+| Type families | DESIGN.md `typography.families.*` | DESIGN_MOBILE.md `typography.families.*` (note: mobile also maps to platform text styles) |
+| SEO defaults | INFORMATION.md `seo.*` | Already token-referenced from SPEC.md `global.meta_defaults` via `{information.seo.*}` |
+| Tech stack | PROJECT.md `tech.*` | Implicit — AI generates code matching this stack |
+| Legal URLs | INFORMATION.md `legal.privacy_url`, `legal.terms_url` | SPEC.md footer columns, app store metadata |
+| Social handles | INFORMATION.md `social.*` | SPEC.md footer brand_column, app store URLs |
+| Project type | PROJECT.md `project.type` | Determines which templates are scoped in intake; informs HTML mapping defaults in DESIGN |
+| Shared profiles | DESIGN.md `profiles.*` | DESIGN_MOBILE.md identical values for all profiles except `section_padding` (web-only) |
+
+When the AI fills any field on the left, it also fills the propagation targets without asking the user again.
+
+## Edge cases
+
+### Only one template present (e.g., only DESIGN.md)
+Intake scopes down to that template's slots only. Sections referencing INFORMATION.md or SPEC.md are omitted. Brand voice slot becomes free-form (filled directly in DESIGN.md) rather than referencing INFORMATION.md.
+
+### PROJECT.md not present
+Protocol still works — AI discovers other templates by scanning the directory. Remind the user that adding PROJECT.md provides better orchestration if they want it.
+
+### User has already partially filled some slots
+Read existing values first, EXCLUDE filled slots from the intake form, only ask about remaining gaps. Critical: don't re-ask about already-decided things.
+
+### User wants to redo a slot they already filled
+Accept overrides. If user says "change brand color to X", apply the change and re-derive all dependent values (12-step palette, shadow tint, dark mode counterpart, etc.).
+
+### User wants intake for one section only
+E.g., "Just walk me through the SPEC.md voice samples." Scope to that section only — produce only the relevant PART 1 questions, skip everything else.
+
+### User pushes back on a default
+Offer the options menu with brief descriptions ("sharp = engineered feel; default = balanced; soft = warmer; pill = playful"). Let the user pick.
+
+### Multilingual / RTL projects
+If user indicates RTL or multilingual ("we ship in Arabic"), the AI automatically:
+- Sets `mode.rtl_support: enabled` in DESIGN.md
+- Asks for target locales
+- Flags i18n/RTL sections of DESIGN.md and INFORMATION.md as relevant
+
+### User changes project type mid-intake
+Update `project.type`, scope the intake to include newly-relevant templates, ask the new mobile-specific (or web-specific) questions.
+
+### User wants to defer content (SPEC.md is the time-intensive part)
+Common case — user wants brand + design configured but isn't ready to write copy. Offer: "I'll fill INFORMATION + DESIGN now and leave SPEC content slots empty. You can run the intake again later just on SPEC, or fill manually."
+
+### Templates aren't in `PROJECT.md`'s `source_files`
+If PROJECT.md says `design_md.exists: false` but DESIGN.md is actually present, prefer the actual file presence over the flag. Note the discrepancy to the user.
+
+### Templates are on an older version
+If template files are on version 1.0.x or 1.1.x and missing this Protocol section, the AI can still run a basic intake using common sense, but recommend the user update to 1.2.0+ for the full structured protocol.
 
 ---
 

@@ -18,7 +18,7 @@
 #    must follow. The YAML frontmatter contains the values. Both are normative.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.0.0"
+template_version: "1.1.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1353,6 +1353,12 @@ This file is the **single source of truth** for the visual design system of any 
 5. Hand the resulting `DESIGN.md` to any AI tool generating UI code — they will produce premium, consistent output.
 
 The companion file `DESIGN_TEMPLATE_MOBILE.md` covers iOS + Android apps. Shared brand-identity values (color, typography, voice) should match identically between web and mobile instances.
+
+## Guided fill-in mode (v1.2+)
+
+Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+
+The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
 
 ---
 

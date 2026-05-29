@@ -32,7 +32,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.1.0"
+template_version: "1.2.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -774,6 +774,12 @@ a11y_notes:
 5. Fill `auth`, `onboarding`, `permissions`, `push_notifications`, `settings`, `app_store`.
 6. Verify with `grep -n "<[^>]*>" SPEC_MOBILE.md` — zero matches.
 7. Hand alongside `DESIGN_MOBILE.md` and `INFORMATION.md` to any AI tool building the app.
+
+## Guided fill-in mode (v1.2+)
+
+Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+
+The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
 
 ---
 

@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.0.0"
+template_version: "1.1.0"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -353,6 +353,12 @@ assets:
 3. For sections that genuinely don't apply (no advisors yet, no Android app planned, etc.), write `n/a` rather than leaving the slot. This signals "intentionally empty" to the AI and prevents it from inventing.
 4. Treat the **Audience** section as the most important. Premium products are built on deep audience understanding. Spend disproportionate time here.
 5. Hand `INFORMATION.md` alongside `DESIGN.md` and `SPEC.md` to any AI tool building your product.
+
+## Guided fill-in mode (v1.2+)
+
+Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+
+The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
 
 ---
 

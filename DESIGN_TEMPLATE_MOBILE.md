@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.0.0"
+template_version: "1.1.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1218,6 +1218,12 @@ This is the **mobile sibling** of `DESIGN_TEMPLATE_WEB.md`. The two files share 
 5. Hand the resulting `DESIGN_MOBILE.md` to any AI tool generating iOS or Android UI code.
 
 **Platform philosophy:** mobile defaults to **platform-native conventions**. iOS UI follows Apple Human Interface Guidelines; Android UI follows Material 3. Brand differentiation lives in color, typography, illustration, motion personality, and microcopy — NOT in navigation patterns, sheet behaviors, gestures, or haptics.
+
+## Guided fill-in mode (v1.2+)
+
+Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+
+The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
 
 ---
 

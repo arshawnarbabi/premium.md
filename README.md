@@ -113,6 +113,20 @@ Use all six files. The brand-identity slots in `INFORMATION.md` are shared — f
 
 ---
 
+## Guided fill-in (new in v1.2)
+
+You don't have to fill the templates manually. Once they're copied into your project, ask your AI:
+
+> "Help me populate these templates"
+
+It produces a **structured intake form** — must-fill brand identity at the top, customizable defaults below — covering every decision you need to make. Answer in your own time. The AI fills the templates for you, derives the 12-step color palette + dark mode counterpart, propagates shared values across all 6 templates, and runs final verification.
+
+Trigger phrases the AI listens for: *"help me populate this"* / *"what do you need to know?"* / *"run the intake"* / *"walk me through this"*.
+
+The full Interactive Population Protocol lives in `PROJECT.md`. See it for the exact intake structure, behavioral steps, and cross-template consistency rules.
+
+---
+
 ## How to point AI at this system
 
 In your AI prompt, reference the entry-point file. The AI discovers the rest via `PROJECT.md`'s declarations.

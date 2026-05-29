@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.1.0"
+template_version: "1.2.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -870,6 +870,12 @@ a11y_notes:
 5. Fill the `forms`, `system_messages`, `emails`, `analytics` blocks.
 6. Verify with `grep -n "<[^>]*>" SPEC.md` — zero matches.
 7. Hand `SPEC.md` alongside `DESIGN.md` and `INFORMATION.md` to any AI tool building your site.
+
+## Guided fill-in mode (v1.2+)
+
+Don't want to fill every slot manually? Ask your AI: "help me populate this" (or any of: "what do you need to know?", "run the intake", "walk me through this"). It will produce a structured intake form covering every decision — separating must-fill items from customizable defaults. After answering, the AI fills the templates for you and runs final verification.
+
+The full Interactive Population Protocol lives in `PROJECT.md`. If your project doesn't have a `PROJECT.md`, the AI walks through this template's slots top-to-bottom — but having `PROJECT.md` provides better orchestration across multiple templates.
 
 ---
 
