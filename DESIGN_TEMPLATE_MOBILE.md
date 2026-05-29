@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.1"
+template_version: "1.2.2"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1242,63 +1242,75 @@ This is the **mobile sibling** of `DESIGN_TEMPLATE_WEB.md`. The two files share 
 ```
 # Intake — DESIGN_MOBILE.md
 
-This is everything you need to decide to fully populate your mobile design system file (iOS + Android).
+This is everything you need to decide to fully populate your mobile design system file (iOS + Android). Each item has a short plain-English hint after the em dash.
 
-Reply with answers to PART 1. For PART 2, either accept the defaults ("looks good, accept all") or list overrides. I'll fill the template as your answers come in and run final verification at the end.
+**How to answer:**
+- **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
+- **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- For PART 2, either accept the defaults ("looks good, accept all") or list overrides.
+
+I'll fill the template as your answers come in and run final verification at the end.
 
 ## PART 1 — Must Fill (no defaults possible)
 
-### Brand identity (Overview section)
-1. **Brand name**: ?
-2. **One-line product description**: ?
-3. **Primary audience persona** — name + one-sentence portrait: ?
-4. **Voice descriptor** (1-2 sentences on tone, energy, formality, what to avoid): ?
+### Brand identity
+1. **Brand name** — what people call your app. E.g., "Headspace", "Strava": ?
+2. **One-line product description** — one sentence: what it does, for whom: ?
+3. **Primary audience persona** — your main user. Give them a name + one sentence describing who they are: ?
+4. **Voice descriptor** — how the brand "sounds" when it speaks. 1-2 sentences on tone, energy, formality, what to avoid. E.g., "Calm and supportive. Conversational, never clinical.": ?
 
 ### Platform scope
-5. **Target platform(s)**: iOS-only / Android-only / both — drives which sub-sections of mobile spec apply: ?
+5. **Target platforms** — which app stores: iOS-only / Android-only / both. Drives which sub-sections of the spec apply: ?
 
 ### Color foundation
-6. **Brand primary color** — hex or OKLCH or descriptive ("warm forest green"). I'll convert to OKLCH and generate the 12-step palette (light + dark): ?
-7. **Brand neutral hue** (0-360, optional): ?
+6. **Brand primary color** — your main brand color. Hex (`#2D6A4F`), OKLCH, or descriptive ("warm forest green"). I'll generate the full 12-step palette + dark mode from this: ?
+7. **Brand neutral hue** *(optional)* — controls whether your grays lean warm (brown-tinted) or cool (blue-tinted). Skip if unsure: ?
 
 ### Typography
-8. **Display font family** for mobile (defaults: SF Pro on iOS / Roboto on Android / Inter cross-platform): ?
-9. **Body font family** (often same as display): ?
-10. **Mono font family** for code (defaults: SF Mono / Roboto Mono / JetBrains Mono; skip if no code surfaces): ?
+8. **Display font family** — the font for headings + large text. Defaults: SF Pro (iOS) / Roboto (Android) / Inter (cross-platform): ?
+9. **Body font family** — the font for paragraph + UI copy. Often same as display: ?
+10. **Mono font family** — fixed-width font for code blocks. Skip if no code surfaces. Defaults: SF Mono / Roboto Mono / JetBrains Mono: ?
 
 ### Iconography
-11. **Icon strategy**: SF Symbols (iOS-strict) / Material Symbols (Android-strict) / Lucide / Phosphor / HugeIcons (premium tier — Pro license required for full library) / custom — pick per platform_adherence: ?
+11. **Icon strategy** — which icon set to use:
+    - **SF Symbols** *(iOS-strict; native, animated, Apple-only)*
+    - **Material Symbols** *(Android-strict; native, three weights/fills)*
+    - **Lucide** *(cross-platform, free, clean)*
+    - **Phosphor** *(cross-platform, free, multiple weights)*
+    - **HugeIcons** *(premium; requires Pro license)*
+    - **custom** *(your own SVG set)*
+    Pick one (or one per platform if iOS-strict + Material-strict): ?
 
 ### Imagery
-12. **Photography style descriptor** (e.g., "natural light, real people"): ?
-13. **Illustration style** preferences (vector / 3D / abstract / mixed / none): ?
+12. **Photography style** — how product/marketing photos should look. Describe lighting, subject, mood. E.g., "Natural light, real people, calm and grounded.": ?
+13. **Illustration style** — custom artwork look: vector *(flat illustrations)* / 3D / abstract / mixed / none: ?
 
 ## PART 2 — Customizable Defaults (accept or override)
 
-All defaults are premium-grade. Skim and tell me which to change.
+All defaults are premium-grade. Skim and tell me which to change. Each option has a one-line hint.
 
 ### Profiles (preset bundles — each shifts multiple coordinated values)
-- **Radius profile:** default ← (sharp / default / soft / pill)
-- **Type scale ratio:** balanced (1.200) ← (compact / balanced / spacious / dramatic / editorial)
-- **Density:** comfortable ← (compact / comfortable / spacious)
-- **Motion personality:** default ← (subtle / default / expressive)
-- **Elevation depth:** default ← (flat / default / dimensional) — mobile maps `default` flatter than web
-- **Color saturation:** default ← (muted / default / vivid)
-- **Brand warmth:** neutral ← (cool / neutral / warm)
-- **Chart minimalism:** default ← (tufte / default / carbon)
+- **Radius** — corner roundness everywhere: **default** ← sharp *(engineered)* / default *(balanced)* / soft *(friendly)* / pill *(fully rounded)*
+- **Type scale** — size jump between text sizes: **balanced (1.200)** ← compact *(subtle hierarchy)* / balanced / spacious / dramatic / editorial *(magazine-large)*
+- **Density** — breathing room around components: **comfortable** ← compact *(packed)* / comfortable / spacious *(airy)*
+- **Motion** — how animated things feel: **default** ← subtle *(barely there)* / default *(polished)* / expressive *(playful, bouncy)*
+- **Elevation** — shadow depth between layers (mobile defaults flatter than web): **default** ← flat *(no shadows)* / default *(subtle)* / dimensional *(pronounced)*
+- **Saturation** — color vividness: **default** ← muted *(desaturated)* / default / vivid *(punchy)*
+- **Warmth** — gray temperature: **neutral** ← cool *(blue-leaning)* / neutral / warm *(brown-leaning)*
+- **Chart minimalism** — how much "ink" charts use: **default** ← tufte *(minimal)* / default / carbon *(info-dense)*
 
 ### Mobile-specific pick-one slots
-- **Mobile nav style:** tab-bar ← (tab-bar / navigation-bar / nav-rail / hybrid)
-- **Platform adherence:** cross-platform-hybrid ← (ios-strict / material-strict / cross-platform-hybrid)
-- **Haptic intensity:** default ← (subtle / default / expressive) — subtle recommended for meditation / wellness contexts
-- **Bottom sheet detents:** medium-large ← (medium-large / small-medium-large / custom)
-- **Icon fill style:** outline ← (outline / filled)
-- **Avatar shape:** circle ← (circle / squircle / rounded-square)
+- **Mobile nav style** — primary navigation pattern: **tab-bar** ← tab-bar *(bottom tabs, iOS pattern)* / navigation-bar *(bottom tabs, Material 3 pattern)* / nav-rail *(side rail, tablets)* / hybrid
+- **Platform adherence** — how strictly to follow each platform's HIG: **cross-platform-hybrid** ← ios-strict *(SF Symbols, sheets, action sheets)* / material-strict *(FAB, top app bar, Material sheets)* / cross-platform-hybrid *(balanced — recommended)*
+- **Haptic intensity** — vibration feedback level: **default** ← subtle *(recommended for meditation/wellness)* / default / expressive *(gaming-style)*
+- **Bottom sheet detents** — sheet stop positions: **medium-large** ← medium-large / small-medium-large *(extra peek state)* / custom
+- **Icon fill** — icon style: **outline** ← outline *(strokes only)* / filled *(solid)*
+- **Avatar shape** — user avatar shape: **circle** ← circle / squircle *(Apple-style)* / rounded-square
 
-### Color-mode + accessibility
-- **Primary mode:** light ← (light / dark / system)
-- **RTL support:** disabled ← (enabled / disabled)
-- **Capitalization style:** sentence case ← (sentence case / title case)
+### Color mode + accessibility
+- **Primary mode** — does the app default to: **light** ← light / dark / system *(follows OS preference — recommended)*
+- **RTL support** — right-to-left languages (Arabic, Hebrew): **disabled** ← enabled / disabled
+- **Capitalization** — button + label casing: **sentence case** *("Get started")* ← sentence case / title case *("Get Started")*
 
 ## PART 3 — When you reply
 

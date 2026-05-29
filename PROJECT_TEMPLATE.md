@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.1"
+template_version: "1.2.2"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -314,71 +314,75 @@ When triggered, the AI produces a **single response** containing exactly this st
 ```
 # Intake — <Project Name or "Premium Product Templates">
 
-This is everything you need to decide to fully populate <scope: e.g., "your design template" / "your full project (PROJECT + INFORMATION + DESIGN + SPEC)">.
+This is everything you need to decide to fully populate <scope: e.g., "your design template" / "your full project (PROJECT + INFORMATION + DESIGN + SPEC)">. Each item has a short plain-English hint after the em dash.
 
-Reply with answers to PART 1 (numbered, freeform, or both — I'll figure it out). For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft"). Say "skip [section]" for anything that doesn't apply.
+**How to answer:**
+- **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
+- **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft").
+- Say "skip [section]" for anything that doesn't apply.
 
 I'll fill the templates as your answers come in and surface gaps at the end.
 ```
 
 ### PART 1 — Must Fill (no defaults possible)
 
-Numbered list, grouped by source template. Each question is one line, clear, concrete:
+Numbered list, grouped by source template. Each question gets a short plain-English hint after the em dash:
 
 ```
 ## PART 1 — Must Fill (no defaults possible)
 
-### Scope (PROJECT.md) — answer this first, it determines which other questions apply
-0. **Project type:** marketing-site / product-saas / mobile-app / hybrid-web-plus-mobile — ?
+### Scope (PROJECT.md) — answer this first; determines which other questions apply
+0. **Project type** — what you're building: marketing-site *(landing + content)* / product-saas *(app behind login)* / mobile-app *(iOS/Android)* / hybrid-web-plus-mobile *(both)*: ?
 
 ### Brand identity (INFORMATION.md)
-1. **Brand name:** ?
-2. **One-line product description** (what it is, what it does): ?
-3. **Primary audience persona** — name + one-sentence portrait: ?
-4. **Secondary personas** — optional, 1-2: name + one-line portrait each (or "none"): ?
-5. **At least one anti-persona** — who this is explicitly NOT for: ?
-6. **Voice descriptor** (1-2 sentences on tone, energy, formality, what to avoid): ?
-7. **Mission** (why this exists, the change in the world): ?
-8. **Brand story** — origin in 2-3 sentences: ?
-9. **Brand archetype** (Sage / Hero / Creator / Caregiver / Innocent / Explorer / Rebel / Magician / Ruler / Lover / Jester / Everyman): ?
-10. **Stage** (idea / pre-launch / beta / launched / scaling / mature): ?
+1. **Brand name** — what people call your product. E.g., "Linear", "Stripe": ?
+2. **One-line product description** — one sentence: what it does, for whom: ?
+3. **Primary audience persona** — your main user. Name + one-sentence portrait: ?
+4. **Secondary personas** *(optional)* — 1-2 other important users. Name + one-line portrait each, or "none": ?
+5. **Anti-persona** — at least one: who this is explicitly NOT for + why. Sharpens positioning: ?
+6. **Voice descriptor** — how the brand "sounds". 1-2 sentences on tone, energy, formality, what to avoid. E.g., "Warm and expert. Direct, never salesy.": ?
+7. **Mission** — the *why*. What change you're creating in the world: ?
+8. **Brand story** — origin in 2-3 sentences. Why now, why you: ?
+9. **Brand archetype** — pick one of Carl Jung's 12: Sage *(wisdom)* / Hero *(triumph)* / Creator *(innovation)* / Caregiver *(nurture)* / Innocent *(simplicity)* / Explorer *(freedom)* / Rebel *(disruption)* / Magician *(transformation)* / Ruler *(control)* / Lover *(connection)* / Jester *(joy)* / Everyman *(belonging)*: ?
+10. **Stage** — current company stage: idea / pre-launch / beta / launched / scaling / mature: ?
 11. **Founder(s)** — for each: full name, role, 1-2 sentence bio: ?
-12. **At least 2 non-features** — things you explicitly will NOT build: ?
-13. **Business model type** (freemium / subscription / one-time / usage-based / marketplace / not-yet-decided) — tier details can come later: ?
-14. **Target geography** (US-only / EU-only / global / specific list) — drives compliance + locale defaults: ?
+12. **Non-features** — at least 2 things you explicitly will NOT build. Sharpens scope discipline: ?
+13. **Business model type** — how money comes in: freemium / subscription / one-time / usage-based / marketplace / not-yet-decided. Tier details can come later: ?
+14. **Target geography** — where users are: US-only / EU-only / global / specific list. Drives compliance + locale defaults: ?
 
-### Visual foundation (DESIGN.md / DESIGN_MOBILE.md — only if project type includes web or mobile)
-15. **Brand primary color** — hex or OKLCH or descriptive ("warm forest green") — I'll convert and generate the 12-step palette + dark mode counterpart: ?
-16. **Display font family** (or accept default "Geist Sans" or "Inter"): ?
-17. **Body font family** (often same as display; accept default): ?
-18. **Mono font family** for code surfaces (accept default "Geist Mono" / "JetBrains Mono", or skip if no code surfaces): ?
-19. **Icon family** (Lucide free default / Phosphor free / HugeIcons — Pro license required for full library / custom): ?
+### Visual foundation (DESIGN.md / DESIGN_MOBILE.md — only if project includes web or mobile)
+15. **Brand primary color** — main brand color. Hex (`#2D6A4F`), OKLCH, or descriptive ("warm forest green"). I'll generate the full 12-step palette + dark mode: ?
+16. **Display font family** — for headings + hero copy. Default: "Geist Sans" or "Inter": ?
+17. **Body font family** — for paragraph copy. Often same as display: ?
+18. **Mono font family** — for code blocks. Default: "Geist Mono" / "JetBrains Mono". Skip if no code surfaces: ?
+19. **Icon family** — UI icon set: Lucide *(free, default)* / Phosphor *(free)* / HugeIcons *(Pro license)* / custom: ?
 
-### Site structure (SPEC.md — only if project type is web or hybrid)
-20. **Sitemap** — list of pages (e.g., home, pricing, about, blog, contact, plus any product pages); mark which appear in top nav: ?
+### Site structure (SPEC.md — only if web or hybrid)
+20. **Sitemap** — list of pages. E.g., home, pricing, about, blog, contact, plus product pages. Mark which appear in **top nav**: ?
 
-### App structure (SPEC_MOBILE.md — only if project type is mobile or hybrid)
-21. **Tab bar destinations** (3-5 top-level) + **screen list organized by tab**: ?
+### App structure (SPEC_MOBILE.md — only if mobile or hybrid)
+21. **Tab bar destinations** *(3-5 top-level)* + **screen list organized by tab**: ?
 
 ### Tech stack confirmation (PROJECT.md) — defaults shown; override only if different
-22. **Web framework**: Next.js (App Router) ← override or accept
-23. **Mobile approach**: SwiftUI / Jetpack Compose / React Native (Expo) ← pick one or "n/a"
-24. **Deployment**: Vercel ← override or accept
-25. **Primary domain URL** (e.g., example.com): ?
+22. **Web framework** — Next.js (App Router) ← override or accept
+23. **Mobile approach** — SwiftUI *(iOS-only)* / Jetpack Compose *(Android-only)* / React Native (Expo) *(cross-platform)*. Pick one or "n/a": ?
+24. **Deployment** — where the site/app is hosted: Vercel ← override or accept
+25. **Primary domain URL** — your main public URL. E.g., `example.com`: ?
 
 ### Operations + Legal (INFORMATION.md)
-26. **Support channel** (email address / Intercom / community Discord / etc.): ?
-27. **Legal entity type + jurisdiction** (e.g., "LLC, Delaware") — or "not-yet-incorporated": ?
-28. **Compliance requirements** — auto-derived from target geography above; confirm: ?
+26. **Support channel** — how users get help: email address / Intercom / community Discord / etc.: ?
+27. **Legal entity type + jurisdiction** — e.g., "LLC, Delaware". Or "not-yet-incorporated": ?
+28. **Compliance requirements** — auto-derived from target geography above. Confirm: GDPR *(EU)* / CCPA *(California)* / HIPAA *(US healthcare)* / SOC2 *(B2B enterprise)* / none: ?
 
 ### Content fundamentals (SPEC.md / SPEC_MOBILE.md)
-29. **5-10 voice samples** — actual sentences in the brand voice. (I can also DRAFT these from your voice descriptor + archetype and you can edit — say "draft them" if you prefer.): ?
-30. **3-5 proof points** — concrete metrics, customer logos, or quotes (real, not invented; or "none yet"): ?
+29. **5-10 voice samples** — real sentences written in your brand's voice. The AI uses these to mimic tone everywhere. Say **"draft them"** for AI to propose drafts from your voice descriptor + archetype: ?
+30. **3-5 proof points** — concrete metrics, customer logos, or testimonials. Real only, no invented numbers. Or "none yet" if pre-launch: ?
 ```
 
 ### PART 2 — Customizable Defaults (accept or override)
 
-Each as `label: default ← (full options list) — brief explanation`:
+Each as `label — what it controls: default ← (option a / option b *(hint)* / option c *(hint)*)`:
 
 ```
 ## PART 2 — Customizable Defaults (accept or override)
@@ -386,48 +390,48 @@ Each as `label: default ← (full options list) — brief explanation`:
 All defaults are premium-grade and I'll apply them unless you override. Skim and tell me which (if any) to change.
 
 ### Profiles (preset bundles — each shifts multiple coordinated values)
-- **Radius profile:** default ← (sharp / default / soft / pill) — controls all component corner rounding
-- **Type scale ratio:** balanced (1.200) ← (compact / balanced / spacious / dramatic / editorial) — controls multiplier between text sizes
-- **Density:** comfortable ← (compact / comfortable / spacious) — controls between-component spacing
-- **Motion personality:** default ← (subtle / default / expressive) — controls animation stagger and spring stiffness
-- **Elevation depth:** default ← (flat / default / dimensional) — controls separation strategy
-- **Color saturation:** default ← (muted / default / vivid) — controls chroma multiplier on palettes
-- **Brand warmth:** neutral ← (cool / neutral / warm) — controls neutral palette hue tint
-- **Section padding** (web only): default ← (compact / default / generous) — controls vertical padding between page sections
-- **Chart minimalism:** default ← (tufte / default / carbon) — controls chart axis and gridline visibility
+- **Radius** — corner roundness everywhere: **default** ← sharp *(engineered)* / default *(balanced)* / soft *(friendly)* / pill *(fully rounded)*
+- **Type scale** — size jump between text sizes: **balanced (1.200)** ← compact *(subtle hierarchy)* / balanced / spacious / dramatic / editorial *(magazine-large)*
+- **Density** — breathing room around components: **comfortable** ← compact *(packed)* / comfortable / spacious *(airy)*
+- **Motion** — how animated things feel: **default** ← subtle *(barely there)* / default *(polished)* / expressive *(playful, bouncy)*
+- **Elevation** — shadow depth between layers: **default** ← flat *(no shadows)* / default *(subtle)* / dimensional *(pronounced)*
+- **Saturation** — color vividness: **default** ← muted *(desaturated)* / default / vivid *(punchy)*
+- **Warmth** — gray temperature: **neutral** ← cool *(blue-leaning)* / neutral / warm *(brown-leaning)*
+- **Section padding** *(web only)* — vertical space between page sections: **default** ← compact / default / generous
+- **Chart minimalism** — how much "ink" charts use: **default** ← tufte *(minimal)* / default / carbon *(info-dense)*
 
 ### Pick-one slots — Web (DESIGN.md + SPEC.md)
-- **Input style:** outlined ← (outlined / filled / underlined)
-- **Tabs style:** underline ← (underline / filled)
-- **Icon fill style:** outline ← (outline / filled)
-- **Avatar shape:** circle ← (circle / squircle / rounded-square)
-- **Modal backdrop:** blur ← (scrim / blur)
-- **Code block surface:** always-dark ← (match-page / always-dark)
-- **Onboarding pattern:** empty-state-driven ← (empty-state-driven / progressive / coach-marks / step-by-step-modal / milestone-checklist)
-- **Save model:** auto-save ← (auto-save / explicit-save)
-- **Settings IA:** sidebar ← (sidebar / tabs / single-page)
-- **Container width:** lg (1280 px) ← (md 1024 / lg 1280 / xl 1440)
-- **Heading weight:** 600 ← (600 / 700)
-- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
-- **Number abbreviation:** contextual ← (short / long / contextual)
-- **Product nav style:** sidebar ← (top-bar / sidebar / hybrid / none)
-- **Hero variant default:** split-asymmetric ← (centered / split-asymmetric / background-led)
-- **Toast position:** top-right ← (top-right / top-center / bottom-right / bottom-center)
-- **Footer style:** multi-column ← (multi-column / minimal)
-- **Command palette (⌘K):** enabled ← (enabled / disabled)
-- **RTL support:** disabled ← (enabled / disabled)
-- **Chart library:** recharts ← (recharts / visx / tremor / echarts / custom)
-- **Illustration style:** vector ← (vector / 3D / abstract / mixed / none)
+- **Input style** — form fields: **outlined** ← outlined *(border)* / filled *(subtle bg)* / underlined *(line only)*
+- **Tabs** — active tab indicator: **underline** ← underline / filled *(pill bg)*
+- **Icon fill** — icon style: **outline** ← outline *(strokes)* / filled *(solid)*
+- **Avatar shape** — **circle** ← circle / squircle *(Apple-style)* / rounded-square
+- **Modal backdrop** — what's behind popups: **blur** ← scrim *(dim overlay)* / blur
+- **Code block surface** — **always-dark** ← match-page *(follows theme)* / always-dark
+- **Onboarding pattern** — how new users learn the product: **empty-state-driven** ← empty-state-driven *(helpful placeholders)* / progressive *(features revealed as needed)* / coach-marks *(pointer arrows)* / step-by-step-modal *(walkthrough)* / milestone-checklist *(gamified)*
+- **Save model** — **auto-save** ← auto-save *(while typing)* / explicit-save *(Save button)*
+- **Settings IA** — settings layout: **sidebar** ← sidebar *(vertical nav)* / tabs *(horizontal)* / single-page *(scroll)*
+- **Container width** — max page width: **lg (1280px)** ← md *(1024)* / lg *(1280)* / xl *(1440)*
+- **Heading weight** — **600** ← 600 *(semibold)* / 700 *(bold)*
+- **Time format** — **hybrid** ← relative *("2h ago")* / absolute *("Mar 5")* / hybrid *(relative ≤7d, absolute after)*
+- **Number abbreviation** — **contextual** ← short *(1.2K)* / long *(1,200)* / contextual
+- **Product nav style** — app navigation: **sidebar** ← top-bar / sidebar *(vertical left)* / hybrid / none
+- **Hero variant** — homepage hero layout: **split-asymmetric** ← centered / split-asymmetric *(text left, image right)* / background-led *(full-bleed)*
+- **Toast position** — **top-right** ← top-right / top-center / bottom-right / bottom-center
+- **Footer style** — **multi-column** ← multi-column *(link directory)* / minimal
+- **Command palette (⌘K)** — Linear/Raycast-style launcher: **enabled** ← enabled / disabled
+- **RTL support** — right-to-left languages: **disabled** ← enabled / disabled
+- **Chart library** — **recharts** ← recharts *(simple)* / visx *(low-level)* / tremor *(dashboards)* / echarts *(feature-rich)* / custom
+- **Illustration style** — custom artwork: **vector** ← vector *(flat illustrations)* / 3D / abstract / mixed / none
 
 ### Pick-one slots — Mobile (DESIGN_MOBILE.md + SPEC_MOBILE.md)
-- **Mobile nav style:** tab-bar ← (tab-bar / navigation-bar / nav-rail / hybrid)
-- **Platform adherence:** cross-platform-hybrid ← (ios-strict / material-strict / cross-platform-hybrid)
-- **Haptic intensity:** default ← (subtle / default / expressive)
-- **Bottom sheet detents:** medium-large ← (medium-large / small-medium-large / custom)
+- **Mobile nav style** — primary nav: **tab-bar** ← tab-bar *(iOS bottom tabs)* / navigation-bar *(Material bottom tabs)* / nav-rail *(side rail, tablets)* / hybrid
+- **Platform adherence** — how strictly to follow each OS's HIG: **cross-platform-hybrid** ← ios-strict / material-strict / cross-platform-hybrid *(balanced, recommended)*
+- **Haptic intensity** — vibration feedback: **default** ← subtle *(wellness)* / default / expressive *(gaming)*
+- **Bottom sheet detents** — sheet stop positions: **medium-large** ← medium-large / small-medium-large *(extra peek)* / custom
 
-### Color-mode + accessibility (DESIGN.md)
-- **Primary mode:** light ← (light / dark / system)
-- **Capitalization style:** sentence case ← (sentence case / title case)
+### Color mode + accessibility (DESIGN.md)
+- **Primary mode** — does the app default to: **light** ← light / dark / system *(follows OS)*
+- **Capitalization** — button + label casing: **sentence case** *("Get started")* ← sentence case / title case *("Get Started")*
 ```
 
 ### PART 3 — What happens next

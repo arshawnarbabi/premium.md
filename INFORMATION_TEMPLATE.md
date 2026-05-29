@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.1"
+template_version: "1.2.2"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -377,85 +377,90 @@ assets:
 ```
 # Intake — INFORMATION.md
 
-This is everything you need to decide to fully populate your brand / business / audience context file.
+This is everything you need to decide to fully populate your brand / business / audience context file. Each item has a short plain-English hint after the em dash.
 
-Reply with answers numbered, freeform, or both — I'll figure it out. Say "skip [section]" for anything that doesn't apply. I'll fill the template as your answers come in and run final verification at the end.
+**How to answer:**
+- **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
+- **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- Say **"skip [section]"** for anything that doesn't apply (e.g., "skip advisors").
+
+I'll fill the template as your answers come in and run final verification at the end.
 
 ## PART 1 — Must Fill (no defaults possible)
 
 ### Project basics
-1. **Brand name** + legal entity name (if different): ?
-2. **Tagline** (5-9 word memorable line): ?
-3. **One-line description** (what it is, what it does): ?
-4. **Elevator pitch** (2-3 sentences — problem + solution + who it's for): ?
-5. **Mission** (the why — what change you're creating): ?
-6. **Vision** (long-term north star): ?
-7. **Stage** (idea / pre-launch / beta / launched / scaling / mature): ?
-8. **Founded** date (YYYY-MM) + HQ location (or "remote-first"): ?
+1. **Brand name** + legal entity name *(if different)* — the public name + the LLC/Inc. name for legal docs: ?
+2. **Tagline** — a memorable 5-9 word line. E.g., "Linear is the new standard for software teams": ?
+3. **One-line description** — one sentence: what it is, what it does: ?
+4. **Elevator pitch** — 2-3 sentences covering: the problem + your solution + who it's for: ?
+5. **Mission** — the *why*. What change are you trying to create in the world?: ?
+6. **Vision** — the long-term north star. Where this leads if it works: ?
+7. **Stage** — current company stage: idea / pre-launch / beta / launched / scaling / mature: ?
+8. **Founded** — month + year you started *(YYYY-MM)* + HQ location *(or "remote-first")*: ?
 
 ### People
 9. **Founders** — for each: full name, role, 1-2 sentence bio, LinkedIn + Twitter: ?
-10. **Team members** (optional — name, role, 1-2 sentence bio): ?
-11. **Advisors** (optional — name + focus area): ?
+10. **Team members** *(optional)* — name, role, 1-2 sentence bio: ?
+11. **Advisors** *(optional)* — name + focus area: ?
 
-### Audience (the most important section)
-12. **Primary persona** — name + one-line portrait + demographics + psychographics + jobs-to-be-done + pains + current alternatives + triggers + success definition + where they hang out + voice they respond to: ?
-13. **Secondary personas** (optional, 1-2): ?
-14. **Anti-personas** — at least one: who this is explicitly NOT for + why not: ?
+### Audience *(the most important section — drives all copy)*
+12. **Primary persona** — your single most important user. Give: name + one-line portrait + demographics *(age, role, location)* + psychographics *(values, fears)* + jobs-to-be-done *(what they're trying to accomplish)* + pains *(what frustrates them today)* + current alternatives *(what they use instead)* + triggers *(what makes them look for a solution)* + success definition + where they hang out *(communities, sites)* + voice they respond to: ?
+13. **Secondary personas** *(optional, 1-2)* — other important users, same structure as primary: ?
+14. **Anti-persona** — at least one: who this is explicitly NOT for + why not. Sharpens positioning: ?
 
 ### Market
-15. **Industry + segment**: ?
-16. **Direct + indirect + adjacent competitors** (with URLs + how you differ): ?
-17. **Positioning statement** (For [audience] who [pain], [product] is the [category] that [unique benefit] unlike [alternatives] because [reason]): ?
-18. **Differentiation axis** (speed / depth / price / UX / philosophy / etc.): ?
+15. **Industry + segment** — broad industry + your specific niche. E.g., "Developer tools / project management for engineering teams": ?
+16. **Competitors** — direct *(do the same thing)* + indirect *(solve same pain differently)* + adjacent *(overlap in users)*, with URLs + how you differ from each: ?
+17. **Positioning statement** — fill the blanks: "For [audience] who [pain], [product] is the [category] that [unique benefit] unlike [alternatives] because [reason].": ?
+18. **Differentiation axis** — your primary basis of competition: speed / depth / price / UX / philosophy / community / data / etc.: ?
 
 ### Business model
-19. **Type** (SaaS / marketplace / freemium / etc.): ?
-20. **Pricing tiers** (name, price, target, key features for each): ?
-21. **Revenue streams** + **key metrics tracked**: ?
+19. **Type** — SaaS / marketplace / freemium / ecommerce / agency / open-source / etc.: ?
+20. **Pricing tiers** — for each: name, price, target user, key features included: ?
+21. **Revenue streams** *(how money comes in)* + **key metrics tracked** *(e.g., MRR, ARR, active users)*: ?
 
 ### Brand
-22. **Values** (3-5 max): ?
-23. **Brand archetype** (Sage / Hero / Creator / Caregiver / Innocent / Explorer / Rebel / Magician / Ruler / Lover / Jester / Everyman): ?
-24. **Tone descriptors** (3-5 adjectives) + formality + energy + serious-to-playful axis (0-10): ?
-25. **Voice principles** — concrete example sentences for active voice, conciseness, humanity, specificity: ?
-26. **Vocabulary** — preferred terms + project-specific banned terms beyond DESIGN.md universal list: ?
-27. **Brand story** (origin, why now, why us): ?
+22. **Values** — 3-5 max. Operating principles that guide decisions. E.g., "Default to clarity. Ship < perfect.": ?
+23. **Brand archetype** — pick one from Carl Jung's 12: Sage *(wisdom)* / Hero *(triumph)* / Creator *(innovation)* / Caregiver *(nurture)* / Innocent *(simplicity)* / Explorer *(freedom)* / Rebel *(disruption)* / Magician *(transformation)* / Ruler *(control)* / Lover *(connection)* / Jester *(joy)* / Everyman *(belonging)*: ?
+24. **Tone descriptors** — 3-5 adjectives describing how the brand sounds + formality *(casual ↔ formal)* + energy *(calm ↔ energetic)* + serious-to-playful axis *(0=dead serious, 10=full clown)*: ?
+25. **Voice principles** — concrete example sentences showing active voice, conciseness, humanity, specificity. Or say **"draft them"** for AI to propose: ?
+26. **Vocabulary** — preferred terms *(e.g., "members" not "users")* + banned terms beyond DESIGN.md's universal banned list: ?
+27. **Brand story** — origin + why now + why you. The narrative behind the company: ?
 
 ### Product
-28. **Core capabilities** (3-7 things the product does): ?
-29. **Current features** (everything shipping today): ?
-30. **Roadmap** (next 3 months + 12 months): ?
-31. **Non-features** — at least 2 things you explicitly will NOT build: ?
+28. **Core capabilities** — 3-7 high-level things the product does. E.g., "track issues / plan sprints / report progress": ?
+29. **Current features** — everything shipping today. Bulleted list: ?
+30. **Roadmap** — what's next: 3-month horizon + 12-month horizon: ?
+31. **Non-features** — at least 2 things you explicitly will NOT build. Sharpens scope discipline: ?
 
 ### Operations
-32. **Domain(s)** — primary, docs, blog, status: ?
-33. **Hosting** (web framework + db + storage): ?
-34. **Email infrastructure** (transactional + marketing): ?
-35. **Support channel** + response SLA: ?
-36. **Integrations** with other services: ?
+32. **Domains** — primary site + docs + blog + status page subdomains: ?
+33. **Hosting** — web framework *(Next.js, Astro)* + database *(Postgres, Supabase)* + storage *(S3, R2)*: ?
+34. **Email infrastructure** — transactional *(Resend, Postmark, SES)* + marketing *(Loops, Customer.io)*: ?
+35. **Support channel** *(email, Intercom, Discord)* + response SLA *(e.g., "24h business days")*: ?
+36. **Integrations** — other services the product connects to. Influences brand-mention copy: ?
 
 ### Legal
-37. **Entity type + jurisdiction**: ?
-38. **Privacy + terms + cookie policy URLs** (or "TBD"): ?
-39. **Compliance requirements** (GDPR / CCPA / HIPAA / SOC2 / none): ?
+37. **Entity type + jurisdiction** — e.g., "Delaware C-Corp", "UK Ltd", "Canadian sole proprietor": ?
+38. **Privacy policy + terms of service + cookie policy URLs** — or "TBD" if not yet drafted: ?
+39. **Compliance requirements** — drives consent UI + data handling: GDPR *(EU users)* / CCPA *(California)* / HIPAA *(US healthcare)* / SOC2 *(B2B enterprise)* / none: ?
 
 ### Social presence
-40. **Handles + URLs** for Twitter, LinkedIn, Instagram, YouTube, GitHub, Product Hunt: ?
-41. **Posting norms** (frequency + voice match): ?
+40. **Social handles + URLs** — Twitter, LinkedIn, Instagram, YouTube, GitHub, Product Hunt. Skip platforms you're not on: ?
+41. **Posting norms** — how often you post + how the voice matches across platforms: ?
 
 ### SEO defaults
-42. **Default page title pattern** (e.g., "{page} — {brand}"): ?
-43. **Default meta description** (150-160 chars): ?
-44. **Default OG image path** (1200×630): ?
-45. **Canonical domain + sitemap URL**: ?
+42. **Page title pattern** — template for `<title>` tags. E.g., `{page} — {brand}` or `{brand} | {page}`: ?
+43. **Default meta description** — fallback meta description, 150-160 chars: ?
+44. **Default OG image path** — social-share image, 1200×630 px. E.g., `/og-default.png`: ?
+45. **Canonical domain + sitemap URL** — e.g., `https://yourbrand.com` + `/sitemap.xml`: ?
 
 ### External resources + brand assets
-46. **Resource URLs** (Figma / Notion / Drive / Slack / Linear / staging / analytics / monitoring): ?
-47. **Logo + favicon + social-share image paths**: ?
+46. **Resource URLs** — where teammates find things: Figma / Notion / Drive / Slack / Linear / staging / analytics dashboard / monitoring: ?
+47. **Brand asset paths** — logo *(SVG + PNG)*, favicon, social-share image: ?
 
 ## PART 2 — Customizable Defaults
-INFORMATION.md has no defaults to customize — every slot is project-specific. Skip directly to answers.
+INFORMATION.md has no defaults to customize — every slot is project-specific to your brand. Skip directly to answers.
 
 ## PART 3 — When you reply
 

@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.1"
+template_version: "1.2.2"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -896,62 +896,67 @@ a11y_notes:
 ```
 # Intake — SPEC.md (web)
 
-This is everything you need to decide to fully populate your site content + layout spec.
+This is everything you need to decide to fully populate your site content + layout spec. Each item has a short plain-English hint after the em dash.
 
-Reply with answers to PART 1. For PART 2, accept the defaults or list overrides. After we lock the structure, I'll loop with you page-by-page to collect the actual copy.
+**How to answer:**
+- **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
+- **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- For PART 2, accept the defaults or list overrides.
+
+After we lock the structure, I'll loop with you page-by-page to collect the actual copy.
 
 ## PART 1 — Must Fill (no defaults possible)
 
-### Brand essentials (for references throughout SPEC)
-1. **Brand name**: ?
-2. **One-line product description** (used as default OG description): ?
-3. **Primary audience persona name** (cross-references INFORMATION.md if present; otherwise just a name): ?
+### Brand essentials
+1. **Brand name** — what people call your product: ?
+2. **One-line product description** — one sentence: what it does, for whom. Also used as default OG/social-share description: ?
+3. **Primary audience persona name** — your main user's name. Pulled from INFORMATION.md if present; otherwise just give a name: ?
 
 ### Sitemap
-4. **Pages list** — top-level pages reachable from URL or nav (e.g., home, pricing, about, blog, contact, plus any product/feature pages). Mark which appear in top nav and footer: ?
-5. **Authentication area?** (yes/no — if yes, add /login, /signup, /password/reset): ?
-6. **Blog?** (yes/no — if yes, add /blog index + /blog/[slug] dynamic): ?
+4. **Pages list** — every top-level page the site has. E.g., home, pricing, about, blog, contact, plus any product/feature pages. Mark which appear in **top nav** and **footer**: ?
+5. **Authentication area?** — does the site have user accounts? yes/no. If yes, I'll add `/login`, `/signup`, `/password/reset`: ?
+6. **Blog?** — does the site have a blog? yes/no. If yes, I'll add `/blog` index + `/blog/[slug]` dynamic routes: ?
 
-### Global elements
-7. **Top nav link labels** in order: ?
-8. **Primary CTA label + destination URL** (e.g., "Start free → /signup"): ?
-9. **Secondary CTA label + destination URL** (e.g., "Sign in → /login"): ?
-10. **Footer columns** — heading + 3-6 link labels per column (typical: Product / Company / Resources / Legal): ?
+### Global elements (nav, CTAs, footer)
+7. **Top nav link labels** — in order, left to right. E.g., "Product, Pricing, Customers, Blog": ?
+8. **Primary CTA** — label + destination URL. The main "do this" button on every page. E.g., "Start free → /signup": ?
+9. **Secondary CTA** — label + destination URL. The "I'm not ready yet" button. E.g., "Sign in → /login": ?
+10. **Footer columns** — heading + 3-6 link labels per column. Typical structure: Product / Company / Resources / Legal: ?
 
-### Voice + vocabulary (the "AI mimics these" inputs)
-11. **5-10 voice samples** — actual marketing headlines / button labels / error messages / long-form prose in the brand voice. (Or say "draft them from INFORMATION.md voice principles and archetype" if you'd rather I propose drafts for approval.): ?
-12. **Vocabulary preferences** — preferred terms (e.g., "members" not "users") + project-specific banned terms beyond DESIGN.md universal banned list: ?
-13. **Brand capitalization rules** (e.g., "GitHub not Github"; "API all caps"; "{brand} never abbreviated"): ?
+### Voice + vocabulary *(the "AI mimics these" inputs)*
+11. **5-10 voice samples** — actual headlines, button labels, error messages, or long-form prose written in your brand's voice. The AI uses these to mimic your tone everywhere. Say **"draft them"** if you'd rather I propose drafts from INFORMATION.md for your approval: ?
+12. **Vocabulary preferences** — preferred terms + banned terms. E.g., "members" not "users", "create" not "make", never "leverage": ?
+13. **Brand capitalization rules** — proper-noun casing the AI must respect. E.g., "GitHub" not "Github", "API" all caps, brand name never abbreviated: ?
 
 ### Proof points
-14. **3-5 trust metrics** — real, verifiable numbers (e.g., "10,000+ teams", "$1.9T processed"). Or "none yet": ?
-15. **Notable customers / logos** (with permission): ?
-16. **Testimonial library** — approved customer quotes with attribution: ?
+14. **3-5 trust metrics** — real, verifiable numbers for social proof. E.g., "10,000+ teams", "$1.9T processed". Say **"none yet"** if pre-launch: ?
+15. **Notable customer logos** — companies you can name (with their permission): ?
+16. **Testimonials** — approved customer quotes with attribution (name, title, company): ?
 
 ### Forms
-17. **Forms on the site** — for each (contact, newsletter, sign-up, sign-in, password-reset, custom): fields + validation + success + error copy. (Defaults provided in template for common forms; tell me which to use as-is and which to customize): ?
+17. **Forms on the site** — which forms exist (contact, newsletter, sign-up, sign-in, password-reset, custom). For each: fields + validation rules + success message + error copy. Defaults are pre-filled in the template — tell me which to use as-is and which to customize: ?
 
-### Transactional emails (if applicable)
-18. **Email templates** to include — welcome / password-reset / email-verification / invoice-receipt / trial-ending / account-deleted. Mark which apply: ?
-19. **From-address** (default email) + **support email**: ?
+### Transactional emails *(if applicable)*
+18. **Email templates** to include — check which apply: welcome / password-reset / email-verification / invoice-receipt / trial-ending / account-deleted: ?
+19. **From-address** *(the email senders see — e.g., hello@brand.com)* + **support email** *(where replies go)*: ?
 
 ### Legal pages
-20. **Legal entity name** for copyright: ?
-21. **Jurisdiction-driven compliance** — GDPR (EU) / CCPA (California) / both / neither — drives cookie banner: ?
+20. **Legal entity name** — full registered company name for copyright footer. E.g., "Acme Labs, Inc.": ?
+21. **Compliance jurisdiction** — drives cookie banner + privacy policy scope: GDPR *(EU users)* / CCPA *(California users)* / both / neither: ?
 
 ### Analytics
-22. **Analytics provider**: PostHog / Plausible / Mixpanel / GA4 / n/a: ?
-23. **Conversion events to track** — primary funnel steps (e.g., homepage_viewed → signup_started → signup_completed → first_action): ?
+22. **Analytics provider** — PostHog *(product analytics)* / Plausible *(privacy-friendly)* / Mixpanel / GA4 *(Google)* / n/a: ?
+23. **Conversion events to track** — the funnel steps that matter. E.g., `homepage_viewed → signup_started → signup_completed → first_action`: ?
 
 ## PART 2 — Customizable Defaults (accept or override)
 
-Most SPEC defaults flow from DESIGN.md and INFORMATION.md (already token-referenced). The few SPEC-specific options:
+Most SPEC defaults flow from DESIGN.md and INFORMATION.md automatically. The few SPEC-specific options:
 
-- **Hero variant default:** split-asymmetric ← (centered / split-asymmetric / background-led)
-- **Toast position:** top-right ← (top-right / top-center / bottom-right / bottom-center)
-- **Footer style:** multi-column ← (multi-column / minimal)
-- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
-- **Number abbreviation:** contextual ← (short / long / contextual)
+- **Hero variant** — homepage hero layout: **split-asymmetric** ← centered / split-asymmetric *(text left, image right)* / background-led *(full-bleed image)*
+- **Toast position** — where notifications appear: **top-right** ← top-right / top-center / bottom-right / bottom-center
+- **Footer style** — page footer: **multi-column** ← multi-column *(link directory)* / minimal *(legal + a few links only)*
+- **Time format** — how times display: **hybrid** ← relative *("2h ago")* / absolute *("Mar 5")* / hybrid *(relative ≤7d, absolute after)*
+- **Number abbreviation** — large number format: **contextual** ← short *(1.2K)* / long *(1,200)* / contextual
 
 ## PART 3 — When you reply (and what happens after)
 

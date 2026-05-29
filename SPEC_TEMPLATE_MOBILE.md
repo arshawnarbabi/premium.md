@@ -32,7 +32,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.1"
+template_version: "1.2.2"
 file_role: "spec"
 platform: "mobile"
 
@@ -800,64 +800,69 @@ a11y_notes:
 ```
 # Intake — SPEC_MOBILE.md
 
-This is everything you need to decide to fully populate your app content + screen-flow spec.
+This is everything you need to decide to fully populate your app content + screen-flow spec. Each item has a short plain-English hint after the em dash.
 
-Reply with answers to PART 1. For PART 2, accept defaults or list overrides. After we lock the structure, I'll loop with you screen-by-screen to collect actual copy.
+**How to answer:**
+- **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
+- **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- For PART 2, accept defaults or list overrides.
+
+After we lock the structure, I'll loop with you screen-by-screen to collect actual copy.
 
 ## PART 1 — Must Fill (no defaults possible)
 
 ### Brand essentials
-1. **Brand name**: ?
-2. **One-line product description**: ?
-3. **Primary audience persona name** (cross-references INFORMATION.md if present): ?
+1. **Brand name** — what people call your app: ?
+2. **One-line product description** — one sentence: what it does, for whom: ?
+3. **Primary audience persona name** — your main user's name. Pulled from INFORMATION.md if present: ?
 
 ### App map
-4. **Tab bar destinations** (3-5 top-level — e.g., home, search, library, profile): ?
-5. **Screen list organized by tab** (e.g., Home → feed + item_detail; Profile → profile + settings + billing): ?
-6. **Deep link URL conventions** — universal link domain + custom scheme: ?
-7. **Modal screens** (e.g., new_item, share_sheet): ?
+4. **Tab bar destinations** — the 3-5 top-level sections in the bottom tab bar. E.g., home, search, library, profile: ?
+5. **Screen list by tab** — every screen inside each tab. E.g., "Home → feed + item_detail; Profile → profile + settings + billing": ?
+6. **Deep link URLs** — universal link domain *(e.g., yourapp.com)* + custom scheme *(e.g., yourapp://)*. Used for sharing + push tap-throughs: ?
+7. **Modal screens** — screens that pop up over the main flow rather than push. E.g., new_item, share_sheet, paywall: ?
 
 ### Onboarding
-8. **Onboarding goal** (e.g., "user completes first meaningful action within 60 seconds"): ?
-9. **Onboarding step sequence** (welcome → permissions intro → profile setup → first action; or your own sequence): ?
+8. **Onboarding goal** — the one outcome that signals success. E.g., "User completes first meaningful action within 60 seconds": ?
+9. **Onboarding step sequence** — the screens a new user sees, in order. Default flow: welcome → permissions intro → profile setup → first action. Customize as needed: ?
 
 ### Authentication
-10. **Sign-up methods** — social (Apple/Google/etc.) / magic link / email+password — which to support: ?
-11. **Sign-in copy** — headline + body for sign-in screen: ?
-12. **MFA?** (yes/no — if yes, 6-digit code with auto-advance and auto-submit): ?
+10. **Sign-up methods** — which sign-up options to offer: Apple *(required on iOS if any social)* / Google / email+password / magic-link / phone. Pick all that apply: ?
+11. **Sign-in copy** — headline + body text shown on the sign-in screen: ?
+12. **MFA (two-factor auth)?** — yes/no. If yes: 6-digit code via email or SMS with auto-advance + auto-submit: ?
 
-### Permissions (mobile-specific — pre-prompts are mandatory)
-13. **Permissions the app needs** — notifications / camera / photos / location / contacts / mic / Bluetooth. For each: explain why in user-friendly terms: ?
+### Permissions *(mobile-specific — pre-prompts are mandatory before system dialog)*
+13. **Permissions the app needs** — for each: notifications / camera / photos / location / contacts / microphone / Bluetooth, explain **why** in user-friendly terms. E.g., "Notifications → so we can remind you when it's time to meditate.": ?
 
 ### Push notifications
-14. **Push notification templates** — which types does the app send (welcome / mention / daily digest / reminder / re-engagement)? Title + body + actions for each: ?
-15. **Frequency rules** — max per day, quiet hours (default 22:00 – 08:00 user local): ?
+14. **Push notification templates** — which types does the app send: welcome / mention / daily digest / reminder / re-engagement / transactional. For each: title + body + tap action: ?
+15. **Frequency rules** — max push per day + quiet hours window. Default: 22:00–08:00 user local time: ?
 
 ### Settings architecture
-16. **Settings sections** — Account / Notifications / Appearance / Privacy / Billing / Support / About / Danger zone — accept defaults or customize: ?
+16. **Settings sections** — accept defaults or customize. Default sections: Account / Notifications / Appearance / Privacy / Billing / Support / About / Danger zone *(delete account)*: ?
 
 ### Voice + vocabulary
-17. **5-10 voice samples** — actual button labels / empty-state messages / error messages / onboarding sentences / push bodies. (Or "draft them" for AI to propose from INFORMATION.md voice for your approval): ?
-18. **Brand vocabulary preferences**: ?
+17. **5-10 voice samples** — actual button labels, empty-state messages, error messages, onboarding sentences, or push body text written in your brand's voice. The AI mimics these for all new copy. Say **"draft them"** if you'd rather I propose drafts from INFORMATION.md for approval: ?
+18. **Vocabulary preferences** — preferred terms + banned terms. E.g., "members" not "users", never "leverage": ?
 
 ### App store metadata
-19. **iOS App Store**: name (max 30 chars), subtitle (max 30), promotional text (max 170), short description, long description, keywords (100 chars total), primary + secondary category, age rating: ?
-20. **Android Play Store**: name (max 50), short description (max 80), full description, category, content rating: ?
+19. **iOS App Store** — fill each: name *(max 30 chars)*, subtitle *(max 30)*, promotional text *(max 170)*, short description, long description, keywords *(100 chars total, comma-separated)*, primary + secondary category, age rating: ?
+20. **Android Play Store** — fill each: name *(max 50)*, short description *(max 80)*, full description, category, content rating: ?
 
 ### Analytics
-21. **Analytics provider**: PostHog / Mixpanel / Amplitude / Firebase / n/a: ?
-22. **Conversion funnels** to track — onboarding completion + user activation steps: ?
-23. **iOS App Tracking Transparency required?** (cross-app tracking → yes): ?
+21. **Analytics provider** — PostHog / Mixpanel / Amplitude / Firebase / n/a: ?
+22. **Conversion funnels to track** — the activation + retention steps that matter. E.g., onboarding completion → first session → day-7 retention: ?
+23. **iOS App Tracking Transparency required?** — yes if you track users across other apps/sites (e.g., advertising SDKs). Triggers the "Allow tracking?" iOS prompt: ?
 
 ## PART 2 — Customizable Defaults (accept or override)
 
-Most SPEC defaults flow from DESIGN_MOBILE.md (already token-referenced). The few SPEC-specific options:
+Most SPEC defaults flow from DESIGN_MOBILE.md automatically. The few SPEC-specific options:
 
-- **Toast position:** top-center ← (top-right / top-center / bottom-right / bottom-center) — mobile typically top-center
-- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
-- **Number abbreviation:** contextual ← (short / long / contextual)
-- **Onboarding pattern:** empty-state-driven ← (empty-state-driven / progressive / coach-marks / step-by-step-modal / milestone-checklist)
-- **Save model:** auto-save ← (auto-save / explicit-save)
+- **Toast position** — where in-app notifications appear: **top-center** ← top-right / top-center *(mobile standard)* / bottom-right / bottom-center
+- **Time format** — how times display: **hybrid** ← relative *("2h ago")* / absolute *("Mar 5")* / hybrid *(relative ≤7d, absolute after)*
+- **Number abbreviation** — large number format: **contextual** ← short *(1.2K)* / long *(1,200)* / contextual
+- **Onboarding pattern** — how new users learn the app: **empty-state-driven** ← empty-state-driven *(helpful placeholders)* / progressive *(features revealed as needed)* / coach-marks *(pointer arrows)* / step-by-step-modal *(guided walkthrough)* / milestone-checklist *(gamified)*
+- **Save model** — how edits persist: **auto-save** ← auto-save *(saves while typing)* / explicit-save *(requires Save button)*
 
 ## PART 3 — When you reply (and what happens after)
 

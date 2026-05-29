@@ -18,7 +18,7 @@
 #    must follow. The YAML frontmatter contains the values. Both are normative.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.1"
+template_version: "1.2.2"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1377,75 +1377,87 @@ The companion file `DESIGN_TEMPLATE_MOBILE.md` covers iOS + Android apps. Shared
 ```
 # Intake — DESIGN.md (web)
 
-This is everything you need to decide to fully populate your web design system file.
+This is everything you need to decide to fully populate your web design system file. Each item has a short plain-English hint after the em dash.
 
-Reply with answers to PART 1. For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft"). I'll fill the template as your answers come in and run final verification at the end.
+**How to answer:**
+- **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
+- **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft").
+
+I'll fill the template as your answers come in and run final verification at the end.
 
 ## PART 1 — Must Fill (no defaults possible)
 
-### Brand identity (Overview section)
-1. **Brand name**: ?
-2. **One-line product description**: ?
-3. **Primary audience persona** — name + one-sentence portrait: ?
-4. **Voice descriptor** (1-2 sentences on tone, energy, formality, what to avoid): ?
+### Brand identity
+1. **Brand name** — what people call your product. E.g., "Linear", "Stripe": ?
+2. **One-line product description** — one sentence: what it does, for whom: ?
+3. **Primary audience persona** — your main user. Give them a name + one sentence describing who they are: ?
+4. **Voice descriptor** — how the brand "sounds" when it speaks. 1-2 sentences on tone, energy, formality, what to avoid. E.g., "Warm and expert. Direct, never salesy. No exclamation points.": ?
 
 ### Color foundation
-5. **Brand primary color** — hex or OKLCH or descriptive ("warm forest green"). I'll convert to OKLCH and generate the 12-step palette (light + dark): ?
-6. **Brand neutral hue** (0-360, optional; defaults auto-set by warmth profile): ?
-7. **Optional secondary brand color** (most projects skip this): ?
+5. **Brand primary color** — your main brand color. Hex (`#2D6A4F`), OKLCH, or descriptive ("warm forest green"). I'll generate the full 12-step palette + dark mode from this: ?
+6. **Brand neutral hue** *(optional)* — controls whether your grays lean warm (brown-tinted) or cool (blue-tinted). Skip if unsure — auto-set by your warmth profile: ?
+7. **Secondary brand color** *(optional)* — most projects skip this. Only fill if your brand has a defined accent separate from primary: ?
 
 ### Typography
-8. **Display font family** (defaults: Geist Sans / Inter): ?
-9. **Body font family** (often same as display): ?
-10. **Mono font family** for code (defaults: Geist Mono / JetBrains Mono; skip if no code surfaces): ?
+8. **Display font family** — the font for headings + hero copy. Defaults: Geist Sans or Inter: ?
+9. **Body font family** — the font for paragraph copy. Often the same as display: ?
+10. **Mono font family** — fixed-width font for code blocks. Skip if no code surfaces. Defaults: Geist Mono or JetBrains Mono: ?
 
 ### Iconography
-11. **Icon family**: Lucide (free default) / Phosphor / Heroicons / Tabler / HugeIcons (premium tier — Pro license required for full library) / custom: ?
+11. **Icon family** — which icon set to use everywhere in the UI:
+    - **Lucide** *(free, default — clean and minimal; recommended for most)*
+    - **Phosphor** *(free; multiple weights/variants)*
+    - **Heroicons** *(free; Tailwind's official set)*
+    - **Tabler** *(free; very large library)*
+    - **HugeIcons** *(premium; requires Pro license — most extensive)*
+    - **custom** *(your own SVG set)*
+    Pick one: ?
 
 ### Imagery
-12. **Photography style descriptor** (e.g., "natural light, real people, no stock-photo headsets"): ?
+12. **Photography style** — how product/marketing photos should look. Describe lighting, subject, and mood. E.g., "Natural light, real people in their workspaces, no stock-photo headsets.": ?
 
 ## PART 2 — Customizable Defaults (accept or override)
 
-All defaults are premium-grade. Skim and tell me which to change.
+All defaults are premium-grade. Skim and tell me which to change. Each option has a one-line hint.
 
 ### Profiles (preset bundles — each shifts multiple coordinated values)
-- **Radius profile:** default ← (sharp / default / soft / pill) — controls all component corner rounding
-- **Type scale ratio:** balanced (1.200) ← (compact / balanced / spacious / dramatic / editorial) — multiplier between text sizes
-- **Density:** comfortable ← (compact / comfortable / spacious) — between-component spacing
-- **Motion personality:** default ← (subtle / default / expressive) — stagger and spring stiffness
-- **Elevation depth:** default ← (flat / default / dimensional) — separation strategy
-- **Color saturation:** default ← (muted / default / vivid) — chroma multiplier on palettes
-- **Brand warmth:** neutral ← (cool / neutral / warm) — neutral palette hue tint
-- **Section padding** (web only): default ← (compact / default / generous) — vertical padding between page sections
-- **Chart minimalism:** default ← (tufte / default / carbon) — chart axis/gridline visibility
+- **Radius** — corner roundness everywhere: **default** ← sharp *(engineered)* / default *(balanced)* / soft *(friendly)* / pill *(fully rounded)*
+- **Type scale** — size jump between text sizes: **balanced (1.200)** ← compact *(subtle hierarchy)* / balanced / spacious / dramatic / editorial *(magazine-large heros)*
+- **Density** — breathing room around components: **comfortable** ← compact *(packed)* / comfortable / spacious *(airy)*
+- **Motion** — how animated things feel: **default** ← subtle *(barely there)* / default *(polished)* / expressive *(playful, bouncy)*
+- **Elevation** — shadow depth between layers: **default** ← flat *(no shadows)* / default *(subtle)* / dimensional *(pronounced)*
+- **Saturation** — color vividness: **default** ← muted *(desaturated)* / default / vivid *(punchy)*
+- **Warmth** — gray temperature: **neutral** ← cool *(blue-leaning)* / neutral *(pure gray)* / warm *(brown-leaning)*
+- **Section padding** — vertical space between page sections: **default** ← compact / default / generous
+- **Chart minimalism** — how much "ink" charts use: **default** ← tufte *(minimal axes/gridlines)* / default / carbon *(info-dense)*
 
-### Pick-one slots (web)
-- **Input style:** outlined ← (outlined / filled / underlined)
-- **Tabs style:** underline ← (underline / filled)
-- **Icon fill style:** outline ← (outline / filled)
-- **Avatar shape:** circle ← (circle / squircle / rounded-square)
-- **Modal backdrop:** blur ← (scrim / blur)
-- **Code block surface:** always-dark ← (match-page / always-dark)
-- **Onboarding pattern:** empty-state-driven ← (empty-state-driven / progressive / coach-marks / step-by-step-modal / milestone-checklist)
-- **Save model:** auto-save ← (auto-save / explicit-save)
-- **Settings IA:** sidebar ← (sidebar / tabs / single-page)
-- **Container width:** lg (1280 px) ← (md 1024 / lg 1280 / xl 1440)
-- **Heading weight:** 600 ← (600 / 700)
-- **Time format:** hybrid ← (relative-only / absolute-only / hybrid)
-- **Number abbreviation:** contextual ← (short / long / contextual)
-- **Product nav style:** sidebar ← (top-bar / sidebar / hybrid / none)
-- **Hero variant default:** split-asymmetric ← (centered / split-asymmetric / background-led)
-- **Toast position:** top-right ← (top-right / top-center / bottom-right / bottom-center)
-- **Footer style:** multi-column ← (multi-column / minimal)
-- **Command palette (⌘K):** enabled ← (enabled / disabled)
-- **RTL support:** disabled ← (enabled / disabled)
-- **Chart library:** recharts ← (recharts / visx / tremor / echarts / custom)
-- **Illustration style:** vector ← (vector / 3D / abstract / mixed / none)
+### Pick-one slots
+- **Input style** — form field look: **outlined** ← outlined *(border around field)* / filled *(subtle background)* / underlined *(line below text only)*
+- **Tabs** — active tab indicator: **underline** ← underline / filled *(pill background)*
+- **Icon fill** — icon style: **outline** ← outline *(strokes only)* / filled *(solid shapes)*
+- **Avatar shape** — user avatar shape: **circle** ← circle / squircle *(Apple-style rounded square)* / rounded-square
+- **Modal backdrop** — what's behind a popup: **blur** ← scrim *(dim overlay)* / blur *(blurred page)*
+- **Code block surface** — code snippet background: **always-dark** ← match-page *(follows theme)* / always-dark
+- **Onboarding pattern** — how new users learn the product: **empty-state-driven** ← empty-state-driven *(helpful placeholders in empty areas)* / progressive *(features revealed as needed)* / coach-marks *(pointer arrows on first visit)* / step-by-step-modal *(guided walkthrough)* / milestone-checklist *(gamified completion list)*
+- **Save model** — how edits persist: **auto-save** ← auto-save *(saves while typing)* / explicit-save *(requires Save button)*
+- **Settings IA** — settings page layout: **sidebar** ← sidebar *(vertical nav)* / tabs *(horizontal)* / single-page *(scroll)*
+- **Container width** — max page content width: **lg (1280px)** ← md *(1024px)* / lg *(1280px)* / xl *(1440px)*
+- **Heading weight** — heading thickness: **600** ← 600 *(semibold)* / 700 *(bold)*
+- **Time format** — how times display: **hybrid** ← relative *("2h ago")* / absolute *("Mar 5")* / hybrid *(relative ≤7d, absolute after)*
+- **Number abbreviation** — large number format: **contextual** ← short *(1.2K)* / long *(1,200)* / contextual *(depends on space)*
+- **Product nav style** — main app navigation: **sidebar** ← top-bar *(horizontal at top)* / sidebar *(vertical left)* / hybrid / none
+- **Hero variant** — homepage hero layout: **split-asymmetric** ← centered / split-asymmetric *(text left, image right)* / background-led *(full-bleed image)*
+- **Toast position** — where notifications appear: **top-right** ← top-right / top-center / bottom-right / bottom-center
+- **Footer style** — page footer: **multi-column** ← multi-column *(link directory)* / minimal *(legal + a few links only)*
+- **Command palette (⌘K)** — Linear/Raycast-style keyboard launcher: **enabled** ← enabled / disabled
+- **RTL support** — right-to-left languages (Arabic, Hebrew): **disabled** ← enabled / disabled
+- **Chart library** — for data viz: **recharts** ← recharts *(simple)* / visx *(low-level)* / tremor *(dashboards)* / echarts *(feature-rich)* / custom
+- **Illustration style** — custom artwork look: **vector** ← vector *(flat illustrations)* / 3D / abstract / mixed / none
 
-### Color-mode + accessibility
-- **Primary mode:** light ← (light / dark / system)
-- **Capitalization style:** sentence case ← (sentence case / title case)
+### Color mode + accessibility
+- **Primary mode** — does the app default to: **light** ← light / dark / system *(follows OS preference)*
+- **Capitalization** — button + label casing: **sentence case** *("Get started")* ← sentence case / title case *("Get Started")*
 
 ## PART 3 — When you reply
 
