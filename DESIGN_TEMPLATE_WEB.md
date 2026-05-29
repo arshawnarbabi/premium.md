@@ -18,7 +18,7 @@
 #    must follow. The YAML frontmatter contains the values. Both are normative.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.3"
+template_version: "1.2.4"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1394,7 +1394,14 @@ The companion file `DESIGN_TEMPLATE_MOBILE.md` covers iOS + Android apps. Shared
 >
 > If `PROJECT.md` is present in the project, use its full Interactive Population Protocol instead (which orchestrates intake across all 6 templates). The block below is the single-template fallback scoped to `DESIGN.md` alone.
 >
-> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list the remaining unfilled items. Still produce the same structured format with header / PART 1 / PART 2 / PART 3, just with fewer questions.
+> **Partial-fill state — audit BEFORE producing PART 1:** Read the file in full, then walk every must-fill item. For each, classify as filled / suspected-stub / unfilled using BOTH mechanical patterns AND semantic reasoning:
+> - **Mechanical (unfilled):** still wrapped in `<...>` placeholder syntax, empty string / null, just `?`, contains `TBD` / `TODO` / `FIXME` (case-insensitive), or a list below its declared minimum cardinality.
+> - **Semantic (suspected stub):** value passes the mechanical checks but looks like a leftover example — known stubs like "Acme Labs", "example.com", "John Doe", "Lorem ipsum", "Your Brand"; generic placeholder language like "Insert your tagline here"; one-word filler like "product" / "app" in slots needing real content; or contextually inconsistent with other filled values.
+> - **Definitively filled:** specific to this brand, contextually coherent, meets cardinality + sub-field requirements.
+>
+> Include unfilled items in PART 1 as-is. Include suspected stubs in PART 1 with confirmation framing (e.g., *"Currently shows 'X' — is that correct? Say 'confirmed' or correct it."*). Exclude definitively-filled items. Same PART 1 / PART 2 / PART 3 shape — just fewer questions.
+>
+> When in doubt, INCLUDE in PART 1 with confirmation framing rather than silently treating as filled.
 >
 > **No brand context provided:** Still produce the intake exactly as below — leave `?` markers. The user will provide context in their reply.
 
@@ -1494,8 +1501,9 @@ I'll:
 4. Generate dark-mode counterpart with chroma reduced 20-40% and lightness compressed (NOT inversion)
 5. Derive shadow tint = neutral.12, surface roles, border roles
 6. Apply HTML mapping defaults appropriate to project type
-7. Run `grep -n "<[^>]*>" DESIGN.md` — zero matches confirms complete
-8. Offer next steps (populate companion INFORMATION.md / SPEC.md, generate Tailwind config from tokens)
+7. Run the 5-pattern verification: (a) `grep -n "<[^>]*>" DESIGN.md` for placeholders, (b) `grep -niE "\bTBD\b|\bTODO\b|\bFIXME\b" DESIGN.md` for plain-text deferrals, (c) `grep -nE ': *""\s*$|: *\?\s*$|: *null\s*$' DESIGN.md` for empty values, (d) stub scan for common surviving examples, (e) cardinality + semantic-reasoning check on each list slot
+8. Report: ✅ filled count, ⚠️ remaining (with reason per item), 🤔 suspected stubs needing confirmation, 📝 user-deferred items. If anything sits in "remaining" or "suspected stubs", do NOT declare complete
+9. Offer next steps (populate companion INFORMATION.md / SPEC.md, generate Tailwind config from tokens)
 ```
 
 The AI MUST produce this output in full (or, if filling a partially-populated DESIGN.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.

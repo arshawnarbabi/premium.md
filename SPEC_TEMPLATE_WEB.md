@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.3"
+template_version: "1.2.4"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -885,7 +885,14 @@ a11y_notes:
 >
 > If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `SPEC.md` alone.
 >
-> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+> **Partial-fill state — audit BEFORE producing PART 1:** Read the file in full, then walk every must-fill item. For each, classify as filled / suspected-stub / unfilled using BOTH mechanical patterns AND semantic reasoning:
+> - **Mechanical (unfilled):** still wrapped in `<...>` placeholder syntax, empty string / null, just `?`, contains `TBD` / `TODO` / `FIXME` (case-insensitive), or a list below its declared minimum cardinality (e.g., "3-5 trust metrics" → 2 items = unfilled).
+> - **Semantic (suspected stub):** value passes the mechanical checks but looks like a leftover example — known stubs like "Acme Labs", "example.com", "John Doe", "Lorem ipsum"; generic placeholder language like "Insert your tagline here"; one-word filler in slots needing real content; or contextually inconsistent with other filled values.
+> - **Definitively filled:** specific to this brand, contextually coherent, meets cardinality + sub-field requirements.
+>
+> Include unfilled items in PART 1 as-is. Include suspected stubs in PART 1 with confirmation framing. Exclude definitively-filled items.
+>
+> When in doubt, INCLUDE in PART 1 with confirmation framing rather than silently treating as filled.
 >
 > **No brand context provided:** Still produce the intake exactly as below — leave `?` markers.
 >
@@ -965,8 +972,9 @@ I'll:
 2. If you said "draft them" for voice samples, draft 8-10 from INFORMATION.md (or your provided voice descriptor) and surface for approval BEFORE committing
 3. Fill default form / system message / email copy from the template's library
 4. Then loop with you **page-by-page** to collect the actual copy (hero headline + subhead + CTAs, narrative section content, bento cells, testimonials, etc.). I'll go in priority order: homepage → pricing → about → contact → blog → others.
-5. Run `grep -n "<[^>]*>" SPEC.md` — zero matches confirms complete
-6. Offer next steps (write the legal page outlines, generate Next.js page scaffolds matching the section sequence, etc.)
+5. Run the 5-pattern verification: (a) `grep -n "<[^>]*>" SPEC.md` for placeholders, (b) `grep -niE "\bTBD\b|\bTODO\b|\bFIXME\b" SPEC.md` for plain-text deferrals, (c) `grep -nE ': *""\s*$|: *\?\s*$|: *null\s*$' SPEC.md` for empty values, (d) stub scan for common surviving examples, (e) cardinality + semantic-reasoning check on each list slot (voice samples ≥5; trust metrics ≥3 or "none yet"; footer columns ≥3; etc.)
+6. Report: ✅ filled count, ⚠️ remaining (with reason per item), 🤔 suspected stubs needing confirmation, 📝 user-deferred items. If anything sits in "remaining" or "suspected stubs", do NOT declare complete
+7. Offer next steps (write the legal page outlines, generate Next.js page scaffolds matching the section sequence, etc.)
 ```
 
 The AI MUST produce this output in full (or, if filling a partially-populated SPEC.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.

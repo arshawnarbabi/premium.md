@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.3"
+template_version: "1.2.4"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -260,7 +260,7 @@ When working on this project, an AI agent **must** follow these rules:
 6. **Respect `agent_constraints.must_not`.** These are project-level red lines.
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
-9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → DESIGN web/mobile → SPEC web/mobile), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all three final verification checks (slot fill, cross-template consistency, YAML validity). The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
+9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → DESIGN web/mobile → SPEC web/mobile), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
 
 ---
 
@@ -304,6 +304,52 @@ The AI invokes this protocol when the user says any of (case-insensitive, paraph
 When ambiguous (e.g., user says "what does this template do?"), the AI explains and offers: *"Want me to walk you through filling it in? Say 'run the intake' and I'll give you the structured question list."*
 
 The AI does NOT silently railroad into intake mode — it either gets an explicit trigger phrase, or it asks before starting.
+
+## What counts as "filled" vs "unfilled"
+
+Before producing the intake form AND before running final verification, the AI MUST classify each slot as filled or unfilled. **Use both mechanical pattern checks AND semantic reasoning** — be smart, not just literal. The whole point of these templates is that they get filled *properly*; missing a stub here defeats the system.
+
+### Definitively UNFILLED — mechanical patterns
+
+A slot is unfilled if ANY of the following are true:
+
+| Pattern | Example | Notes |
+|---|---|---|
+| Placeholder syntax still present | `name: "<brand name>"` | The default unfilled state |
+| Empty / null / blank value | `name: ""`, `name: null`, `name:` (nothing after the colon) | Common copy-paste artifact |
+| Question mark left over | `name: "?"` | From the intake form template |
+| Deferred marker | `<TBD>`, `TBD`, `TODO`, `FIXME` (case-insensitive, with or without `<…>`) | Plain-text deferrals also count |
+| List below declared cardinality | `founders: [{name: "Jane"}]` when intake said "founders (2 founders, both required)" | Cardinality mismatch |
+| Sub-field missing in a list item | `founders: [{name: "Jane"}]` but each founder requires name + role + bio | Parent looks filled, child isn't |
+
+### Likely UNFILLED — semantic reasoning required
+
+Use judgment for these. For each value, read it and ask: *"is this real content for THIS specific brand, or did someone leave a copy-pasted example?"*
+
+- **Known stub strings** — common template examples that often survive: `"Acme"`, `"Acme Labs"`, `"Acme, Inc."`, `"John Doe"`, `"Jane Smith"`, `"example.com"`, `"hello@example.com"`, `"Your Company"`, `"Lorem ipsum"`, `"Your brand here"`, `"My SaaS"`, `"Product Name"`, `"My App"`.
+- **Generic placeholder language** — values that sound like instructions, not content: `"Insert your tagline here"`, `"Add a description"`, `"Your value proposition"`, `"Describe your product"`.
+- **Contextually inconsistent with established values** — e.g., the brand name throughout the file is "Glow" but this slot says `"My SaaS Product"`. Clearly a stub that survived.
+- **One-word fillers in slots needing real content** — single generic words like `"product"`, `"app"`, `"thing"`, `"company"`, `"users"` in slots that need a real description or persona.
+- **Suspiciously round / placeholder-like numbers** — `"$1,000,000 users"`, `"100% better"` — values that look like fillers rather than real metrics.
+
+### Definitively FILLED — no further check needed
+
+- Value is specific to this brand and contextually coherent with other filled values
+- For lists: meets declared cardinality AND each item has all required sub-fields populated
+- For descriptions: at least one full sentence with brand-specific details (not generic)
+- For computed/derived values: matches the declared algorithm output (e.g., palette step 9 = brand primary color)
+
+### Intentional skips
+
+If the user explicitly said "skip [section]" / "skip 14" / "n/a" — or the value is `<SKIPPED>` / `<N/A>` / `"n/a"` — treat as resolved. Do NOT include in the unfilled list. Track separately and surface in the final report ("3 items intentionally skipped by user: 14, 27, 38").
+
+### When in doubt — confirm, don't assume
+
+If a slot's content looks plausibly real but you can't tell whether it's a stub, **include it in PART 1 with a confirmation framing** instead of silently treating it as filled:
+
+> *5. **Legal entity name** — currently shows "Acme Labs, Inc.". Is that your real entity? Say "confirmed" or correct it.*
+
+Better to ask one extra question than miss a stub that ships to production.
 
 ## Output format
 
@@ -444,12 +490,12 @@ I'll:
 2. Generate derived values (12-step color palette from your primary color with APCA verification, dark-mode counterpart, semantic palette dark variants, shadow tint)
 3. Propagate shared values across templates (voice descriptor → DESIGN voice slot + SPEC voice samples; brand color → DESIGN palettes + DESIGN_MOBILE; primary persona name → SPEC page references)
 4. If you asked me to draft voice samples, I'll show you 8-10 drafted from your voice descriptor + archetype for your approval BEFORE committing to SPEC.md (voice mimicry is high-stakes)
-5. Run final verification: slot fill check (`grep -n "<[^>]*>" *.md`), cross-template consistency check, and YAML validity
-6. Report what was filled, what's still open, and what's marked `<TBD>` for your follow-up
+5. Run the five final verification checks: multi-pattern slot fill (`<placeholder>` syntax + plain-text TBD/TODO + empty YAML + known stub strings like "Acme" / "example.com" + cardinality + semantic reasoning), cross-template consistency, YAML validity, propagation integrity, and completeness summary
+6. Report what was filled, what's still open, what's a suspected stub needing your confirmation, and what's intentionally marked `<TBD>` or `<SKIPPED>` for follow-up
 7. Offer next steps (draft page copy, scaffold code, etc.) — your choice
 ```
 
-## Behavioral protocol — the 11 steps the AI follows
+## Behavioral protocol — the 12 steps the AI follows
 
 ### Step 1: Verify template files present
 Before producing intake, read PROJECT.md (if present) to learn which sibling files exist via `source_files.*.exists`. If PROJECT.md isn't present, scan the directory for the recognized template filenames (`DESIGN.md`, `DESIGN_MOBILE.md`, `SPEC.md`, `SPEC_MOBILE.md`, `INFORMATION.md`).
@@ -457,13 +503,33 @@ Before producing intake, read PROJECT.md (if present) to learn which sibling fil
 ### Step 2: Determine scope
 If the user's trigger was about a specific template ("what do you need for DESIGN.md?"), scope to that template only. If general ("what do you need?"), scope to all present templates.
 
-### Step 3: Produce intake — deterministic format
-Output follows the structure in the "Output format" section above. Same headers, same ordering, same labels every time. Skip sections that don't apply to the scoped templates.
+### Step 3: Audit slot state BEFORE producing intake
 
-### Step 4: Wait for user response
+This step is what guarantees PART 1 lists every actually-unfilled item, not just placeholder-looking ones. Skipping this step is the single biggest way the protocol can fail the user.
+
+For every scoped template file:
+
+1. **Read the file in full** (not a partial read — the whole file).
+2. **Walk every must-fill item** in that template's canonical intake. For each one, locate its corresponding YAML slot path and classify it using the rules in §"What counts as 'filled' vs 'unfilled'".
+3. **Build three buckets**:
+   - **Unfilled** — fails one of the mechanical checks. Goes into PART 1.
+   - **Suspected stub** — passes the mechanical checks but fails the semantic reasoning checks (looks like a leftover example, contextually inconsistent, generic placeholder language). Goes into PART 1 with confirmation framing.
+   - **Definitively filled** — passes all checks. Excluded from PART 1.
+4. **Cardinality pass**: for any list slot with a declared minimum ("3-5 trust metrics", "at least 2 non-features", "2 founders"), count items and mark unfilled if the list is short OR if any item is missing required sub-fields.
+5. **Cross-template propagation pass**: if a slot is filled in its source template (e.g., `INFORMATION.project.name`), check that its propagation targets match (e.g., `PROJECT.project.name`). If they don't match, fix automatically and note in the final report — don't re-ask the user.
+6. **Intentional-skip pass**: items the user explicitly skipped on a prior pass (marked `<SKIPPED>`, `<N/A>`, `"n/a"`) stay excluded.
+
+**Output of this step is the single source of truth for PART 1.** Never improvise the PART 1 list from memory or assumption — always derive from this audit.
+
+Surface a brief one-line summary at the top of the intake form when there are pre-filled items: *"Already filled: 18 of 47 items. 3 suspected stubs need confirmation. 26 remaining."*
+
+### Step 4: Produce intake — deterministic format
+Output follows the structure in the "Output format" section above. Same headers, same ordering, same labels every time. Skip sections that don't apply to the scoped templates. Include only items flagged unfilled or suspected-stub by Step 3.
+
+### Step 5: Wait for user response
 Don't proceed until the user replies. If they go silent, don't fabricate answers.
 
-### Step 5: Parse user response flexibly
+### Step 6: Parse user response flexibly
 Users will answer in many shapes:
 - Numbered ("1. Acme. 2. We're a billing platform. ...")
 - Free-form prose ("So Acme is a billing platform for ...")
@@ -498,7 +564,7 @@ If the user gives partial answers and says "let me come back later" / "I'll do t
 **Intake mode persists across ad-hoc questions:**
 If during intake the user asks a side question ("wait, what does 'profile' mean again?"), answer it briefly and then return to intake — don't drop the form. Re-show the remaining open items if it's been a while since the form was displayed.
 
-### Step 6: Fill templates progressively, in the right order
+### Step 7: Fill templates progressively, in the right order
 As you parse answers, edit the relevant template files directly. **Fill order matters** because later files reference earlier ones:
 
 1. **PROJECT.md** first (project type + tech stack + file existence flags — sets scope for everything else)
@@ -508,7 +574,7 @@ As you parse answers, edit the relevant template files directly. **Fill order ma
 
 Show the user a compact summary of what you filled per file after each batch.
 
-### Step 7: Derive automatically (in this order)
+### Step 8: Derive automatically (in this order)
 For values that can be computed from user inputs, derive without asking. **Order matters** — later derivations depend on earlier ones.
 
 1. **Resolve all profile selections first** (saturation, warmth, radius, type-scale, etc.). User-provided overrides win; defaults apply otherwise.
@@ -533,10 +599,10 @@ For values that can be computed from user inputs, derive without asking. **Order
    - Voice mimicry is high-stakes; treat this as the most important approval gate in the intake
 8. **Generate placeholder paths** for OG image, favicon, logo (mark with `<TBD: replace with actual asset>` so user remembers).
 
-### Step 8: Propagate shared values
+### Step 9: Propagate shared values
 See "Cross-template consistency" table below.
 
-### Step 9: Surface ambiguities and gaps
+### Step 10: Surface ambiguities and gaps
 If the user couldn't answer something ("I don't have a brand color yet"), offer three options:
 - I can generate one based on your brand archetype and voice
 - We can mark it `<TBD: brand primary color>` and circle back
@@ -544,22 +610,41 @@ If the user couldn't answer something ("I don't have a brand color yet"), offer 
 
 Never silently fabricate brand decisions.
 
-### Step 10: Final verification
-After all edits, perform three checks and report results:
+### Step 11: Final verification — multi-pattern audit
 
-**Check A — slot fill:**
-Run `grep -n "<[^>]*>" *.md` across all template files. Report:
+After all edits, perform five checks and report results. **The grep patterns are a deterministic safety net** — the AI also uses semantic reasoning per §"What counts as 'filled' vs 'unfilled'". Combine both.
+
+**Check A — slot fill (5 sub-patterns):**
+
+Run each pattern across all scoped template files. The union of hits is the unfilled set.
+
+| Sub-check | Pattern / method | Catches |
+|---|---|---|
+| A.1 | `grep -n "<[^>]*>" *.md` | Unfilled `<placeholder>` syntax |
+| A.2 | `grep -niE "\bTBD\b\|\bTODO\b\|\bFIXME\b" *.md` | Plain-text deferrals (case-insensitive) |
+| A.3 | `grep -nE ': *""\s*$\|: *\?\s*$\|: *null\s*$' *.md` | Empty / null / `?` YAML values |
+| A.4 | Stub scan: `grep -niE "Acme\|example\.com\|John Doe\|Jane Smith\|Lorem ipsum\|Your Brand\|Your Company\|Product Name" *.md` | Common surviving template stubs |
+| A.5 | Cardinality + semantic scan: walk each list slot with a declared minimum count and verify; for descriptive slots, apply the semantic reasoning checks from §"What counts as 'filled' vs 'unfilled'" | Lists below threshold; suspected stubs that don't trip A.1–A.4 |
+
+Report combined results:
 - ✅ X slots filled
-- ⚠️ Y remaining slots (list them; explain why each is still open)
-- ⚠️ Z slots marked `<TBD: ...>` (intentional placeholders user needs to fill later)
+- ⚠️ Y slots remaining (per sub-check that flagged each; cite the failure mode: *placeholder / empty / deferred / stub / under-cardinality / semantic-stub-suspected*)
+- 📝 Z slots intentionally marked `<TBD: ...>` or `<SKIPPED>` by the user — not failures, but called out so the user can revisit
+- 🤔 W slots flagged as suspected stubs needing confirmation (passed A.1–A.4 but failed semantic reasoning — surface each with its current value)
 
 **Check B — cross-template consistency:**
-Verify each propagation rule from the table below. Report ✅ rules verified + ⚠️ any inconsistencies.
+Verify each propagation rule from the table below. Report ✅ rules verified + ⚠️ any inconsistencies. Auto-fix drift; don't re-ask the user.
 
 **Check C — YAML validity (when AI has shell access):**
 Run `yaml.safe_load` on each frontmatter. Surface and offer to fix any errors.
 
-### Step 11: Offer next steps
+**Check D — propagation integrity:**
+Walk the propagation table (below). For each row, the source value must match all targets exactly. Surface any drift, even if it would otherwise pass Check A.
+
+**Check E — completeness summary:**
+Final counts per file: `total slots / filled / remaining / suspected-stubs / user-deferred / skipped`. **If anything sits in `remaining` or `suspected-stubs`, the templates are NOT complete — do NOT declare done.** Surface the buckets clearly so the user can tell what still needs attention vs. what they intentionally deferred.
+
+### Step 12: Offer next steps
 After completion, proactively offer (don't wait for user to ask):
 - "Want me to draft v1 copy for any specific page (home / pricing / about)?"
 - "Want me to draft auth flow copy, transactional emails, or system messages?"

@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.3"
+template_version: "1.2.4"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1252,7 +1252,14 @@ This is the **mobile sibling** of `DESIGN_TEMPLATE_WEB.md`. The two files share 
 >
 > If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `DESIGN_MOBILE.md` alone.
 >
-> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+> **Partial-fill state — audit BEFORE producing PART 1:** Read the file in full, then walk every must-fill item. For each, classify as filled / suspected-stub / unfilled using BOTH mechanical patterns AND semantic reasoning:
+> - **Mechanical (unfilled):** still wrapped in `<...>` placeholder syntax, empty string / null, just `?`, contains `TBD` / `TODO` / `FIXME` (case-insensitive), or a list below its declared minimum cardinality.
+> - **Semantic (suspected stub):** value passes the mechanical checks but looks like a leftover example — known stubs like "Acme Labs", "example.com", "John Doe", "Lorem ipsum", "Your Brand"; generic placeholder language; one-word filler in slots needing real content; or contextually inconsistent with other filled values.
+> - **Definitively filled:** specific to this brand, contextually coherent, meets cardinality + sub-field requirements.
+>
+> Include unfilled items in PART 1 as-is. Include suspected stubs in PART 1 with confirmation framing. Exclude definitively-filled items.
+>
+> When in doubt, INCLUDE in PART 1 with confirmation framing rather than silently treating as filled.
 >
 > **No brand context provided:** Still produce the intake exactly as below — leave `?` markers. The user will provide context in their reply.
 
@@ -1340,8 +1347,9 @@ I'll:
 4. Generate dark-mode counterpart with chroma reduced 20-40% and lightness compressed (NOT inversion)
 5. Set platform-appropriate icon family + nav style based on platform_adherence
 6. Map type roles to iOS Dynamic Type / Android Material 3 sp scale
-7. Run `grep -n "<[^>]*>" DESIGN_MOBILE.md` — zero matches confirms complete
-8. Offer next steps (populate companion INFORMATION.md / SPEC_MOBILE.md, generate iOS asset catalog colors, Material 3 ColorScheme, etc.)
+7. Run the 5-pattern verification: (a) `grep -n "<[^>]*>" DESIGN_MOBILE.md` for placeholders, (b) `grep -niE "\bTBD\b|\bTODO\b|\bFIXME\b" DESIGN_MOBILE.md` for plain-text deferrals, (c) `grep -nE ': *""\s*$|: *\?\s*$|: *null\s*$' DESIGN_MOBILE.md` for empty values, (d) stub scan for common surviving examples, (e) cardinality + semantic-reasoning check on each list slot
+8. Report: ✅ filled count, ⚠️ remaining (with reason per item), 🤔 suspected stubs needing confirmation, 📝 user-deferred items. If anything sits in "remaining" or "suspected stubs", do NOT declare complete
+9. Offer next steps (populate companion INFORMATION.md / SPEC_MOBILE.md, generate iOS asset catalog colors, Material 3 ColorScheme, etc.)
 ```
 
 The AI MUST produce this output in full (or, if filling a partially-populated DESIGN_MOBILE.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.

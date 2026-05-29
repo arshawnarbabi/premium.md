@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.2.3"
+template_version: "1.2.4"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -368,7 +368,14 @@ assets:
 >
 > If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `INFORMATION.md` alone.
 >
-> **Partial-fill state:** If the user has already filled some `<slot>` values, read the file first, then EXCLUDE filled items from PART 1 — only list remaining unfilled items.
+> **Partial-fill state — audit BEFORE producing PART 1:** Read the file in full, then walk every must-fill item. For each, classify as filled / suspected-stub / unfilled using BOTH mechanical patterns AND semantic reasoning:
+> - **Mechanical (unfilled):** still wrapped in `<...>` placeholder syntax, empty string / null, just `?`, contains `TBD` / `TODO` / `FIXME` (case-insensitive), or a list below its declared minimum cardinality.
+> - **Semantic (suspected stub):** value passes the mechanical checks but looks like a leftover example — known stubs like "Acme Labs", "example.com", "John Doe", "Lorem ipsum", "Your Brand"; generic placeholder language like "Insert your tagline here"; one-word filler like "product" / "app" in slots needing real content; or a value contextually inconsistent with other filled values in this file.
+> - **Definitively filled:** specific to this brand, contextually coherent, meets cardinality + sub-field requirements.
+>
+> Include unfilled items in PART 1 as-is. Include suspected stubs in PART 1 with confirmation framing (e.g., *"Currently shows 'Acme Labs' — is that your real entity? Say 'confirmed' or correct it."*). Exclude definitively-filled items.
+>
+> When in doubt, INCLUDE in PART 1 with confirmation framing rather than silently treating as filled.
 >
 > **No brand context provided:** Still produce the intake exactly as below — leave `?` markers. The user will provide context in their reply.
 
@@ -467,8 +474,8 @@ INFORMATION.md has no defaults to customize — every slot is project-specific t
 I'll:
 1. Apply your answers to INFORMATION.md
 2. If you said "draft them" for voice principles, draft 4 example sentences from your archetype + tone descriptors and surface for approval
-3. Run grep verification: `grep -n "<[^>]*>" INFORMATION.md` — zero matches confirms complete
-4. Surface any remaining `<TBD>` placeholders for follow-up
+3. Run the 5-pattern verification: (a) `grep -n "<[^>]*>" INFORMATION.md` for placeholders, (b) `grep -niE "\bTBD\b|\bTODO\b|\bFIXME\b" INFORMATION.md` for plain-text deferrals, (c) `grep -nE ': *""\s*$|: *\?\s*$|: *null\s*$' INFORMATION.md` for empty values, (d) stub scan for common surviving examples ("Acme", "example.com", "John Doe", "Lorem ipsum"), (e) cardinality + semantic-reasoning check on each list slot
+4. Report: ✅ filled count, ⚠️ remaining (with reason per item), 🤔 suspected stubs needing confirmation, 📝 user-deferred `<TBD>` / `<SKIPPED>` items. If anything sits in "remaining" or "suspected stubs", do NOT declare complete
 5. Offer next steps (populate companion DESIGN.md / SPEC.md, generate sitemap from product description, etc.)
 ```
 
