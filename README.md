@@ -1,3 +1,5 @@
+![premium-product-templates](./premium-product-templates_banner.png)
+
 # premium-product-templates
 
 > A six-file template system that turns any AI agent into a reliable premium-grade product builder.
