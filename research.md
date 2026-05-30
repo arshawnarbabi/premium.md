@@ -37,6 +37,7 @@
 - §W — Product Flow Patterns
 - §X — Microcopy & UX Writing
 - §X2 — Marketing & Conversion Copy
+- §X3 — Discoverability (SEO + AEO + GEO)
 - §Y — Measured Reference Data
 - §Z — Open Questions
 - Sources
@@ -3423,6 +3424,88 @@ What makes copy read as cheap/AI-average (extends §S Anti-Patterns + §X.10):
 - **AI Agent Contract hook:** when writing or revising marketing/product copy, the AI applies §X2 — lead with the value proposition, write to "you" with specifics, frame features as outcomes, keep one CTA, never fabricate proof or urgency, and pass the 5-second + could-my-competitor-say-this tests.
 
 **Source.** Synthesized from established conversion-copywriting practice and current (2025–2026) sources: positioning → messaging → copy ([April Dunford](https://www.aprildunford.com/post/a-product-positioning-exercise)); 5 stages of awareness (Eugene Schwartz, *Breakthrough Advertising*); voice-of-customer / message mining ([Copyhackers / Joanna Wiebe](https://copyhackers.com/voice-of-customer-in-your-brand/), [CXL](https://cxl.com/blog/voice-of-customer/)); landing-page conversion structure + 4-U headlines + tested lift data ([VWO](https://vwo.com/blog/landing-page-copywriting/), [Unbounce](https://unbounce.com/landing-page-copywriting/), [Shopify](https://www.shopify.com/blog/high-converting-landing-pages)); persuasion principles + ethics ([Cialdini via CXL](https://cxl.com/blog/cialdinis-principles-persuasion/), [InfluenceAtWork](https://www.influenceatwork.com/7-principles-of-persuasion/)); ASO + onboarding/paywall copy ([ASOMobile 2026](https://asomobile.net/en/blog/aso-in-2026-the-complete-guide-to-app-optimization/), [AppFollow](https://appfollow.io/blog/aso-tips)); answer-engine/GEO copy ([Frase AEO 2026](https://www.frase.io/blog/what-is-answer-engine-optimization-the-complete-guide-to-getting-cited-by-ai)). Premium positioning arc cross-refs §Y; UX writing in §X; anti-patterns in §S.
+
+---
+
+## §X3 — Discoverability (SEO + AEO + GEO)
+
+**Scope.** §X2 covered how to *write* copy that converts; this section covers how that copy gets **found and cited** — by search engines (SEO), by answer features/snippets (AEO), and by generative AI assistants (GEO). This is the brand-agnostic *why* behind `SEO.md` (the operational template). Per-page metadata lives in `INFORMATION.seo` + `SPEC.meta`; this section is the standard those slots encode. **The 2026 reality: a page must satisfy three readers — the crawler, the human, and the LLM — and the same fundamentals (crawlable, fast, structured, credible, fresh) serve all three.**
+
+### X3.1 The three layers
+| Layer | Goal | Won by |
+| --- | --- | --- |
+| **SEO** | rank in the classic results | crawlable + fast + intent-matched + structured |
+| **AEO** | *be the answer* in AI Overviews / featured snippets | answer-first content + structured data |
+| **GEO** | *be cited* by ChatGPT / Claude / Perplexity / Gemini | structured data + credibility signals + freshness + entity consistency |
+
+They're not separate stacks — they share a foundation. The strongest strategy is **search-first in its foundations, answer-first in its formatting.** You cannot be cited by an AI engine if a crawler can't read you in the first place.
+
+### X3.2 Technical foundation — a page that can't be crawled can't be found
+Crawlability/indexation failures are the most common *and* most damaging SEO issues — fix these before anything else:
+- **Crawlability & crawl budget:** block low-value URL patterns in `robots.txt`, consolidate duplicates with `<link rel="canonical">`, kill URL-parameter proliferation, and keep `sitemap.xml` reflecting your highest-priority pages.
+- **Indexability:** SEO-critical content must render **without** JavaScript execution — use **SSR or SSG** (don't hide primary content behind client-side JS). Correct `robots`/`noindex` usage.
+- **Site architecture:** pages **more than 3–4 clicks from the homepage are crawled less often** — keep priority pages within ~3 clicks. **Internal linking with descriptive anchor text** distributes authority and teaches engines your topical structure.
+- **Mobile-first:** Google crawls/ranks the **mobile** version; it must be complete, not a stripped-down variant.
+- **Core Web Vitals** (page experience): **LCP < 2.5s · INP < 200ms · CLS < 0.1**, judged at the **75th percentile of real users**. Performance is discoverability *and* conversion (a 1s delay can cut conversions ~7%). The *values* live in DESIGN §M / QA Gate B — this section just says they're a discoverability input, not only a UX one.
+- **Hygiene:** HTTPS, no broken links, clean redirects (301 not chains), an XML sitemap, and a **quarterly technical audit**.
+
+### X3.3 On-page & intent
+- **Match search intent, not just keywords** — informational / navigational / commercial / transactional queries want different page types. Write the page the query deserves.
+- **Titles & meta:** unique, descriptive `<title>` (front-load the primary term), a compelling meta description (CTR, not a ranking factor), clean readable URLs, one `<h1>` and a logical heading hierarchy (also an AEO surface). These slots live in `INFORMATION.seo` + `SPEC.meta`.
+- **Topical authority & depth:** cover a topic comprehensively across linked pages rather than one thin page per keyword. Depth + internal linking signals expertise.
+
+### X3.4 Structured data (JSON-LD) — the machine-readable layer
+Structured data is how engines and LLMs *understand and trust* a page's entities. **JSON-LD is Google's preferred format** — emit `<script type="application/ld+json">` in `<head>` with `@context: https://schema.org` and the right `@type`.
+- **Core type map:** `Organization` + `WebSite` (every page, from INFORMATION), `Article`/`BlogPosting` (posts: author, datePublished, dateModified), `Product`/`Offer` (pricing), `BreadcrumbList`, `HowTo`, `LocalBusiness` (only with a real location), `Person` (founders/authors → E-E-A-T).
+- **FAQPage caveat (important + current):** Google **restricted FAQ *rich results* to government + authoritative-health sites in late 2023** — general business sites no longer get the FAQ rich snippet. **But** `FAQPage` markup still helps **LLM/AEO answer extraction**, so keep it where genuine Q&A exists — for the AEO/GEO benefit, not the rich result.
+- **Never fabricate schema** (fake ratings, prices, reviews) — it's a manual-action risk and an AI-trust killer. Mark up only what's truly on the page. Validate every page in the **Rich Results Test** (0 errors) before "done" (QA Gate C).
+
+### X3.5 E-E-A-T & trust — the credibility layer
+**E-E-A-T** (Experience, Expertise, Authoritativeness, Trust) is *how Google's quality raters judge a page* — **not a direct ranking factor, there is no "E-E-A-T score,"** but the signals it describes are increasingly load-bearing (and they're exactly what LLMs weigh when deciding whom to cite):
+- **Authorship is now infrastructure, not metadata.** Named bylines → complete **author pages** with verifiable credentials, relevant experience, and links to professional profiles. The author page must show relevance to *the specific topic*, not just general credentials. Back it with **`Person` schema + `sameAs`** to known profiles (Knowledge-Graph entity).
+- **Trust signals:** real about/contact/policy pages, citations to authoritative sources, consistent NAP (for local), honest reviews. Especially critical for **YMYL** (your-money-your-life) topics.
+- **Entity consistency:** the brand name, people, and claims must be identical across every page and match `INFORMATION.social.sameAs` — inconsistency confuses both the Knowledge Graph and LLMs. (Ties to CONTENT.team_members + INFORMATION.)
+
+### X3.6 AEO — be the answer
+Optimizing for the answer-retrieval layer (featured snippets, AI Overviews):
+- **Answer-first:** open a page/section with a clean **40–60-word answer** to the question it targets — the chunk an engine lifts. Depth follows.
+- **Definition-lead sentences:** `[Entity] is a [category] that [differentiator]` — the structure retrieval systems parse most reliably.
+- **Genuine Q&A + scannable structure** — question `H2`s, short answers, lists, tables, comparison blocks. (This is the same craft as §X2.10 — copy that converts *and* gets extracted.)
+
+### X3.7 GEO — be cited by generative engines
+Getting quoted by ChatGPT / Claude / Perplexity / Gemini. Measured citation lifts vs. uncited pages: **expert quotes +41%, statistics +30%, inline citations +30%**; pages with **named authors are cited ~2.3×** more.
+- Include **real stats, attributed expert quotes, and inline citations** to authoritative sources; make claims clear and specific.
+- **Comprehensive, definitive pages** on your core topics earn citations; thin pages don't.
+- **Entity consistency** (X3.5) is a GEO prerequisite.
+- **Platform tilt (FYI, not gospel):** Perplexity rewards freshness/authority; Claude favors long-form depth; Gemini weighs multimodal; ChatGPT leans on well-structured, citable sources.
+- **`llms.txt`** (a markdown index of key pages at `/llms.txt`): low-cost forward-proofing — **no major provider officially consumes it yet**, so it's insurance, not a 2026 lever.
+
+### X3.8 Freshness & maintenance
+Content **decays**. Pages not refreshed within a quarter lose AI citations at roughly **3×** the normal rate, and stale info erodes rankings. Stamp a `last_reviewed` date, surface "updated" dates honestly, and **review core pages quarterly** (alongside the technical audit). Freshness is a ranking *and* a citation signal.
+
+### X3.9 Measurement — the metric is shifting from clicks to citations
+- **Classic:** rankings, impressions, CTR (Search Console), organic sessions, indexed-page count, CWV field data (CrUX).
+- **2026 additions:** **citations/mentions in AI answers** (does ChatGPT/Perplexity name you for your core queries?), AI-Overview presence, branded-search lift. As zero-click and AI-answer surfaces grow, *being the cited source* matters even when the click doesn't happen.
+- Audit technical + freshness **quarterly**; never silently let coverage decay.
+
+### X3.10 Anti-patterns (discoverability)
+- **Keyword stuffing / writing for crawlers** over humans (and now over LLMs, which punish it harder).
+- **Fabricated structured data** — fake ratings/reviews/prices (manual-action + AI-trust killer).
+- **Thin / doorway / AI-spam content** with no depth or first-hand experience.
+- **Faking E-E-A-T** — invented authors, borrowed credentials.
+- **Hiding primary content behind JavaScript** (uncrawlable).
+- **Orphaned pages** (no internal links) and **deep burial** (>4 clicks).
+- **Fabricated stats/quotes** in GEO copy (also breaks the CONTENT "never invent" rule).
+- **Cloaking** / showing engines different content than users.
+
+### X3.11 Template translation
+- **`SEO.md`** is the operational layer — the per-project structured-data map, social cards, AEO/GEO flags, freshness, `llms.txt`. It now cites **research §X3** for the *why* (as DESIGN cites §C and SPEC cites §X2).
+- **`INFORMATION.seo`** = entity + meta defaults (canonical domain, title pattern, OG defaults, robots, sitemap); **`SPEC.meta`** = per-page title/description/canonical + the `page_type`/`aeo`/`last_reviewed` hooks.
+- **`CONTENT.md`** supplies the GEO credibility inputs — real `stats`, `testimonials` (quotes), and `team_members` (→ `Person`/author E-E-A-T) — never invented.
+- **`SPEC` page copy** is written answer-first per **§X2.10 + X3.6**; **DESIGN §M / QA Gate B** own the CWV performance values this section depends on.
+- **AI Agent Contract hook:** emit valid JSON-LD per page type (0 errors), keep the entity consistent with INFORMATION, write informational pages answer-first, stamp `last_reviewed`, and **never fabricate** schema fields, stats, reviews, or authorship.
+
+**Source.** Synthesized from current (2026) discoverability standards: technical SEO / crawlability / CWV / SSR ([NoGood](https://nogood.io/blog/technical-seo-checklist/), [DebugBear](https://www.debugbear.com/blog/technical-seo-checklist), [ALM Corp](https://almcorp.com/blog/technical-seo-checklist/)); JSON-LD / schema types + the FAQPage rich-result restriction ([Digital Applied — Structured Data 2026](https://www.digitalapplied.com/blog/structured-data-seo-2026-rich-results-guide), [SALT.agency](https://salt.agency/blog/json-ld-structured-data-beginners-guide-for-seos/)); E-E-A-T + authorship ([Search Engine Journal](https://www.searchenginejournal.com/google-e-e-a-t-how-to-demonstrate-first-hand-experience/474446/), [Keywords Everywhere](https://keywordseverywhere.com/blog/google-e-e-a-t-guidelines-an-overview/)); AEO / GEO ([Frase AEO 2026](https://www.frase.io/blog/what-is-answer-engine-optimization-the-complete-guide-to-getting-cited-by-ai), [eMarketer GEO/AEO 2026](https://www.emarketer.com/content/faq-on-geo-aeo--where-ai-search-seo-overlap-2026)). Operational layer in `SEO.md`; answer-first copy craft in §X2; CWV values in §M / QA.
 
 ---
 

@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.16.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.17.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -43,7 +43,7 @@ Plus one reference file:
 
 | File | Purpose |
 | --- | --- |
-| `research.md` | The brand-agnostic premium-standard research (27 sections, ~4,000 lines) covering design **and copy** (incl. §X2 Marketing & Conversion Copy) — the explanatory backing for everything in the templates. DESIGN + SPEC templates cite specific sections. |
+| `research.md` | The brand-agnostic premium-standard research (28 sections, ~4,050 lines) covering **design, copy, and discoverability** (incl. §X2 Marketing & Conversion Copy and §X3 SEO + AEO + GEO) — the explanatory backing for everything in the templates. DESIGN / SPEC / SEO templates cite specific sections. |
 
 Plus optional tooling (the markdown templates stay dependency-free):
 
@@ -90,7 +90,7 @@ Each template is operational, not aspirational. Specifically:
 - **Marketing & conversion copy** — positioning→messaging→copy, awareness stages, the conversion-page narrative, headline/value-prop formulas, feature→benefit→outcome, persuasion psychology (ethical), proof & CTA craft, app-store/onboarding/paywall copy, answer-engine (AEO/GEO) copy (`research.md §X2`; SPEC templates apply it)
 - **AI Agent Contract** — 26 hard rules (web) / 18 hard rules (mobile) the AI must follow
 - **Content model** (`CONTENT.md`) — reusable typed records (testimonials, stats, features, FAQs, team, case studies, pricing) maintained *once* and referenced by pages via `{content.*}` — the same mechanism as design tokens, so the same quote or metric never drifts across pages
-- **Discoverability** (`SEO.md`) — three layers: **SEO** (rank), **AEO** (be the direct answer in AI Overviews), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini): JSON-LD structured data per page type, answer-first patterns, citability signals (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`
+- **Discoverability** (`SEO.md`, backed by `research.md §X3`) — three layers: **SEO** (rank — crawlability, structured data, E-E-A-T, Core Web Vitals), **AEO** (be the direct answer in AI Overviews — answer-first, FAQ markup), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini — stats / quotes / citations / entity consistency / freshness): JSON-LD per page type, social cards, `llms.txt`
 - **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
 - **Decision log** (`DECISIONS.md`) — append-only ADR-style record of locked choices + rationale, so a fresh agent reads what's settled before reopening it; plus an `AGENTS.md` emitted to the built repo (the open standard 20+ coding agents read) for the docs→code handoff
 
@@ -240,7 +240,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.16.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.17.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 

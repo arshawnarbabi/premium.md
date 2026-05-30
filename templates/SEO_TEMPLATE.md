@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SEO_TEMPLATE.md — Discoverability: SEO + AEO + GEO
-# Version: 1.16.0
+# Version: 1.17.0
 # Scope: web. How the site gets FOUND (search) and CITED (AI answer engines).
 # Companions: INFORMATION.md (the entity — brand/people/social), SPEC.md (the pages),
 #            QA.md (validates the output). Basic per-page meta lives in INFORMATION.seo
@@ -21,7 +21,7 @@
 #    QA.md validates them. Re-review pages quarterly (freshness drives AI citations).
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.16.0"
+template_version: "1.17.0"
 file_role: "seo"   # information | design | spec | project | content | seo | qa | decisions
 
 # ── Structured data (JSON-LD) — the machine-readable layer AI engines read to CITE you ──
@@ -49,7 +49,7 @@ structured_data:
     about:       ["Organization", "Person (founders)"]        # founders → E-E-A-T entity signals
   notes:
     - "JSON-LD is the format Google, Bing, Perplexity, and ChatGPT all rely on. A page with valid schema is far likelier to be indexed + cited than one without."
-    - "FAQPage: Google removed FAQ *rich results* (May 2026), but FAQPage markup still helps LLM answer extraction — keep it where genuine Q&A exists."
+    - "FAQPage: Google restricted FAQ *rich results* to government + authoritative-health sites (late 2023) — general sites no longer get the rich snippet, but FAQPage markup still aids LLM/AEO answer extraction, so keep it where genuine Q&A exists. See research §X3.4."
     - "Don't fabricate schema fields (fake ratings/prices). Only mark up what's truly on the page."
 
 # ── Social cards (extends INFORMATION.seo.default_og_image; per-page override in SPEC) ──
@@ -125,7 +125,7 @@ If `crawl.llms_txt.enabled`, emit a `/llms.txt`: a markdown index of the site's 
 5. **Don't invent** stats, quotes, ratings, or citations — pull from CONTENT.md / INFORMATION.md or ask.
 
 # Versioning
-`template_version: 1.16.0`. Per-project `SEO.md` instances should preserve this field.
+`template_version: 1.17.0`. Per-project `SEO.md` instances should preserve this field.
 
 # Source
-2026 SEO/AEO/GEO standards (JSON-LD as the AI-search signal layer; answer-first + FAQ for AEO; stats/quotes/citations/freshness for GEO citation). See `docs/SYSTEM_RESEARCH.md` (F2, F5, F14). Entity data lives in `INFORMATION.md`; page copy in `SPEC.md`; this file is the discoverability layer over both.
+The brand-agnostic *why* behind this template is **`research.md §X3 — Discoverability (SEO + AEO + GEO)`** (technical foundation, structured data/JSON-LD, E-E-A-T, answer-first/AEO, citability/GEO, freshness). Originating findings: `docs/SYSTEM_RESEARCH.md` (F2, F5, F14). Entity data lives in `INFORMATION.md`; page copy in `SPEC.md` (answer-first per `research §X2.10 + §X3.6`); this file is the operational discoverability layer over both.
