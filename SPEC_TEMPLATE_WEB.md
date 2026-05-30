@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.10.0"
+template_version: "1.11.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -166,6 +166,10 @@ pages:
       og_image: "<page-specific image or omit to use default>"
       canonical: "<URL>"
       robots: "index, follow"
+      # ── Discoverability hooks (consumed by SEO.md) — present on every page ──
+      page_type: "home"   # SEO.md `page_type_schema` key → which JSON-LD to emit (home|article|product|pricing|faq|how_to|about|local)
+      aeo: { answer_first: false, faq: false }   # is this page an answer target? drives answer-first copy + FAQPage markup
+      last_reviewed: "<YYYY-MM-DD>"   # SEO.md freshness — re-review quarterly
 
     # Section sequence — uses DESIGN.md canonical landing composition
     # Override the default order only with clear justification
@@ -1073,7 +1077,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.9.0`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.11.0`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 

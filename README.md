@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.10.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.11.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -32,6 +32,7 @@ The system is built from ~4,000 lines of cross-referenced research on what makes
 | **`DESIGN_TEMPLATE_MOBILE.md`** | Visual design system for mobile — iOS HIG + Material 3 native specs, gestures, haptics, safe areas, Dynamic Type / sp scaling. | ~1,800 |
 | **`SPEC_TEMPLATE_WEB.md`** | Site map + per-page content/layout/copy + forms + system messages + transactional email + legal pages + analytics events. | ~950 |
 | **`SPEC_TEMPLATE_MOBILE.md`** | App map + per-screen content/copy/states + onboarding + auth + permission pre-prompts + push notifications + app store metadata. | ~860 |
+| **`SEO_TEMPLATE.md`** | **Discoverability** — SEO + AEO + GEO: JSON-LD structured data (page-type schema map), answer-first content patterns, generative-engine citability (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`. The discoverability layer over `INFORMATION.seo` + `SPEC`. | ~130 |
 | **`QA_TEMPLATE.md`** | Premium **acceptance gate** the AI runs against its own build before "done" — WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget, token fidelity (no hardcoded values), responsive incl. ultra-wide, content-matches-SPEC, security. | ~150 |
 
 Plus one reference file:
@@ -83,6 +84,7 @@ Each template is operational, not aspirational. Specifically:
 - **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
 - **Microcopy** — voice principles, banned-word list, length budgets, premium positioning structure
 - **AI Agent Contract** — 26 hard rules (web) / 18 hard rules (mobile) the AI must follow
+- **Discoverability** (`SEO.md`) — three layers: **SEO** (rank), **AEO** (be the direct answer in AI Overviews), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini): JSON-LD structured data per page type, answer-first patterns, citability signals (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`
 - **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
 
 ---
@@ -134,7 +136,7 @@ You don't have to fill the templates manually. Once they're copied into your pro
 
 > "Help me populate these templates"
 
-It produces a **structured intake form** — must-fill brand identity at the top, customizable defaults below — covering every decision you need to make. Answer in your own time. The AI fills the templates for you, derives the 12-step color palette + dark mode counterpart, propagates shared values across all 6 templates, and runs final verification. For a **web + mobile** project it confirms scope up front and fills **both** design files — shared values (colors, fonts, icons) are copied across automatically, so the mobile system never gets left behind.
+It produces a **structured intake form** — must-fill brand identity at the top, customizable defaults below — covering every decision you need to make. Answer in your own time. The AI fills the templates for you, derives the 12-step color palette + dark mode counterpart, propagates shared values across every template, and runs final verification. For a **web + mobile** project it confirms scope up front and fills **both** design files — shared values (colors, fonts, icons) are copied across automatically, so the mobile system never gets left behind.
 
 Trigger phrases the AI listens for: *"help me populate this"* / *"what do you need to know?"* / *"run the intake"* / *"walk me through this"*.
 
@@ -229,7 +231,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.10.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.11.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 

@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.10.0"
+template_version: "1.11.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -65,6 +65,11 @@ source_files:
     purpose: "App map, per-screen content, states, onboarding, push, settings."
     exists: "<true | false>"
     priority_for: ["screen content", "auth flow", "permissions", "push notifications", "app store metadata"]
+  seo_md:
+    file: "SEO.md"
+    purpose: "Discoverability — SEO + AEO + GEO: JSON-LD structured data, answer-first patterns, citability, freshness, llms.txt. The discoverability layer over INFORMATION.seo + SPEC."
+    exists: "<true | false>"
+    priority_for: ["structured data / JSON-LD", "AEO answer-first", "GEO citability", "social cards", "llms.txt"]
   qa_md:
     file: "QA.md"
     purpose: "Premium acceptance gate — the AI runs it against its own build before declaring done."
@@ -78,7 +83,9 @@ priority_order:
   - SPEC.md / SPEC_MOBILE.md       # what to build (page content + layout instances)
   - INFORMATION.md                  # who it's for + how to talk about it
   - DESIGN.md / DESIGN_MOBILE.md   # how it looks
+  - SEO.md                          # discoverability layer derived from INFORMATION + SPEC (never overrides them)
   - PROJECT.md                      # project-wide constraints (this file)
+  - QA.md                           # validation gate — references the above; never an authority on a decision
 
 # ═══════════════════════════════════════════════════════════════
 # TECH STACK
@@ -421,7 +428,7 @@ Numbered list, grouped by source template. Each question gets a short plain-Engl
 19. **Icon family** — UI icon set: Lucide *(free, default)* / Phosphor *(free)* / HugeIcons *(Pro license)* / custom: ?
 
 ### Site structure (SPEC.md — only if web or hybrid)
-20. **Sitemap** — list of pages. E.g., home, pricing, about, blog, contact, plus product pages. Mark which appear in **top nav**: ?
+20. **Sitemap** — list of pages. E.g., home, pricing, about, blog, contact, plus product pages. Mark which appear in **top nav**, and note each page's **type** *(home / article / product / pricing / FAQ / how-to / about / local)* — this drives the JSON-LD structured data in SEO.md: ?
 
 ### App structure (SPEC_MOBILE.md — only if mobile or hybrid)
 21. **Tab bar destinations** *(3-5 top-level)* + **screen list organized by tab**: ?
@@ -480,6 +487,7 @@ All defaults are premium-grade and I'll apply them unless you override. Skim and
 - **Hero variant** — homepage hero layout: **split-asymmetric** ← centered / split-asymmetric *(text left, image right)* / background-led *(full-bleed)*
 - **Toast position** — **top-right** ← top-right / top-center / bottom-right / bottom-center
 - **Footer style** — **multi-column** ← multi-column *(link directory)* / minimal
+- **`llms.txt`** *(SEO.md — discoverability)* — markdown index of key pages for AI crawlers: **disabled** ← enabled *(low-cost forward-proofing)* / disabled *(no provider officially consumes it yet)*
 - **Command palette (⌘K)** — Linear/Raycast-style launcher: **enabled** ← enabled / disabled
 - **RTL support** — right-to-left languages: **disabled** ← enabled / disabled
 - **Chart library** — **recharts** ← recharts *(simple)* / visx *(low-level)* / tremor *(dashboards)* / echarts *(feature-rich)* / custom
@@ -688,6 +696,8 @@ Frame these as menu options. Wait for the user to choose.
 | Legal URLs | INFORMATION.md `legal.privacy_url`, `legal.terms_url` | SPEC.md footer columns, app store metadata |
 | Social handles | INFORMATION.md `social.*` | SPEC.md footer brand_column, app store URLs |
 | Project type | PROJECT.md `project.type` | Determines which templates are scoped in intake; informs HTML mapping defaults in DESIGN |
+| Entity (brand/people/social) | INFORMATION.md `project.name`, `people.*`, `social.*` | SEO.md `structured_data.organization` (name/logo/**sameAs**) + Person schema for founders (E-E-A-T) — keep identical for GEO entity consistency |
+| Page list + copy | SPEC.md `sitemap` + `pages.*` | SEO.md `page_type_schema` (which schema per page) + answer-first page copy; SEO `social_cards` pull SPEC page title/description |
 
 When the AI fills any field on the left, it also fills the propagation targets without asking the user again.
 
@@ -784,7 +794,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.9.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.11.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

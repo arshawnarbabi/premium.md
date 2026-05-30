@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.10.0"
+template_version: "1.11.0"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -616,7 +616,7 @@ Paths or URLs to the actual files. AI can generate `<img>` / `<Image>` reference
 
 # Versioning
 
-`template_version: 1.9.0`. Per-project `INFORMATION.md` instances should preserve this field so you can track which template version they were authored against.
+`template_version: 1.11.0`. Per-project `INFORMATION.md` instances should preserve this field so you can track which template version they were authored against.
 
 # Source
 

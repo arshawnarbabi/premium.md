@@ -32,7 +32,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.10.0"
+template_version: "1.11.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -991,7 +991,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.9.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.11.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 
