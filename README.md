@@ -233,6 +233,12 @@ This release: **v1.5.1** — stable. Future updates follow [semantic versioning]
 
 ---
 
+## Credits
+
+The DESIGN.md format used here — YAML token frontmatter + a human-readable rationale body, with `{group.path}` token references and sections like Overview / Colors / Typography / Elevation / Shapes / Components / Do's & Don'ts — builds on [Google Labs' **DESIGN.md**](https://github.com/google-labs-code/design.md) (Apache-2.0). This project extends that single-file format into a six-file product system (brand, content, and web + mobile design), adds an interactive intake protocol and OKLCH brand-kit tooling, and backs the rules with ~4,000 lines of research.
+
+---
+
 ## Contributing
 
 Issues and discussions welcome. PRs welcome but not promised. This is maintained as time permits.
