@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # QA_TEMPLATE.md — Premium acceptance checklist (the "done" gate)
-# Version: 1.12.0
+# Version: 1.13.0
 # Scope: the AI runs this against its OWN build before declaring done.
 # Companions: DESIGN_TEMPLATE_*.md (token/a11y/perf targets), SEO_TEMPLATE.md
 #            (discoverability), SPEC_TEMPLATE_*.md (the copy that must match).
@@ -20,7 +20,7 @@
 # 4. Fix → re-check → repeat. Report ✅/❌ per gate; never ship with an open ❌.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.12.0"
+template_version: "1.13.0"
 file_role: "qa"   # information | design | spec | project | content | seo | qa | decisions
 
 # Hard thresholds the build is measured against (machine-readable).
@@ -113,7 +113,7 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 4. **Report** per gate (✅/❌ + what was fixed). Surface anything that can't be auto-verified (e.g. real-device checks) rather than silently passing it.
 
 # Versioning
-`template_version: 1.12.0`. Per-project `QA.md` instances should preserve this field.
+`template_version: 1.13.0`. Per-project `QA.md` instances should preserve this field.
 
 # Source
 Acceptance bars synthesized from 2026 premium-launch standards (WCAG 2.2 AA / axe zero-critical, Core Web Vitals budget, JSON-LD/AEO, token fidelity) — see `AI_WEBSITE_WORKFLOW_RESEARCH.md` (F6, F9, F10). Contrast/perf/a11y target *values* live in `DESIGN.md`; this file references them rather than restating.

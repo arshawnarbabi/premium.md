@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.12.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.13.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -35,6 +35,7 @@ The system is built from ~4,000 lines of cross-referenced research on what makes
 | **`SPEC_TEMPLATE_MOBILE.md`** | App map + per-screen content/copy/states + onboarding + auth + permission pre-prompts + push notifications + app store metadata. | ~860 |
 | **`SEO_TEMPLATE.md`** | **Discoverability** — SEO + AEO + GEO: JSON-LD structured data (page-type schema map), answer-first content patterns, generative-engine citability (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`. The discoverability layer over `INFORMATION.seo` + `SPEC`. | ~130 |
 | **`QA_TEMPLATE.md`** | Premium **acceptance gate** the AI runs against its own build before "done" — WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget, token fidelity (no hardcoded values), responsive incl. ultra-wide, content-matches-SPEC, security. | ~150 |
+| **`DECISIONS_TEMPLATE.md`** | **Decision log** — an append-only ADR-style record of locked choices + rationale. A fresh agent reads it before proposing changes, so settled decisions aren't relitigated each session. | ~70 |
 
 Plus one reference file:
 
@@ -88,6 +89,7 @@ Each template is operational, not aspirational. Specifically:
 - **Content model** (`CONTENT.md`) — reusable typed records (testimonials, stats, features, FAQs, team, case studies, pricing) maintained *once* and referenced by pages via `{content.*}` — the same mechanism as design tokens, so the same quote or metric never drifts across pages
 - **Discoverability** (`SEO.md`) — three layers: **SEO** (rank), **AEO** (be the direct answer in AI Overviews), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini): JSON-LD structured data per page type, answer-first patterns, citability signals (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`
 - **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
+- **Decision log** (`DECISIONS.md`) — append-only ADR-style record of locked choices + rationale, so a fresh agent reads what's settled before reopening it; plus an `AGENTS.md` emitted to the built repo (the open standard 20+ coding agents read) for the docs→code handoff
 
 ---
 
@@ -168,7 +170,7 @@ Now build me a [pricing page | onboarding flow | settings screen | …].
 | Generic AI-agent tools | `AGENTS.md` |
 | Continue.dev | `.continuerules` |
 
-Content stays the same.
+Content stays the same. **`AGENTS.md` is an open standard** (stewarded under the Linux Foundation) that 20+ coding agents read — Codex, Cursor, Copilot, Gemini CLI, Zed, and others. When the design docs are turned into a real codebase, the build step should also emit an `AGENTS.md` **at the repo root** carrying the build / test / lint commands, code conventions, the QA gate, and a pointer back to these design docs — so the coding agent that maintains the repo has its own entry point.
 
 ---
 
@@ -233,7 +235,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.12.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.13.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 

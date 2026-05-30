@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.12.0
+# Version: 1.13.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.12.0"
+template_version: "1.13.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -80,6 +80,11 @@ source_files:
     purpose: "Premium acceptance gate — the AI runs it against its own build before declaring done."
     exists: "<true | false>"
     priority_for: ["accessibility", "performance (Core Web Vitals)", "token fidelity", "responsive", "launch QA"]
+  decisions_md:
+    file: "DECISIONS.md"
+    purpose: "Append-only log of locked decisions + rationale. Read before proposing changes so settled choices aren't relitigated."
+    exists: "<true | false>"
+    priority_for: ["locked decisions", "rationale history", "what we're deliberately NOT doing"]
 
 priority_order:
   # When multiple files speak to the same decision, this is the precedence.
@@ -92,6 +97,7 @@ priority_order:
   - SEO.md                          # discoverability layer derived from INFORMATION + SPEC (never overrides them)
   - PROJECT.md                      # project-wide constraints (this file)
   - QA.md                           # validation gate — references the above; never an authority on a decision
+  - DECISIONS.md                    # rationale/history of locked choices — read before reopening any of them; not an override
 
 # ═══════════════════════════════════════════════════════════════
 # TECH STACK
@@ -186,6 +192,9 @@ agent_constraints:
     - "When a needed value isn't in the source files, ask — don't fabricate."
     - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components."
     - "If QA.md exists, the build is NOT done until every gate in it is ✅. Run it against your own output; fix failures and re-check before declaring complete."
+    - "If DECISIONS.md exists, read it before proposing changes — don't reopen a locked decision unless the human explicitly asks. When a non-trivial decision is locked this session, append an entry (Context / Options / Choice / Rationale / Consequences / Status) while the reasoning is fresh."
+    - "Reusable content (testimonials, stats, FAQs, features, team, pricing) lives in CONTENT.md when present — reference it via {content.*}, never paste inline or invent it."
+    - "When turning these docs into a real codebase, emit an AGENTS.md at the repo root (the open standard read by 20+ coding agents): build/test/lint commands, code conventions from `tech`, the QA.md gate, and a pointer back to these design docs as the source of truth."
 
   must_not:
     - "Don't introduce new dependencies without surfacing the choice."
@@ -270,10 +279,11 @@ deployment:
 
 **Instantiation steps:**
 
-1. Copy this file to your project as `PROJECT.md`. (If your AI tool prefers `AGENTS.md` or `CLAUDE.md`, rename accordingly — the content is the same.)
+1. Copy this file to your project as `PROJECT.md`. (If your AI tool prefers `AGENTS.md` or `CLAUDE.md`, rename accordingly — the content is the same. `AGENTS.md` is an open standard, stewarded under the Linux Foundation and read by 20+ coding agents — Codex, Cursor, Copilot, Gemini CLI, Zed, and others.)
 2. Fill every `<slot>` value. Verify with `grep -n "<[^>]*>" PROJECT.md`.
 3. For each `source_files.*.exists` field, mark `true` only for files actually present. The AI will skip referencing files marked `false`.
 4. Reference `PROJECT.md` (or have your tool auto-discover it) in every AI prompt for this project.
+5. **When you turn these docs into a real codebase, emit an `AGENTS.md` at the repo root** — the entry point for the coding agent that will maintain the code. It carries the build / test / lint commands, code conventions (from `tech` above), the QA gate (`QA.md`), and a pointer back to these design docs as the source of truth. This is the docs→code handoff: the design docs describe *what* to build; the repo's `AGENTS.md` tells an agent *how to run and maintain* what was built.
 
 ---
 
@@ -801,7 +811,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.12.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.13.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

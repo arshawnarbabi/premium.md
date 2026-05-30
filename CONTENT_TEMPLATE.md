@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # CONTENT_TEMPLATE.md — Reusable content model (single source of content truth)
-# Version: 1.12.0
+# Version: 1.13.0
 # Scope: web + mobile. Typed, reusable content RECORDS the AI maintains ONCE and
 #        pages REFERENCE — so a testimonial, stat, or FAQ lives in exactly one place.
 # Companions: SPEC.md / SPEC_MOBILE.md (pages reference these records), INFORMATION.md
@@ -21,7 +21,7 @@
 # 3. In SPEC pages, reference records by path — never paste a quote/stat/FAQ inline again.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.12.0"
+template_version: "1.13.0"
 file_role: "content"   # information | design | spec | project | content | seo | qa | decisions
 
 # Each record is a list item with a stable `id` (kebab or snake). Pages reference fields:
@@ -137,7 +137,7 @@ A content fact lives in **exactly one** record. SPEC pages **reference** it; the
 5. **Stamp `as_of`/freshness** on stats so SEO.md freshness + quarterly review can act on them.
 
 # Versioning
-`template_version: 1.12.0`. Per-project `CONTENT.md` instances should preserve this field.
+`template_version: 1.13.0`. Per-project `CONTENT.md` instances should preserve this field.
 
 # Source
 Content-modeling practice (typed, reusable content types referenced by pages — the headless-CMS pattern, applied as a markdown layer). Generalizes the existing `SPEC.proof_points` record pattern. See `AI_WEBSITE_WORKFLOW_RESEARCH.md` (F7). Voice lives in `INFORMATION.md`; pages that reference these records live in `SPEC.md` / `SPEC_MOBILE.md`; discoverability use in `SEO.md`.
