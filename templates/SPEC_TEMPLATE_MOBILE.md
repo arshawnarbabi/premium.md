@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.15.1
+# Version: 1.16.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -33,7 +33,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.15.1"
+template_version: "1.16.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -896,7 +896,7 @@ When generating any screen, copy, or interaction from this document, an AI agent
 2. **Reference DESIGN_MOBILE.md vocabulary** for component names, state styles, and platform conventions.
 3. **Reference INFORMATION.md for brand voice and audience.** Anchor all new copy to voice principles + primary persona.
 4. **Reference CONTENT.md for reusable content.** Testimonials, stats, FAQs, features — when `CONTENT.md` exists, reference records via `{content.*}` (e.g. an onboarding social-proof screen pulls `{content.testimonials.maria.quote}`); never invent or inline-duplicate them.
-5. **Mimic voice_samples for any generated copy.** Don't average toward generic app copy.
+5. **Mimic voice_samples + apply the conversion craft.** Match the `voice_samples` (don't average toward generic app copy) — and follow **research.md §X2 (Marketing & Conversion Copy)**, esp. §X2.9 for app surfaces: App Store **name/subtitle** say what-it-does-for-whom-and-the-result (ASO-indexed); the listing description runs **problem → promise → proof → CTA**; **onboarding** drives to the first "aha"/value moment fast; **paywall** leads with the value unlocked + proof at the paywall; **permission pre-prompts** explain the why before the OS dialog; **push** is relevant, timely, value-led. Never fabricate proof or urgency.
 6. **Every screen declares loading / empty / error states.** Never ship a screen without all four states (loaded + 3 alternates).
 7. **Permission pre-prompts are mandatory.** Never trigger system permission dialog without showing the custom in-app explanation first.
 8. **Settings architecture is final.** Use the declared section ordering and item types — don't reorder or invent items.
@@ -993,7 +993,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.15.1`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.16.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

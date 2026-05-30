@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
-# Version: 1.15.1
+# Version: 1.16.0
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.15.1"
+template_version: "1.16.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -152,6 +152,13 @@ global:
 # Use DESIGN.md vocabulary for section types and component names.
 # Use INFORMATION.md audience to write copy that resonates with the primary
 # persona, and INFORMATION.md voice principles to maintain consistency.
+#
+# COPY CRAFT: write marketing/product copy per research.md §X2 (Marketing &
+# Conversion Copy) — lead with the value proposition, write to "you" with
+# specifics, frame features as outcomes (feature → benefit → outcome), one
+# primary CTA per page, answer-first for informational sections, and never
+# fabricate proof or urgency. INFORMATION voice sets the TONE; §X2 sets the
+# conversion CRAFT; DESIGN §Q sets the section LAYOUT this copy fills.
 
 pages:
 
@@ -988,7 +995,7 @@ When generating any page, copy, form, email, or content from this document, an A
 1. **`SPEC.md` is canonical for page content, layout, AND every word of copy.** Every page's section sequence and every word that appears on the website lives here. Section sequences declared here override DESIGN.md's canonical defaults. **Copy declared here is the final text that ships** — never paraphrase, summarize, rewrite, or "improve" declared copy. Render it exactly as written, character-for-character. If a content slot still contains placeholder guidance (e.g., `"<≤44 chars, one sharp value claim>"`), surface the gap to the human — don't invent the copy yourself.
 2. **Reference DESIGN.md vocabulary for visual choices.** When a section type is named (`hero`, `bento-grid`, `narrative-pair`), look up its spec in DESIGN.md. Don't invent new section types.
 3. **Reference INFORMATION.md for brand voice and audience.** When generating new copy that isn't pre-written here, anchor to the brand voice principles and primary persona declared there.
-4. **Mimic voice_samples.** When generating new copy, the cadence, vocabulary, and tone must match the `voice_samples`. Don't invent a different voice.
+4. **Mimic voice_samples + apply the conversion craft.** When generating new copy, the cadence, vocabulary, and tone must match the `voice_samples` (don't invent a different voice) — and the *craft* follows **research.md §X2 (Marketing & Conversion Copy)**: lead with the value proposition, write to "you" with specifics, frame features as outcomes (feature → benefit → outcome), one primary CTA per page, answer-first for informational sections, pass the 5-second + "could-my-competitor-say-this" tests, and never fabricate proof or urgency.
 5. **Never invent metrics or proof points.** Reusable proof content (testimonials, metrics, logos, press) is single-sourced in `CONTENT.md` — reference it via `{content.*}` (e.g. `{content.stats.active_teams.value}`), never paste inline. Only use real, approved records; if a needed number isn't there, ask — don't fabricate. (Legacy projects without `CONTENT.md`: use `proof_points` here.)
 6. **Form copy is final.** When generating form code, use the labels, placeholders, helper text, and error messages exactly as written. Don't rephrase to "improve" them.
 7. **Email copy is the design.** Transactional emails are part of the product UX, not technical artifacts. Render them with the same care as a landing page hero.
@@ -1074,7 +1081,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.15.1`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.16.0`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 

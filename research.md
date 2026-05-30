@@ -36,6 +36,7 @@
 - §V — Code & Technical Surfaces
 - §W — Product Flow Patterns
 - §X — Microcopy & UX Writing
+- §X2 — Marketing & Conversion Copy
 - §Y — Measured Reference Data
 - §Z — Open Questions
 - Sources
@@ -3293,6 +3294,135 @@ Premium copy fits these budgets. Long copy = unedited copy.
 - **Brand names always capitalized as the brand spells itself.** "GitHub" not "Github"; "iPhone" not "Iphone"; "macOS" not "MacOS".
 - Wrap in `<span translate="no">` (per §N.14 / §U.9) so machine translation doesn't mangle them.
 - **Pluralize correctly.** "2 GBs" wrong; "2 GB" correct (units don't pluralize). "Two users" / "1 user".
+
+---
+
+## §X2 — Marketing & Conversion Copy
+
+**Scope.** §X covered *UX writing* — the small functional copy inside a product (buttons, errors, empty states, labels). This section covers *marketing & conversion copy* — the persuasive copy that gets a stranger to understand, trust, and act: landing/marketing pages, product pages, pricing, and the app-store/onboarding/paywall surfaces. The two are complementary; voice (§X.1) is shared, but the goals differ — UX writing *guides*, marketing copy *persuades*. SPEC.md is where the actual words live; this section is the craft for writing them. **The throughline: clarity beats cleverness, specificity beats adjectives, and the customer's own words beat ours.**
+
+### X2.1 Strategy precedes words — positioning → messaging → copy
+Copy is the *last* step, not the first. You cannot write a headline until you know the **positioning**: what this product *is*, *who* it's for, and what it's *better than* (the alternatives the customer would otherwise pick — which may be a competitor, a spreadsheet, or doing nothing). Positioning → messaging (the consistent value story) → copy (the specific words). Writing copy without positioning produces generic output, because there's no differentiated value to express.
+
+- **Differentiated value proposition** = (unique attributes this product has that alternatives don't) → (the value those attributes create) → (for the customer who cares most about that value). Lead with the value, justify with the attribute.
+- **Mine your best customers.** The sharpest positioning comes from the customers who "got it" fastest and became fans — what did *they* say it replaced, and why did they care? Their language is the raw material for copy.
+- **One value proposition per page.** A page that argues two things argues neither. Marketing pages have a single big idea, a single primary offer, and a single primary action.
+
+### X2.2 Meet the reader where they are — the 5 stages of awareness
+Copy must match the reader's **awareness** of their problem and your solution (Eugene Schwartz, *Breakthrough Advertising*). The same product needs different copy per stage:
+
+| Stage | Reader knows… | Lead the copy with… |
+| --- | --- | --- |
+| **Unaware** | nothing | the problem/tension, a story or stat — not the product |
+| **Problem-aware** | they have the problem, not that solutions exist | the problem named sharply, then "there's a better way" |
+| **Solution-aware** | solutions exist, not yours specifically | your differentiation vs. the category |
+| **Product-aware** | your product, not convinced | proof, specifics, objection-handling, the offer |
+| **Most-aware** | everything, just needs a nudge | the offer, urgency, a frictionless CTA |
+
+A homepage usually targets **problem/solution-aware**; a pricing page targets **product-aware**; an ad's landing page should match the ad's promise (message match). Mismatch is a top conversion killer.
+
+### X2.3 Page architecture — the conversion narrative
+A high-converting page is a **sequence where each section earns the next scroll** (the "slippery slope"). The canonical premium structure (maps to SPEC section sequences + DESIGN §Q canonical landing composition):
+
+1. **Hero** — value-prop headline + clarifying subhead + primary CTA + a supporting visual (real product UI > abstract art).
+2. **Social-proof strip** — logos / a metric / a star rating immediately under the hero (borrowed credibility before you've earned attention).
+3. **Problem / stakes** — name the pain in the reader's words; raise the cost of inaction.
+4. **Solution / how-it-works** — the mechanism, in 3 steps or a short narrative. This is *what it does*.
+5. **Features as benefits** — each feature framed as the outcome it produces (X2.5). Bento/alternating layout per DESIGN §Q.
+6. **Deeper proof** — testimonials, case studies, hard numbers (pulled from CONTENT.md).
+7. **Objection handling / FAQ** — preempt the top 3–5 reasons a fit buyer hesitates.
+8. **Pricing** (if on-page) — framed as value, not a feature table (X2.8).
+9. **Final CTA band** — restate the core value + the single action.
+10. **Footer** — per DESIGN/SPEC.
+
+Rules: **one job per section**; lead each section with its conclusion (front-load — the reader scans before they read); the page must pass the **5-second test** above the fold (a stranger can say *what it is, who it's for, why it's better* in 5 seconds).
+
+### X2.4 The hero — the highest-leverage copy on the page
+Most readers decide here. Headline optimization alone moves conversion **27–104%** in tested ranges, second only to form-length reduction.
+
+- **The headline expresses the value proposition** — not a clever phrase, not the company name. Default to **clarity and outcome over wit.** A reader who is confused does not scroll.
+- **Headline formulas** (pick by awareness stage):
+  - *Outcome + removal of pain:* "Ship faster — without the busywork."
+  - *Ultra-specific value-prop:* "The issue tracker engineering teams actually enjoy."
+  - *Voice-of-customer swipe:* take the customer's literal phrasing (X2.6) — these routinely beat clever controls (a famous Copyhackers test swapped a clever headline for a customer's exact words and lifted CTA clicks >400%).
+- **The 4-U gut-check** (Copyhackers): a strong headline is **Useful, Unique, Ultra-specific, Urgent** — hit at least three.
+- **Subhead** = the amplifier: it answers *how* or *for whom* in one sentence, adding the specificity the headline couldn't carry.
+- **Hero CTA** per X2.7.
+- **Hero anti-patterns:** clever-over-clear ("Reimagine tomorrow"), abstract benefit ("Unlock your potential"), feature-dump, or a headline that could belong to any competitor (the "could-my-competitor-say-this?" test — if yes, it's not positioning).
+
+### X2.5 Sentence-level craft — features into outcomes
+- **Feature → benefit → outcome (the "so what?" chain).** A feature is what it *is*; the benefit is what it *does*; the outcome is what the customer's life is like after. Always write to the outcome, justify with the feature. *"256-bit encryption"* (feature) → *"your data is unreadable to anyone but you"* (benefit) → *"sleep easy on compliance"* (outcome).
+- **Write to "you," not "we."** Reader-focused copy ("you get…") outperforms company-focused copy ("we built…"). Count the "we"s — too many is a smell.
+- **Specificity beats adjectives.** "10,000+ teams" > "many teams"; "set up in 4 minutes" > "easy setup." Numbers, names, and concrete nouns carry conviction; vague intensifiers ("powerful," "seamless," "robust") signal genericness (see §X.10 banned-words + X2.12).
+- **Concrete > abstract.** Show the thing happening, don't describe a category. "Drag a task to tomorrow" > "flexible scheduling."
+- **Scannability.** Readers scan in an F-pattern: front-load sentences and sections, use descriptive subheads that tell the story on their own, keep paragraphs short, and let one idea own each line. The subheads alone should convey the argument.
+- **Plain, confident voice.** Short sentences. Active voice. Cut hedges ("we believe," "helps to," "can"). Premium reads as *calm confidence* — no hype, no exclamation barrage (ties to §X.1 voice invariants).
+
+### X2.6 Voice of customer — the copy isn't yours to invent
+The highest-converting copy is **mined, not authored**: it uses the customer's own words for their problem, desired outcome, and objections. Sources: sales-call transcripts, support tickets, reviews (yours *and* competitors'), survey open-ends, community threads, interview quotes. Pull the recurring phrasings — especially the emotional, specific ones — and build copy on them.
+- **Why it works:** it passes the reader's "this is about me" filter instantly and sidesteps internal jargon.
+- **In this system:** when real customer language doesn't exist yet (pre-launch), this is a *gap to flag*, not to fabricate — the same "never invent" rule as CONTENT.md. Approved real quotes live in `CONTENT.md.testimonials`; the *patterns* you hear become the raw material for SPEC copy.
+
+### X2.7 CTAs — make the click feel like progress, not commitment
+- **Value-first, first-person, specific.** "Start my free trial" / "Get my report" beats "Submit" / "Sign up" / "Learn more." The button states the *value the reader receives*, ideally in their voice.
+- **Reduce risk at the moment of action.** Pair the button with a risk-reducer: "No credit card · 2-minute setup · cancel anytime." This kills the hesitation a CTA triggers.
+- **One primary action per page,** repeated (hero, after you've built desire mid-page, and at the end). A secondary CTA (e.g. "See how it works") is fine but must be visually subordinate — competing equal CTAs split intent and lower conversion.
+- **Match the CTA to awareness:** most-aware → "Buy now"; problem-aware → "See how it works" (a softer next step). Don't ask for marriage on the first date.
+
+### X2.8 Conversion-specific surfaces
+- **Pricing page** — frame **value, not a feature spreadsheet**. Name tiers for the buyer ("Starter / Team / Scale"), not internals. Use **anchoring** (show the higher tier first or a "most popular" highlight) and **value-per-unit** framing. Make the recommended plan obvious. Annual-vs-monthly framed as savings. Address the "is it worth it?" objection right on the page (guarantee, trial, "switch anytime").
+- **Forms** — the single biggest tested lever: **shorter forms convert dramatically better** (field reduction is the highest-impact change in aggregate test data). Ask only for what you need now; frame each field as value, not labor; reassure near the submit (privacy, "no spam"). Detailed field/error rules live in §X.6 / §X.4.
+- **Lifecycle & transactional email** — subject lines earn the open (specific, benefit/curiosity, no clickbait); the body has one job and one CTA; transactional emails are brand surfaces, not plumbing (SPEC.emails holds the actual copy).
+
+### X2.9 App / mobile copy (distinct discipline)
+App stores and onboarding have their own copy rules (ties to SPEC_MOBILE):
+- **App Store / Play listing.** The **app name + subtitle** must say *what it does, for whom, and the result* in the first characters — both are indexed for search (ASO). Build the **description as a funnel: problem → promise → proof → CTA.** **Don't repeat keywords** across title/subtitle/keyword field — the store cross-references them, so repetition wastes character budget. As of 2025, **Apple indexes screenshot caption text** for ranking — write keyword-aware, benefit-led captions, not decorative ones. The first 1–3 lines of the description (and the first 2–3 screenshots) carry almost all the weight.
+- **Onboarding copy.** Get the user to the **"aha" / first value moment** as fast as possible; explain the core feature *early*; make the user feel "this was built for me." Value-first, progressive (don't front-load every feature), and tied to the activation event, not a feature tour.
+- **Paywall / upgrade copy.** Lead with the value the user is about to unlock (outcome, not feature list), show proof *at the paywall* (rating/testimonial), state the trial/guarantee plainly, and reduce friction — confusing paywalls are a top driver of bad reviews and churn.
+- **Permission pre-prompts.** Always explain *why* (the user benefit) *before* triggering the OS permission dialog (per SPEC_MOBILE) — "So we can remind you before events" precedes the notifications prompt.
+- **Push notifications.** Relevant, timely, value-led, and personal; never cry-wolf. (Deterministic/transactional push copy lives in SPEC_MOBILE.)
+
+### X2.10 Discoverability-aware copy (the 2026 layer) — write for humans *and* answer engines
+Copy is now read by AI answer engines (ChatGPT, Claude, Perplexity, Google AI Overviews) that *quote* it. Write so it's quotable without sacrificing persuasion (ties to SEO.md AEO/GEO):
+- **Answer-first.** Open an informational page/section with a clean **40–60 word answer** to the question it targets — the chunk an engine lifts and cites. Persuasion can follow; the liftable answer comes first.
+- **Definition-lead sentences.** For "what is X" moments, use **`[Entity] is a [category] that [differentiator]`** — the format AI retrieval parses most reliably (and a crisp positioning statement for humans too).
+- **Conversational, jargon-free language** — "use" not "utilize," "buy" not "make a purchase." This helps both readers and engines.
+- **Scannable structure** — question subheads, short answers, FAQs, lists, tables; these double as AEO surfaces and human scannability.
+- **Citability signals** — concrete stats, named/attributed quotes, and clear factual claims get cited more (pages with named authors are cited ~2.3× more). Pull these from CONTENT.md; keep entity language consistent with INFORMATION.
+
+### X2.11 Persuasion psychology — ethical, evidence-based (Cialdini)
+Use the seven principles **only with truthful inputs** — manufactured persuasion (fake scarcity, invented social proof) is seen through and destroys trust:
+- **Social proof** — testimonials, counts, ratings, logos lower perceived risk for the undecided. Specific + named + outcome-based beats generic.
+- **Authority** — credentials, expert quotes, press, certifications, real data.
+- **Scarcity / urgency** — frame *honest* limits as what the reader stands to *lose* (loss aversion is stronger than gain). **Never fabricate** countdowns or "only 2 left."
+- **Reciprocity** — give real value first (a free tool, a useful guide) before the ask.
+- **Commitment & consistency** — small first step → larger commitment (free trial → paid); micro-yeses.
+- **Liking** — human, warm, on-brand voice; show the people behind it.
+- **Unity** — shared identity ("for builders," "by engineers, for engineers").
+- **The ethical line (and the long-game ROI):** every tactic must rest on something *true*. Persuasion amplifies a real value; it cannot manufacture one.
+
+### X2.12 Anti-patterns — the genericness tells
+What makes copy read as cheap/AI-average (extends §S Anti-Patterns + §X.10):
+- **Clever over clear** — wordplay that costs comprehension.
+- **Abstract benefits** — "unlock potential," "empower teams," "transform your workflow."
+- **Feature-dumping** — a list of capabilities with no benefit or outcome.
+- **Superlatives & hype** — "world-class," "cutting-edge," "industry-leading," "revolutionary," "seamless," "powerful" (unbacked).
+- **Us-focused** — every sentence starts with "we" / the product name instead of "you."
+- **Could-my-competitor-say-this** — claims with no differentiation.
+- **Fake urgency / invented proof** — the fastest way to lose trust.
+- **Wall of text** — no hierarchy, no front-loading, nothing scannable.
+- **Competing CTAs** — multiple equal-weight asks.
+- **Unsubstantiated numbers** — stats with no source (also fails GEO + the CONTENT "never invent" rule).
+
+### X2.13 Template translation — how this wires into the system
+- **SPEC.md / SPEC_MOBILE.md** are where the actual words live. They cite this section: page copy follows the **page architecture (X2.3)**, the **hero rules (X2.4)**, **feature→benefit (X2.5)**, and **CTA rules (X2.7)**; `voice_samples` + INFORMATION voice set the *tone*, this section sets the *conversion craft*.
+- **Section sequence** comes from DESIGN §Q (canonical landing composition) — X2.3 is the *copy* layer over that *layout* layer.
+- **Proof copy** (testimonials, stats, case studies) is referenced from **CONTENT.md** — never invented (X2.6, X2.11).
+- **Answer-first / citability** (X2.10) ties to **SEO.md** AEO/GEO.
+- **UX microcopy** (buttons, errors, empty states) stays in **§X**; this section is everything that *sells*.
+- **AI Agent Contract hook:** when writing or revising marketing/product copy, the AI applies §X2 — lead with the value proposition, write to "you" with specifics, frame features as outcomes, keep one CTA, never fabricate proof or urgency, and pass the 5-second + could-my-competitor-say-this tests.
+
+**Source.** Synthesized from established conversion-copywriting practice and current (2025–2026) sources: positioning → messaging → copy ([April Dunford](https://www.aprildunford.com/post/a-product-positioning-exercise)); 5 stages of awareness (Eugene Schwartz, *Breakthrough Advertising*); voice-of-customer / message mining ([Copyhackers / Joanna Wiebe](https://copyhackers.com/voice-of-customer-in-your-brand/), [CXL](https://cxl.com/blog/voice-of-customer/)); landing-page conversion structure + 4-U headlines + tested lift data ([VWO](https://vwo.com/blog/landing-page-copywriting/), [Unbounce](https://unbounce.com/landing-page-copywriting/), [Shopify](https://www.shopify.com/blog/high-converting-landing-pages)); persuasion principles + ethics ([Cialdini via CXL](https://cxl.com/blog/cialdinis-principles-persuasion/), [InfluenceAtWork](https://www.influenceatwork.com/7-principles-of-persuasion/)); ASO + onboarding/paywall copy ([ASOMobile 2026](https://asomobile.net/en/blog/aso-in-2026-the-complete-guide-to-app-optimization/), [AppFollow](https://appfollow.io/blog/aso-tips)); answer-engine/GEO copy ([Frase AEO 2026](https://www.frase.io/blog/what-is-answer-engine-optimization-the-complete-guide-to-getting-cited-by-ai)). Premium positioning arc cross-refs §Y; UX writing in §X; anti-patterns in §S.
 
 ---
 

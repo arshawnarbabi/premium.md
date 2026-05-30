@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.15.1-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.16.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -43,7 +43,7 @@ Plus one reference file:
 
 | File | Purpose |
 | --- | --- |
-| `research.md` | The brand-agnostic premium-standard research (23 sections, ~4,000 lines) — the explanatory backing for everything in the templates. DESIGN templates cite specific sections. |
+| `research.md` | The brand-agnostic premium-standard research (27 sections, ~4,000 lines) covering design **and copy** (incl. §X2 Marketing & Conversion Copy) — the explanatory backing for everything in the templates. DESIGN + SPEC templates cite specific sections. |
 
 Plus optional tooling (the markdown templates stay dependency-free):
 
@@ -87,6 +87,7 @@ Each template is operational, not aspirational. Specifically:
 - **Data visualization** — three-palette system (categorical / sequential / diverging), chart-type conventions
 - **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
 - **Microcopy** — voice principles, banned-word list, length budgets, premium positioning structure
+- **Marketing & conversion copy** — positioning→messaging→copy, awareness stages, the conversion-page narrative, headline/value-prop formulas, feature→benefit→outcome, persuasion psychology (ethical), proof & CTA craft, app-store/onboarding/paywall copy, answer-engine (AEO/GEO) copy (`research.md §X2`; SPEC templates apply it)
 - **AI Agent Contract** — 26 hard rules (web) / 18 hard rules (mobile) the AI must follow
 - **Content model** (`CONTENT.md`) — reusable typed records (testimonials, stats, features, FAQs, team, case studies, pricing) maintained *once* and referenced by pages via `{content.*}` — the same mechanism as design tokens, so the same quote or metric never drifts across pages
 - **Discoverability** (`SEO.md`) — three layers: **SEO** (rank), **AEO** (be the direct answer in AI Overviews), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini): JSON-LD structured data per page type, answer-first patterns, citability signals (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`
@@ -239,7 +240,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.15.1"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.16.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
