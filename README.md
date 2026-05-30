@@ -132,7 +132,7 @@ You don't have to fill the templates manually. Once they're copied into your pro
 
 > "Help me populate these templates"
 
-It produces a **structured intake form** — must-fill brand identity at the top, customizable defaults below — covering every decision you need to make. Answer in your own time. The AI fills the templates for you, derives the 12-step color palette + dark mode counterpart, propagates shared values across all 6 templates, and runs final verification.
+It produces a **structured intake form** — must-fill brand identity at the top, customizable defaults below — covering every decision you need to make. Answer in your own time. The AI fills the templates for you, derives the 12-step color palette + dark mode counterpart, propagates shared values across all 6 templates, and runs final verification. For a **web + mobile** project it confirms scope up front and fills **both** design files — shared values (colors, fonts, icons) are copied across automatically, so the mobile system never gets left behind.
 
 Trigger phrases the AI listens for: *"help me populate this"* / *"what do you need to know?"* / *"run the intake"* / *"walk me through this"*.
 
@@ -206,7 +206,7 @@ Audience persona depth, market positioning, business model, brand story, social 
 | UI primitives | shadcn/ui (dashboards / product apps); custom for marketing |
 | Animation | Framer Motion |
 | Forms | React Hook Form + Zod |
-| Icons | Lucide (free default) / Phosphor / **HugeIcons** (premium tier — 51K icons, 10 styles) — declare per project |
+| Icons | Lucide (free default) / Phosphor / Heroicons / Tabler / **HugeIcons** (free Stroke-Rounded ~4,500 + 51K on Pro) — declare per project; keep `PROJECT.tech.web.icons` in sync with `DESIGN.icons.library` |
 | Deploy | Vercel |
 | Mobile native | SwiftUI / Jetpack Compose, or React Native (Expo) for cross-platform |
 
