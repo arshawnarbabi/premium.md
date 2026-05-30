@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # QA_TEMPLATE.md — Premium acceptance checklist (the "done" gate)
-# Version: 1.13.0
+# Version: 1.14.0
 # Scope: the AI runs this against its OWN build before declaring done.
 # Companions: DESIGN_TEMPLATE_*.md (token/a11y/perf targets), SEO_TEMPLATE.md
 #            (discoverability), SPEC_TEMPLATE_*.md (the copy that must match).
@@ -20,7 +20,7 @@
 # 4. Fix → re-check → repeat. Report ✅/❌ per gate; never ship with an open ❌.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.13.0"
+template_version: "1.14.0"
 file_role: "qa"   # information | design | spec | project | content | seo | qa | decisions
 
 # Hard thresholds the build is measured against (machine-readable).
@@ -86,8 +86,9 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 - [ ] **AEO/GEO:** answer-first pages have a question heading + concise answer; FAQ/entity markup matches `SEO.md`.
 
 ## Gate D — Token fidelity (no drift)
-- [ ] UI references the **exported tokens / CSS variables** (`npm run export`) — **no hardcoded `#hex`, `rgb()`, or raw `oklch()`** in component code; spacing/radius/type from tokens, not magic numbers.
-- [ ] Components match their `DESIGN.md` specs (variants, states, sizes).
+- [ ] UI references the **exported tokens / CSS variables** (`npm run export`) — **no hardcoded `#hex`, `rgb()`, or raw `oklch()`** in component code.
+- [ ] **Type, spacing, radius come from tokens too** — **font sizes** use the exported `--text-*` vars and **line-heights** use the `--leading-*` vars (both from `typography.roles`), **not raw `rem`/`px`/unitless literals**; spacing/radius from `--space-*`/`--radius-*`, not magic numbers. *(A purely decorative, `aria-hidden` glyph may use `line-height: 1`.)* If a needed token is missing from the export, **flag it** in the QA report — don't silently hardcode a value.
+- [ ] Components match their `DESIGN.md` specs (variants, states, sizes), incl. the project's **surface-separation strategy** (per `DESIGN.md` + `DECISIONS.md` — don't substitute a different one).
 
 ## Gate E — Responsive & themes
 - [ ] Renders cleanly across **xs → 2xl**, **plus ultra-wide ≥ 2560** (content **caps + centers**, line length ≤ ~75ch — never stretches), and the **foldable 600–720** zone is sane.
@@ -110,10 +111,18 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 1. **The build is not done until every gate is ✅.** On any ❌: fix, re-run the affected gate, repeat. Never declare done with an open failure.
 2. **Self-QA is mandatory**, not optional — run this before handing the build over.
 3. **Don't weaken a gate to pass it.** Tune budgets in the frontmatter only with explicit intent, and log the change in `DECISIONS.md`.
-4. **Report** per gate (✅/❌ + what was fixed). Surface anything that can't be auto-verified (e.g. real-device checks) rather than silently passing it.
+4. **Report per gate as a written artifact** (✅/❌ + what was fixed) — self-QA must leave **evidence**, not just be asserted in passing. Emit a `## QA results` section (or a `QA-RESULTS.md`) alongside the build; surface anything that can't be auto-verified (e.g. real-device checks) rather than silently passing it. Format:
+
+```md
+## QA results — <component/page>
+- Gate A (a11y): ✅ — axe 0 critical; focus-visible ring; targets ≥24px
+- Gate D (tokens): ✅ — colors/type/spacing all via vars; ran `npm run export`
+- Gate E (responsive+themes): ✅ — xs→ultra-wide; light+dark verified
+- …one line per applicable gate, ❌ only if fixed-then-rechecked…
+```
 
 # Versioning
-`template_version: 1.13.0`. Per-project `QA.md` instances should preserve this field.
+`template_version: 1.14.0`. Per-project `QA.md` instances should preserve this field.
 
 # Source
 Acceptance bars synthesized from 2026 premium-launch standards (WCAG 2.2 AA / axe zero-critical, Core Web Vitals budget, JSON-LD/AEO, token fidelity) — see `AI_WEBSITE_WORKFLOW_RESEARCH.md` (F6, F9, F10). Contrast/perf/a11y target *values* live in `DESIGN.md`; this file references them rather than restating.

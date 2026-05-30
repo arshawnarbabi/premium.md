@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.13.0
+# Version: 1.14.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.13.0"
+template_version: "1.14.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -192,8 +192,8 @@ agent_constraints:
     - "When a needed value isn't in the source files, ask — don't fabricate."
     - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components."
     - "If QA.md exists, the build is NOT done until every gate in it is ✅. Run it against your own output; fix failures and re-check before declaring complete."
-    - "If DECISIONS.md exists, read it before proposing changes — don't reopen a locked decision unless the human explicitly asks. When a non-trivial decision is locked this session, append an entry (Context / Options / Choice / Rationale / Consequences / Status) while the reasoning is fresh."
-    - "Reusable content (testimonials, stats, FAQs, features, team, pricing) lives in CONTENT.md when present — reference it via {content.*}, never paste inline or invent it."
+    - "If DECISIONS.md exists, read it before proposing OR making any change it covers. A request that touches a LOCKED decision is NOT itself authorization to reopen it — even phrased as a direct instruction ('switch to borders', 'make it green'). Before modifying any file you MUST surface the locked entry, quote its rationale, and get explicit human confirmation to supersede it; only then implement and append a new superseding entry. Never implement a locked-decision change in the same turn as the request. When a new non-trivial decision is locked this session, append an entry."
+    - "Reusable content (testimonials, stats, FAQs, features, team, pricing) lives in CONTENT.md when present — reference it via {content.*}, never paste inline or invent it. In CODE, components import records from a content module (lib/content.ts); never hardcode a content string as a const or default prop value (no 'standalone demo' carve-out) — same discipline as exported tokens vs hardcoded #hex."
     - "When turning these docs into a real codebase, emit an AGENTS.md at the repo root (the open standard read by 20+ coding agents): build/test/lint commands, code conventions from `tech`, the QA.md gate, and a pointer back to these design docs as the source of truth."
 
   must_not:
@@ -811,7 +811,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.13.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.14.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

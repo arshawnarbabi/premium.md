@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # CONTENT_TEMPLATE.md — Reusable content model (single source of content truth)
-# Version: 1.13.0
+# Version: 1.14.0
 # Scope: web + mobile. Typed, reusable content RECORDS the AI maintains ONCE and
 #        pages REFERENCE — so a testimonial, stat, or FAQ lives in exactly one place.
 # Companions: SPEC.md / SPEC_MOBILE.md (pages reference these records), INFORMATION.md
@@ -21,7 +21,7 @@
 # 3. In SPEC pages, reference records by path — never paste a quote/stat/FAQ inline again.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.13.0"
+template_version: "1.14.0"
 file_role: "content"   # information | design | spec | project | content | seo | qa | decisions
 
 # Each record is a list item with a stable `id` (kebab or snake). Pages reference fields:
@@ -121,6 +121,24 @@ sections:
 
 Reference **fields**, not whole records (refs resolve to strings). Edit the record here once → every referencing page updates.
 
+## Resolving content in code (the code layer)
+The `{content.*}` convention has a **code-layer equivalent** — honor it the same way exported design tokens are honored. When you build actual components, content records resolve through a **content module**, never as inline string literals:
+
+- Maintain a single content module (e.g. `lib/content.ts`) that mirrors `CONTENT.md` and exports typed records — the content analog of the exported design tokens.
+- Components **import** from it; they never hardcode a quote, stat, FAQ, or feature string:
+
+```tsx
+// ✅ correct — {content.testimonials.jordan.quote} maps to a named import
+import { TESTIMONIALS, STATS } from "@/lib/content";
+const jordan = TESTIMONIALS.find((t) => t.id === "jordan")!;
+// <blockquote>{jordan.quote}</blockquote>
+
+// ❌ wrong — inlines content as a const / default prop literal (drifts from CONTENT.md)
+const QUOTE = "…the actual quote text…";
+```
+
+**No carve-outs:** this includes component **default prop values** and "standalone demo" defaults — those still hardcode content and drift. If a component needs isolated demo data, put it in a separate story/fixture file, never in the production component. The rule mirrors token fidelity exactly: colors come from exported tokens (never `#hex`); content comes from the content module (never inline strings).
+
 ## One home for every fact (single-source rule)
 A content fact lives in **exactly one** record. SPEC pages **reference** it; they don't restate it. This replaces the old `SPEC.proof_points.testimonial_library` / `trust_metrics` (now references into `CONTENT.md`). If a number appears in both a case study and a stat strip, it's **one** `stats[]` record referenced twice — not two copies that can drift.
 
@@ -131,13 +149,13 @@ A content fact lives in **exactly one** record. SPEC pages **reference** it; the
 
 # AI Agent Contract (content)
 1. **Maintain each fact once.** New testimonial/stat/FAQ → add a record here; pages reference it. Never paste content inline in a page when a record exists.
-2. **Reference, don't duplicate.** SPEC pages use `{content.*}` refs. If you find the same fact in two files, consolidate to one record and reference it.
+2. **Reference, don't duplicate.** SPEC pages use `{content.*}` refs. In **code**, components import records from a content module (`lib/content.ts`) — never hardcode a content string as a const or **default prop value** (including "standalone demo" defaults). If you find the same fact in two files, consolidate to one record and reference it.
 3. **Never invent** quotes, names, numbers, logos, or press. Real + approved only; honor `permission`. Surface gaps, don't fill them.
 4. **Keep entity-consistent** with INFORMATION (names, `sameAs`) — GEO/E-E-A-T depend on it.
 5. **Stamp `as_of`/freshness** on stats so SEO.md freshness + quarterly review can act on them.
 
 # Versioning
-`template_version: 1.13.0`. Per-project `CONTENT.md` instances should preserve this field.
+`template_version: 1.14.0`. Per-project `CONTENT.md` instances should preserve this field.
 
 # Source
 Content-modeling practice (typed, reusable content types referenced by pages — the headless-CMS pattern, applied as a markdown layer). Generalizes the existing `SPEC.proof_points` record pattern. See `AI_WEBSITE_WORKFLOW_RESEARCH.md` (F7). Voice lives in `INFORMATION.md`; pages that reference these records live in `SPEC.md` / `SPEC_MOBILE.md`; discoverability use in `SEO.md`.

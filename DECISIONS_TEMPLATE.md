@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DECISIONS_TEMPLATE.md — Decision log (append-only; AI-maintained)
-# Version: 1.13.0
+# Version: 1.14.0
 # Scope: any project. The short record of WHY the locked choices are locked, so a
 #        fresh agent (or teammate) doesn't relitigate settled decisions next session.
 # Companions: PROJECT.md (the contract rule that says to read + append here).
@@ -20,7 +20,7 @@
 #    unless the human explicitly reopens them.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.13.0"
+template_version: "1.14.0"
 file_role: "decisions"   # information | design | spec | project | content | seo | qa | decisions
 
 # Append-only. Newest entry at the top. One entry per locked, non-trivial decision.
@@ -52,12 +52,13 @@ What belongs here: choices that were genuinely decided and would be costly or co
 - **Status:** locked
 
 # AI Agent Contract (decisions)
-1. **Read before proposing.** Consult `DECISIONS.md` before suggesting changes to anything it covers; don't reopen a `locked` decision unless the human explicitly asks.
-2. **Append when locked.** When a non-trivial decision is settled, append an entry (Context / Options / Choice / Rationale / Consequences / Status) — same session, while the reasoning is fresh.
-3. **Supersede, don't overwrite.** To change a past decision, add a new entry and mark the old one `superseded by <date>`. The log is append-only.
+1. **Read before proposing or changing.** Consult `DECISIONS.md` before suggesting OR making any change to something it covers.
+2. **A request that touches a locked decision is NOT itself authorization to reopen it** — even when phrased as a direct instruction (e.g. "switch the cards to borders," "make it green"). A stakeholder asking for the *change* is not the same as the human explicitly asking to *reopen the locked decision*. Before modifying any file, you MUST: **(a)** surface the locked entry, **(b)** quote its documented rationale, **(c)** ask the human to confirm they intend to supersede it. Implement only after that explicit confirmation — then append a new superseding entry. Do **not** implement in the same turn as the request. (This is the analog of the QA gate: locked decisions are a gate you don't silently pass.)
+3. **Append when locked.** When a *new* non-trivial decision is settled, append an entry (Context / Options / Choice / Rationale / Consequences / Status) — same session, while the reasoning is fresh.
+4. **Supersede, don't overwrite.** To change a past decision, add a new entry and mark the old one `superseded by <date>`. The log is append-only; never delete or rewrite a prior entry.
 
 # Versioning
-`template_version: 1.13.0`. Per-project `DECISIONS.md` instances should preserve this field.
+`template_version: 1.14.0`. Per-project `DECISIONS.md` instances should preserve this field.
 
 # Source
 ADR (Architecture Decision Record) practice, adapted as an append-only log for agentic builds — so locked choices survive across sessions. See `AI_WEBSITE_WORKFLOW_RESEARCH.md` (F11).
