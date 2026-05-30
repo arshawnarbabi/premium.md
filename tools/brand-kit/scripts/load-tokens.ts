@@ -22,24 +22,29 @@ function arg(name: string): string | undefined {
 
 const appDir = fileURLToPath(new URL("..", import.meta.url)); // tools/brand-kit/
 
-/** Find a DESIGN.md / INFORMATION.md within a project root (root, or one level deep). */
-function findDoc(rootDir: string, kind: "DESIGN" | "INFORMATION"): string {
-  const direct = join(rootDir, `${kind}.md`);
-  if (existsSync(direct)) return direct;
+/** Find a doc within a project root (root, or one level deep). Tries each candidate name in order;
+ *  for DESIGN we accept DESIGN.md OR DESIGN_MOBILE.md so mobile-only projects can be reviewed too. */
+function findDoc(rootDir: string, candidates: string[]): string {
+  for (const name of candidates) {
+    const direct = join(rootDir, name);
+    if (existsSync(direct)) return direct;
+  }
   for (const entry of readdirSync(rootDir, { withFileTypes: true })) {
     if (entry.isDirectory()) {
-      const nested = join(rootDir, entry.name, `${kind}.md`);
-      if (existsSync(nested)) return nested;
+      for (const name of candidates) {
+        const nested = join(rootDir, entry.name, name);
+        if (existsSync(nested)) return nested;
+      }
     }
   }
-  throw new Error(`Could not find ${kind}.md under ${rootDir}`);
+  throw new Error(`Could not find ${candidates.join(" / ")} under ${rootDir}`);
 }
 
 const root = arg("root");
-const designPath = arg("design") ?? (root ? findDoc(root, "DESIGN") : join(appDir, "sample/DESIGN.md"));
-const infoPath = arg("information") ?? (root ? findDoc(root, "INFORMATION") : join(appDir, "sample/INFORMATION.md"));
-// Asset paths in INFORMATION.md are resolved relative to the project root (or the doc's folder for the sample).
-const assetBase = root ?? dirname(designPath);
+const designPath = arg("design") ?? (root ? findDoc(root, ["DESIGN.md", "DESIGN_MOBILE.md"]) : join(appDir, "sample/DESIGN.md"));
+const infoPath = arg("information") ?? (root ? findDoc(root, ["INFORMATION.md"]) : join(appDir, "sample/INFORMATION.md"));
+// Asset base: refined below from INFORMATION.md `assets.assets_base_path` if declared.
+let assetBase = root ?? dirname(infoPath);
 const dataDir = join(appDir, "src/data");
 const publicAssets = join(appDir, "public/assets");
 mkdirSync(dataDir, { recursive: true });
@@ -78,6 +83,12 @@ function resolveRefs(obj: any, rootObj: any): any {
 const design = frontmatter(designPath);
 const info = frontmatter(infoPath);
 const tokens = resolveRefs(design, design);
+
+// Honor INFORMATION.md → assets.assets_base_path (relative to --root, else the doc's folder).
+const declaredBase = info?.assets?.assets_base_path;
+if (typeof declaredBase === "string" && declaredBase.trim() && !declaredBase.includes("<")) {
+  assetBase = isAbsolute(declaredBase) ? declaredBase : join(root ?? dirname(infoPath), declaredBase);
+}
 
 // ── Copy brand assets referenced in INFORMATION.md (paths are project-root-relative) ──
 function copyAsset(relPath: string | undefined): string | null {

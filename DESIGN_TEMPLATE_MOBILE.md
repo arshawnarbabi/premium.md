@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.3.0"
+template_version: "1.3.1"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1225,7 +1225,9 @@ derivation:
   lightness_curve_dark:   [0.17, 0.21, 0.24, 0.28, 0.32, 0.37, 0.44, 0.53, 0.62, 0.68, 0.79, 0.93]
   saturation_multipliers: { muted: 0.7, default: 1.0, vivid: 1.3 }
   warmth_neutral_hue:     { cool: 240, neutral: 60, warm: 40 }
-  # Brand-kit viewer: web-only in v1.3.0 (review mobile tokens via the web kit, since they share values).
+  # Brand-kit viewer: also renders THIS file — `tools/brand-kit` → `npm run load -- --root <project>`
+  # finds DESIGN_MOBILE.md when there's no web DESIGN.md (mobile-only projects). Mobile-only surfaces
+  # (haptics, gestures) aren't drawn, but colors / type / spacing / radius / elevation are. `npm run dev` to review.
 
 ---
 

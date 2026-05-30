@@ -60,6 +60,32 @@ export function parseOklch(str: string): LCH | null {
   return { L: parseFloat(m[1]), C: parseFloat(m[2]), H: parseFloat(m[3]) };
 }
 
+const srgbToLinear = (c: number): number => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+
+/** Convert a hex string (#rgb or #rrggbb) to OKLCH. */
+export function hexToOklch(hex: string): LCH | null {
+  let h = hex.trim().replace(/^#/, "");
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  if (!/^[0-9a-fA-F]{6}$/.test(h)) return null;
+  const r = srgbToLinear(parseInt(h.slice(0, 2), 16) / 255);
+  const g = srgbToLinear(parseInt(h.slice(2, 4), 16) / 255);
+  const b = srgbToLinear(parseInt(h.slice(4, 6), 16) / 255);
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  const L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
+  const A = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
+  let H = (Math.atan2(B, A) * 180) / Math.PI;
+  if (H < 0) H += 360;
+  return { L: round(L, 3), C: round(Math.hypot(A, B), 3), H: round(H, 1) };
+}
+
+/** Accept either `oklch(L C H)` or a hex string — so users can pass their brand hex directly. */
+export function parseColor(str: string): LCH | null {
+  return parseOklch(str) ?? hexToOklch(str);
+}
+
 export const fmtOklch = (L: number, C: number, H: number): string =>
   `oklch(${round(L, 3)} ${round(clampChroma(L, C, H), 3)} ${H})`;
 

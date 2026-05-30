@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.3.0"
+template_version: "1.3.1"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════

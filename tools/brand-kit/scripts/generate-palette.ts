@@ -5,7 +5,7 @@
 //        [--saturation default] [--neutral-hue 162]
 // Emits the DESIGN.md `colors:` palette block (stdout) + an APCA report (stderr).
 // ─────────────────────────────────────────────────────────────────────────
-import { generateAll, parseOklch, apca, oklchToSrgb01, type Step } from "../src/lib/oklch.ts";
+import { generateAll, parseColor, apca, oklchToSrgb01, type Step } from "../src/lib/oklch.ts";
 
 function arg(name: string, def?: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -14,10 +14,10 @@ function arg(name: string, def?: string): string | undefined {
 
 const baseStr = arg("base");
 if (!baseStr) {
-  console.error('Required: --base "oklch(L C H)"');
+  console.error('Required: --base "oklch(L C H)" or --base "#RRGGBB"');
   process.exit(1);
 }
-const base = parseOklch(baseStr);
+const base = parseColor(baseStr); // accepts oklch(...) OR a hex string
 if (!base) { console.error(`Could not parse: ${baseStr}`); process.exit(1); }
 
 const saturation = arg("saturation", "default")!;

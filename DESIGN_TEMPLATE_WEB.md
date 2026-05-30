@@ -10,7 +10,7 @@
 # 2. Fill every `<slot>` value. Greppable: `grep -n "<[^>]*>" DESIGN.md` should
 #    return zero results once instantiation is complete.
 # 3. Run the color-derivation step. EASIEST: use the bundled generator —
-#    `tools/brand-kit` → `npm run gen -- --base "oklch(L C H)" [--neutral-hue H] [--neutral-chroma S]`
+#    `tools/brand-kit` → `npm run gen -- --base "#RRGGBB"` (your brand HEX, or `oklch(L C H)`) [--neutral-hue H] [--neutral-chroma S]
 #    — it derives all 12 steps × light + dark for every palette, gamut-clamped + APCA-verified, and
 #    prints the `colors:` block to paste in. (Or derive by hand per `§Colors → Generating the scale`.)
 # 4. Profiles and pick-one slots have safe defaults. Override only with intent.
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.3.0"
+template_version: "1.3.1"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -2531,7 +2531,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.3.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.3.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
