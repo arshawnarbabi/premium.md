@@ -1,7 +1,7 @@
 {
   "name": "brand-kit",
   "private": true,
-  "version": "1.8.1",
+  "version": "1.9.0",
   "type": "module",
   "description": "Brand-kit viewer + OKLCH palette generator for premium-product-templates. Renders a project's DESIGN.md + INFORMATION.md.",
   "scripts": {
@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "load": "node scripts/load-tokens.ts",
-    "gen": "node scripts/generate-palette.ts"
+    "gen": "node scripts/generate-palette.ts",
+    "export": "node scripts/export-tokens.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

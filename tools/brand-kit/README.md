@@ -50,6 +50,22 @@ npm run gen -- --base "oklch(0.49 0.12 162)" [--neutral-hue 85] [--neutral-chrom
   algorithm spec'd in `DESIGN_TEMPLATE_WEB.md` §Colors → "Generating the scale" and `research.md` §C.15 —
   this script is its exact implementation.
 
+## Token export (docs → code)
+
+Turn `DESIGN.md` into build-ready token files so the design tokens reach code **without hand-transcription** (the #1 docs→code drift source):
+
+```bash
+npm run export -- --root /path/to/your/project   # or --design /path/to/DESIGN.md
+# default output: <project>/design-tokens/
+```
+
+Writes three files from the same source of truth:
+- **`tokens.css`** — CSS custom properties: `:root` (light) + `[data-theme="dark"]` (dark). Palettes are concrete OKLCH; role tokens (`--surface-canvas`, `--text-primary`, …) are `var()` refs that auto-switch with the theme. Works with **any** stack.
+- **`theme.css`** — a **Tailwind v4 `@theme`** block (imports `tokens.css`), mapping the tokens to utilities (`bg-primary-9`, `text-neutral-12`, `font-display`, `rounded-lg`, …).
+- **`tokens.json`** — **W3C DTCG (2025.10)** tokens (`$type`/`$value`) — the standard interchange (Style Dictionary, Tokens Studio, Figma). Uses string `$value` for portability.
+
+Dependency-free (`node`, no install). Covers colors (5 palettes × light+dark + role tokens), font families, spacing, radius, elevation, and `border-width`.
+
 ## Icons
 
 The viewer renders the project's chosen icon family, read from `icons.library` in `DESIGN.md`:

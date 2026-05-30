@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.8.1
+# Version: 1.9.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.8.1"
+template_version: "1.9.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -2560,7 +2560,10 @@ renders the whole system so a human can judge harmony before any product code is
 cd tools/brand-kit && npm install
 npm run load -- --root <your project>   # or --design <path> --information <path>
 npm run dev                              # review;  npm run build → static export to share
+npm run export -- --root <your project> # docs→code: emit tokens.css + Tailwind v4 theme.css + DTCG tokens.json
 ```
+
+**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). See `tools/brand-kit/README.md → Token export`.
 
 The kit has two sections:
 
@@ -2591,7 +2594,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.8.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.9.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
