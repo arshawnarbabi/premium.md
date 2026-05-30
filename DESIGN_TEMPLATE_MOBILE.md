@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.5.1
+# Version: 1.6.0
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.5.1"
+template_version: "1.6.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1441,6 +1441,8 @@ Dark mode is **authored, not inverted** — the same core rules as web (`DESIGN_
 
 Same 8 semantic roles as web. The difference is mapping: each role maps to an **iOS text style** (Dynamic Type) and an **Android Material 3 size** (sp). See `typography.roles` in the frontmatter for the mapping table.
 
+**Font-category adjustments apply here too** — classify each family (serif / sans-serif / monospace / slab) and re-tune the per-role `letter_spacing` / `line_height` / `weight` / optical sizing exactly as in `DESIGN_TEMPLATE_WEB.md §Typography → Font-category adjustments` (e.g. serif display = halve the negative tracking + a touch more leading + bind `opsz`). Native nuance: on iOS, custom fonts scale via `UIFontMetrics(forTextStyle:).scaledFont(for:)` and tracking re-scales with Dynamic Type, so express tracking proportionally (em-relative), not as a fixed point value; on Android, set `letterSpacing` in `em` so it scales with the user's font-size setting.
+
 ## Dynamic Type / sp scaling is mandatory
 
 - **iOS:** every text element uses `UIFont.preferredFont(forTextStyle:)` (UIKit) or `Text("…").font(.body)` (SwiftUI). Custom fonts use `UIFontMetrics(forTextStyle:).scaledFont(for:)`. Never fixed-point sizes for body content.
@@ -1929,7 +1931,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.5.1`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.6.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

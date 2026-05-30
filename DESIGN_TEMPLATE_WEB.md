@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.5.1
+# Version: 1.6.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.5.1"
+template_version: "1.6.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1721,6 +1721,19 @@ Both are inverse to size:
 
 Hardcoded per role in the frontmatter — never recomputed.
 
+## Font-category adjustments
+
+The line-height + tracking table above is tuned for **sans-serif** display + body (the default). **Before locking the role values, classify each family** (`typography.families.{display,body,mono}`) as sans-serif / serif / monospace / slab-or-display, set `fallback_assignments.{display,body}` to match, and **re-tune the `letter_spacing` / `line_height` / `weight` of the roles that use that family** per the deltas below (relative to the sans-serif baseline above). Different categories genuinely want different metrics — leaving sans defaults on a serif heading is a visible mistake.
+
+| Category | Tracking (letter-spacing) | Line-height | Weight / optical | Notes |
+| --- | --- | --- | --- | --- |
+| **Sans-serif** (grotesque / geometric / humanist — Inter, DM Sans, Geist) | Baseline (negative on display + heading) | Baseline | 400 / 500 / 600 | What the table above assumes. |
+| **Serif** (old-style / transitional / modern — Fraunces, Lora, Source Serif) | **Halve the negative tracking** — serifs collide when over-tightened. Display ≈ −0.005 to −0.02em; heading ≈ −0.005 to 0; **serif body = 0 (never negative)**. | **+0.02–0.05 leading at body sizes** (serifs read better with a touch more room); display may stay 1.05–1.15. | If the face has an `opsz` (optical-size) axis — **Fraunces does** — bind it to the rendered size: high `opsz` for display, low for body. Keep high-contrast moderns ≥ 16px in body so thin strokes survive. | A serif display + sans body is the strongest premium pairing. |
+| **Monospace** (code / tabular only) | **0 always**. | **1.5–1.6** — mono glyphs are wide and need vertical room. | 400 body / 500 emphasis. | Never use for headings or prose body. |
+| **Slab-serif / display-decorative** (Roboto Slab, decorative faces) | Display only; 0 to slightly negative. | Tight (1.0–1.15) at display sizes. | as designed. | Reserve for hero / display roles; never body. |
+
+**Mixing rule (the important one):** when `display` and `body` are *different* categories — e.g. **serif display + sans body** — there is no single global setting. Apply each family's adjustments to the roles that reference it via `font_family`: the serif display roles get serif tracking/leading/`opsz`, the sans body roles keep the sans baseline. Re-tune each affected role's `letter_spacing` / `line_height` in the frontmatter; do **not** leave the sans defaults on serif display roles (or vice-versa). Also match the `@font-face` metric overrides (`ascent/descent/line-gap/size-adjust`) to each real font so the fallback swap stays CLS-free.
+
 ## Weight system
 
 Three weights per screen maximum. Available:
@@ -2546,7 +2559,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.5.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.6.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 

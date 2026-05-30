@@ -89,10 +89,11 @@ export default function Composition({ tokens, brand, icons }:
             background: "linear-gradient(180deg, var(--surface-canvas), var(--primary-2))" }}>
             <div style={{ fontSize: roles.overline?.size, fontWeight: 600, letterSpacing: "0.08em",
               textTransform: "uppercase", color: "var(--text-link)", marginBottom: 16 }}>{brand.tagline || "Your tagline here"}</div>
-            <div className="bk-h" style={{ fontSize: roles["display-2xl"]?.size, fontWeight: 600, lineHeight: 1.05,
-              letterSpacing: "-0.03em", maxWidth: 640, margin: "0 auto" }}>A headline that earns the scroll.</div>
+            <div className="bk-h" style={{ fontSize: roles["display-2xl"]?.size, fontWeight: 600,
+              lineHeight: roles["display-2xl"]?.line_height ?? 1.05,
+              letterSpacing: roles["display-2xl"]?.letter_spacing ?? "-0.03em", maxWidth: 640, margin: "0 auto" }}>A headline that earns the scroll.</div>
             <p style={{ fontSize: roles["body-lg"]?.size, color: "var(--text-secondary)", maxWidth: 480,
-              margin: "20px auto 28px", lineHeight: 1.55 }}>
+              margin: "20px auto 28px", lineHeight: roles["body-lg"]?.line_height ?? 1.55 }}>
               A clear, confident subhead — one sentence on the value, in the body font.</p>
             <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
               <Button variant="primary">Get started</Button>
@@ -112,7 +113,7 @@ export default function Composition({ tokens, brand, icons }:
             ))}
           </div>
           <div style={{ background: "var(--primary-9)", color: "#fff", textAlign: "center", padding: "48px 24px" }}>
-            <div className="bk-h" style={{ fontSize: 28, fontWeight: 600, letterSpacing: "-0.02em", marginBottom: 16 }}>Ready to begin?</div>
+            <div className="bk-h" style={{ fontSize: 28, fontWeight: 600, letterSpacing: roles["display-lg"]?.letter_spacing ?? "-0.02em", marginBottom: 16 }}>Ready to begin?</div>
             <button className="bk-btn" style={{ background: "#fff", color: "var(--primary-11)" }}>Get started</button>
           </div>
         </Card>
@@ -126,7 +127,7 @@ export default function Composition({ tokens, brand, icons }:
             display: "flex", flexDirection: "column" }}>
             <div style={{ padding: "20px 18px 12px" }}>
               <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>Welcome back</div>
-              <div className="bk-h" style={{ fontSize: 26, fontWeight: 600, letterSpacing: "-0.02em" }}>{brand.name}</div>
+              <div className="bk-h" style={{ fontSize: 26, fontWeight: 600, letterSpacing: roles["heading-md"]?.letter_spacing ?? "-0.02em" }}>{brand.name}</div>
             </div>
             <div style={{ padding: "0 14px", display: "flex", flexDirection: "column", gap: 10, flex: 1, overflow: "hidden" }}>
               {[["calendar", "Upcoming", "warning"], ["check", "Completed", "success"],

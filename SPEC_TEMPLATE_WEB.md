@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
-# Version: 1.5.1
+# Version: 1.6.0
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.5.1"
+template_version: "1.6.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -1073,7 +1073,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.5.1`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.6.0`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 
