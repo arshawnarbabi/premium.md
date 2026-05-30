@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.0.0
+# Version: 1.4.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.3.1"
+template_version: "1.4.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1552,6 +1552,7 @@ When generating any UI, code, or design artifact from this document, an AI agent
 22. **Performance is design.** Operations slower than 500 ms (POST/PATCH/DELETE) require a designed loading state. LCP target ≤ 2.5 s; INP target ≤ 200 ms.
 23. **Details are the product.** Every micro-interaction, every edge-case copy, every focus ring, every loading state must be authored with the same care as the primary flow. Premium is felt in the corners, not the headlines.
 24. **Always resolve `{typography.families.*}` together with its fallback stack.** When emitting CSS `font-family`, the value is `<families.X>, <fallbacks[fallback_assignments.X]>` — never the custom family alone. Apply `font-display: swap` and metric overrides (`ascent-override`, `descent-override`, `line-gap-override`, `size-adjust`) on `@font-face` so the fallback renders at the custom font's metrics and the swap causes zero CLS.
+25. **Dark mode is a required deliverable, authored not inverted.** Emit both light and dark values from the `colors.*.dark.*` ramps; never ship a component that only resolves in light mode. In dark mode, raised surfaces get *lighter* (not darker), accent chroma drops 20–40%, and the page background is near-black (`L ≈ 0.18`), never `#000`. Switch via `prefers-color-scheme` or `[data-theme]`, and verify every component and state in both modes. See `§Dark mode`.
 
 ---
 
@@ -2531,7 +2532,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.3.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.4.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 

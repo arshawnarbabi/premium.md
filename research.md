@@ -371,6 +371,11 @@ Use the same token names; the underlying palette differs per mode.
 - **iOS:** Apple's system colors (`UIColor.label`, `UIColor.systemBlue`, etc.) auto-adapt to light/dark/elevated contexts. Premium iOS apps use these as the foundation and layer a single brand accent over them.
 - **Android:** Material 3 dynamic color allows the system to extract palettes from the user's wallpaper. Branded apps opt out via static color schemes. The five "key colors" (primary, secondary, tertiary, neutral, neutral-variant) each generate a 13-tone palette (0 / 10 / 20 / 30 / 40 / 50 / 60 / 70 / 80 / 90 / 95 / 99 / 100). Tokens then reference tones, e.g., `primary-40` for light-mode primary.
 - **Both:** Mobile platforms have a higher contrast bar in outdoor / bright-light conditions. Treat APCA Lc 75 as the floor for mobile body text, not Lc 60.
+- **Dark mode is platform-specific, and this is where mobile dark mode usually breaks:**
+  - **iOS elevated surfaces.** Dark mode ships two tiers of system background — a base (`systemBackground`) and lighter elevated variants (`secondarySystemBackground` / `tertiarySystemBackground`). Raised surfaces (sheets, modals, popovers, grouped cards) use the *lighter* elevated tier — the "raised gets lighter" rule expressed in native tokens. Ship light + dark in the asset catalog (Color Sets / Image Sets), never runtime inversion.
+  - **Android tonal elevation.** Material 3 dark theme conveys depth by tinting higher surfaces *lighter* (`surfaceContainerLowest → … → surfaceContainerHighest`), not by deepening shadows, which read poorly on dark surfaces.
+  - **System bars.** Status-bar / nav-bar foreground must flip per mode (light glyphs on dark, dark on light); a stale status bar is the most common dark-mode regression.
+  - **OLED "true black."** Pure `#000` saves power on OLED but causes halation and grey scroll-smear; offer it as an explicit opt-in *AMOLED* theme, not the default dark — the default stays near-black (`L ≈ 0.18`).
 
 ### C.14 Light-mode vs dark-mode default — pick one
 

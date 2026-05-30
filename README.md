@@ -4,7 +4,7 @@
 
 > A six-file template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.3.1-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.4.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -81,7 +81,7 @@ Each template is operational, not aspirational. Specifically:
 - **Data visualization** — three-palette system (categorical / sequential / diverging), chart-type conventions
 - **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
 - **Microcopy** — voice principles, banned-word list, length budgets, premium positioning structure
-- **AI Agent Contract** — 23 hard rules (web) / 16 hard rules (mobile) the AI must follow
+- **AI Agent Contract** — 25 hard rules (web) / 17 hard rules (mobile) the AI must follow
 
 ---
 
@@ -96,7 +96,8 @@ curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-template
 curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/DESIGN_TEMPLATE_WEB.md
 curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/SPEC_TEMPLATE_WEB.md
 
-# 2. Rename to project files
+# 2. Rename to project files. PROJECT.md is the generic entry-point name; you can
+#    rename it to CLAUDE.md / AGENTS.md / etc. to match your AI tool (see "Tool conventions" below).
 mv PROJECT_TEMPLATE.md PROJECT.md
 mv INFORMATION_TEMPLATE.md INFORMATION.md
 mv DESIGN_TEMPLATE_WEB.md DESIGN.md
@@ -225,9 +226,9 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.3.1"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.4.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
-This release: **v1.3.1** — stable. Future updates follow [semantic versioning](https://semver.org/).
+This release: **v1.4.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.0.0
+# Version: 1.4.0
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.3.1"
+template_version: "1.4.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1383,6 +1383,7 @@ When generating any iOS or Android UI from this document, an AI agent **must** f
 14. **Use materials over shadows on iOS.** Reach for `UIBlurEffect` / `.thinMaterial` / `.regularMaterial` for surface separation; reserve shadows for FABs and elevated cards on Android.
 15. **Mobile copy is shorter than web.** Button labels typically 1–2 words; toasts under 60 chars; tooltips don't apply (no hover).
 16. **Details are the product** — same rule as web. Premium is felt in haptics, micro-interactions, gesture responsiveness, and edge-case copy.
+17. **Dark mode is a required deliverable, authored not inverted.** Use the `colors.*.dark.*` ramps; never produce a screen that only works in light mode. On iOS use Color Sets / Image Sets with light + dark appearances and the *elevated* system backgrounds for raised surfaces; on Android use M3 tonal elevation (`surfaceContainer*`). Flip status-bar / nav-bar content per mode. Verify every screen, sheet, toast, keyboard, and system surface in both modes. See `§Colors → Dark mode (mobile)`.
 
 ---
 
@@ -1417,6 +1418,17 @@ Same rules as web (`DESIGN_TEMPLATE_WEB.md §Colors`). Same OKLCH authoring, sam
 - **Higher outdoor-readability bar:** treat APCA Lc 75 as the floor for mobile body text (not Lc 60 like web), accounting for bright-light outdoor conditions.
 
 The shadow tint is the same; on iOS, prefer material-based surface separation over actual shadows.
+
+## Dark mode (mobile) — a first-class deliverable, not a derived afterthought
+
+Dark mode is **authored, not inverted** — the same core rules as web (`DESIGN_TEMPLATE_WEB.md §Dark mode`: chroma drops 20–40%, lightness compresses to a near-black `L ≈ 0.18` page rather than pure `#000`, white text lands at `L ≈ 0.95`, and **raised surfaces get *lighter*, not darker**). The `colors.*.dark.{1..12}` ramps in the frontmatter are the source of truth; every screen must be designed and verified in **both** modes. Most "dark mode falls apart" failures are mobile-specific, so this template calls them out explicitly:
+
+- **iOS — ship light + dark in the asset catalog.** Define every brand color as a **Color Set** with *Any* and *Dark* appearances, and every raster as an **Image Set** with light/dark variants — never `filter`/tint-invert at runtime. SwiftUI / `UIColor(named:)` then resolves the right value automatically from `UITraitCollection`.
+- **iOS — use the *elevated* system backgrounds in dark mode.** In dark mode, iOS provides a slightly lighter set of background colors for layered surfaces. Modals, sheets, popovers, and cards sit on `secondarySystemBackground` / `tertiarySystemBackground` (or the elevated variant), which are **lighter** than the base `systemBackground` — this is the "raised = lighter" rule expressed in native tokens. Don't make dark-mode sheets *darker* than the page.
+- **Android — convey elevation with *tonal* elevation, not bigger shadows.** Material 3 dark theme expresses depth by tinting higher surfaces lighter (`surfaceContainerLowest → surfaceContainerLow → surfaceContainer → surfaceContainerHigh → surfaceContainerHighest`), not by deepening drop shadows (which read poorly on dark surfaces). Map raised surfaces to the `surfaceContainer*` roles; reserve real shadows for FABs.
+- **Flip system-bar content with the theme.** Status-bar and navigation-bar foreground must invert per mode: light content on dark backgrounds, dark content on light. iOS: `preferredStatusBarStyle` (or let the system manage it via appearance). Android: `WindowInsetsController.isAppearanceLightStatusBars` / `…LightNavigationBars`. A stale status bar (dark glyphs on a dark bar) is the most common dark-mode regression.
+- **OLED "true black" is an opt-in third theme, never the default dark.** Pure `#000` saves power on OLED and some users want it, but it causes halation, grey smear on scroll, and loss of elevation cues. If you offer it, expose it as an explicit *AMOLED / pure-black* toggle layered on top of the standard dark palette — the **default** dark mode stays near-black (`L ≈ 0.18`).
+- **Verify the whole surface inventory in both modes.** Dark mode isn't "done" until you've checked it on-device across: sheets and modals, the keyboard accessory bar, toasts / snackbars, empty / error / loading states, system share sheets, the splash / launch screen, and any embedded `WKWebView` / Custom Tab content.
 
 ---
 
@@ -1912,7 +1924,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.0.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.4.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 
