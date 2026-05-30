@@ -70,11 +70,23 @@ body {
 .bk-input--error { border-color: var(--danger-9); }
 
 /* Cards */
-.bk-card { background: var(--surface-raised); border: 1px solid var(--border-subtle);
+.bk-card { background: var(--surface-raised); border: var(--border-width, 1px) solid var(--border-subtle);
   border-radius: var(--radius-lg); padding: 24px; }
 .bk-card--elevated { border: none; box-shadow: var(--elev-1);
   transition: box-shadow 200ms ease, transform 200ms ease; }
 .bk-card--elevated:hover { box-shadow: var(--elev-3); transform: translateY(-2px); }
+
+/* Surface-separation strategy — driven by tokens.surface_separation.strategy on .bk-root.
+   Default ('shadow') uses the elevated rules above; the others override how a raised card reads. */
+.bk-root[data-separation="border"] .bk-card--elevated {
+  box-shadow: none; border: var(--border-width, 1px) solid var(--border-subtle); }
+.bk-root[data-separation="border"] .bk-card--elevated:hover {
+  box-shadow: none; border-color: var(--border-strong); transform: none; }
+.bk-root[data-separation="surface-tone"] .bk-card--elevated {
+  box-shadow: none; border: none; background: var(--surface-raised); }
+.bk-root[data-separation="surface-tone"] .bk-card--elevated:hover { transform: none; }
+.bk-root[data-separation="shadow+border"] .bk-card--elevated {
+  border: var(--border-width, 1px) solid var(--border-subtle); box-shadow: var(--elev-1); }
 
 /* Badges */
 .bk-badge { display: inline-flex; align-items: center; gap: 6px;

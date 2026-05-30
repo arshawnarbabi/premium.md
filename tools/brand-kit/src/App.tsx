@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import tokensData from "./data/tokens.json";
 import brandData from "./data/brand.json";
 import { buildTokenCss } from "./applyTokens";
@@ -27,8 +27,13 @@ export default function App() {
     return () => { document.head.removeChild(link); };
   }, []);
 
+  const sep = tokens.surface_separation ?? {};
+  const sepStrategy = sep.strategy ?? "shadow";
+  const borderW = sep.border_width != null ? `${sep.border_width}px` : "1px";
+
   return (
-    <div className="bk-root" data-theme={theme}>
+    <div className="bk-root" data-theme={theme} data-separation={sepStrategy}
+      style={{ ["--border-width" as string]: borderW } as CSSProperties}>
       <style>{css}</style>
 
       {/* Sticky header (viewer chrome) */}

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.8.0
+# Version: 1.8.1
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.8.0"
+template_version: "1.8.1"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -2591,7 +2591,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.8.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.8.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 

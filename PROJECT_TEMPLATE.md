@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.8.0
+# Version: 1.8.1
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.8.0"
+template_version: "1.8.1"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -777,7 +777,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.8.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.8.1`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 
