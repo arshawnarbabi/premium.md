@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.5.0
+# Version: 1.5.1
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.5.0"
+template_version: "1.5.1"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -475,7 +475,7 @@ All defaults are premium-grade and I'll apply them unless you override. Skim and
 
 ### Pick-one slots — Mobile (DESIGN_MOBILE.md + SPEC_MOBILE.md)
 - **Mobile nav style** — primary nav: **tab-bar** ← tab-bar *(iOS bottom tabs)* / navigation-bar *(Material bottom tabs)* / nav-rail *(side rail, tablets)* / hybrid
-- **Platform adherence** — how strictly to follow each OS's HIG: **cross-platform-hybrid** ← ios-strict / material-strict / cross-platform-hybrid *(balanced, recommended)*
+- **Platform adherence** — how strictly to follow each OS's HIG: **cross-platform-hybrid** ← ios-strict / material-strict / cross-platform-hybrid *(balanced, recommended when shipping both; if you ship only one platform, prefer that platform's strict mode)*
 - **Haptic intensity** — vibration feedback: **default** ← subtle *(wellness)* / default / expressive *(gaming)*
 - **Bottom sheet detents** — sheet stop positions: **medium-large** ← medium-large / small-medium-large *(extra peek)* / custom
 
@@ -772,7 +772,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.5.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.5.1`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

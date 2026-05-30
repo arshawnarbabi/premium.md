@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.5.0
+# Version: 1.5.1
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.5.0"
+template_version: "1.5.1"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1338,7 +1338,7 @@ All defaults are premium-grade. Skim and tell me which to change. Each option ha
 
 ### Mobile-specific pick-one slots
 - **Mobile nav style** — primary navigation pattern: **tab-bar** ← tab-bar *(bottom tabs, iOS pattern)* / navigation-bar *(bottom tabs, Material 3 pattern)* / nav-rail *(side rail, tablets)* / hybrid
-- **Platform adherence** — how strictly to follow each platform's HIG: **cross-platform-hybrid** ← ios-strict *(SF Symbols, sheets, action sheets)* / material-strict *(FAB, top app bar, Material sheets)* / cross-platform-hybrid *(balanced — recommended)*
+- **Platform adherence** — how strictly to follow each platform's HIG: **cross-platform-hybrid** ← ios-strict *(SF Symbols, sheets, action sheets)* / material-strict *(FAB, top app bar, Material sheets)* / cross-platform-hybrid *(balanced — recommended when shipping both; if you ship only one platform, prefer that platform's strict mode)*
 - **Haptic intensity** — vibration feedback level: **default** ← subtle *(recommended for meditation/wellness)* / default / expressive *(gaming-style)*
 - **Bottom sheet detents** — sheet stop positions: **medium-large** ← medium-large / small-medium-large *(extra peek state)* / custom
 - **Icon fill** — icon style: **outline** ← outline *(strokes only)* / filled *(solid)*
@@ -1929,7 +1929,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.5.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.5.1`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

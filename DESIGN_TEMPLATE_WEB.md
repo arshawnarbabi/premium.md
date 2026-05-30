@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.5.0
+# Version: 1.5.1
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.5.0"
+template_version: "1.5.1"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1471,7 +1471,7 @@ I'll fill the template as your answers come in and run final verification at the
 ### Mobile companion *(only if you also ship an iOS/Android app — skip these if web-only)*
 Everything above is shared with the mobile app and I copy it across automatically. These are the *extra* mobile-only decisions:
 13. **Target platforms** — which app stores: iOS-only / Android-only / both: ?
-14. **Platform adherence** — how strictly to follow each platform's design language: ios-strict *(SF Symbols, sheets, action sheets)* / material-strict *(FAB, Material sheets)* / cross-platform-hybrid *(balanced — recommended)*: ?
+14. **Platform adherence** — how strictly to follow each platform's design language: ios-strict *(SF Symbols, sheets, action sheets)* / material-strict *(FAB, Material sheets)* / cross-platform-hybrid *(balanced — recommended when shipping both platforms; if you ship only one platform, prefer that platform's strict mode)*: ?
 15. **Mobile nav style** — primary navigation: tab-bar *(bottom tabs, iOS)* / navigation-bar *(bottom tabs, Material 3)* / nav-rail *(side rail, tablets)* / hybrid: ?
 16. **Haptic intensity** — vibration feedback: subtle / default / expressive: ?
 *(The mobile app inherits your icon, font, color, and voice choices from above — tell me only if you want something different on mobile.)*
@@ -2546,7 +2546,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.5.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.5.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
