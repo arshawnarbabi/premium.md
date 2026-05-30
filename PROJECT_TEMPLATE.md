@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.9.0
+# Version: 1.10.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.9.0"
+template_version: "1.10.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -65,6 +65,11 @@ source_files:
     purpose: "App map, per-screen content, states, onboarding, push, settings."
     exists: "<true | false>"
     priority_for: ["screen content", "auth flow", "permissions", "push notifications", "app store metadata"]
+  qa_md:
+    file: "QA.md"
+    purpose: "Premium acceptance gate — the AI runs it against its own build before declaring done."
+    exists: "<true | false>"
+    priority_for: ["accessibility", "performance (Core Web Vitals)", "token fidelity", "responsive", "launch QA"]
 
 priority_order:
   # When multiple files speak to the same decision, this is the precedence.
@@ -166,6 +171,8 @@ agent_constraints:
     - "Honor INFORMATION.md compliance requirements (GDPR / CCPA / HIPAA / etc.)."
     - "Treat SPEC.md copy as final — don't rephrase declared copy to 'improve' it."
     - "When a needed value isn't in the source files, ask — don't fabricate."
+    - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components."
+    - "If QA.md exists, the build is NOT done until every gate in it is ✅. Run it against your own output; fix failures and re-check before declaring complete."
 
   must_not:
     - "Don't introduce new dependencies without surfacing the choice."

@@ -11,3 +11,6 @@ dist/
 
 # Generated release asset — built on demand by make-release-zip.sh, never committed
 premium-product-templates-v*.zip
+
+# Working build-plan/checklist (transient; not part of the published system)
+WORKFLOW_ADDITIONS_PLAN.md

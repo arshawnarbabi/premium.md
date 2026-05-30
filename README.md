@@ -2,9 +2,9 @@
 
 # premium-product-templates
 
-> A six-file template system that turns any AI agent into a reliable premium-grade product builder.
+> A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.9.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.10.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -14,7 +14,7 @@ The system is built from ~4,000 lines of cross-referenced research on what makes
 
 ## TL;DR
 
-- **6 markdown templates** covering brand context, design system, content / layout, and orchestration
+- **Markdown templates** covering brand context, design system, content / layout, and orchestration
 - **Web and mobile** treated as parallel systems with shared brand identity
 - **Brand-agnostic** — works for any project; you fill in slots
 - **Free, MIT licensed, provided as-is** — fork, adapt, ship anything you want
@@ -22,7 +22,7 @@ The system is built from ~4,000 lines of cross-referenced research on what makes
 
 ---
 
-## The six templates
+## The templates
 
 | File | Purpose | Lines |
 | --- | --- | --- |
@@ -32,6 +32,7 @@ The system is built from ~4,000 lines of cross-referenced research on what makes
 | **`DESIGN_TEMPLATE_MOBILE.md`** | Visual design system for mobile — iOS HIG + Material 3 native specs, gestures, haptics, safe areas, Dynamic Type / sp scaling. | ~1,800 |
 | **`SPEC_TEMPLATE_WEB.md`** | Site map + per-page content/layout/copy + forms + system messages + transactional email + legal pages + analytics events. | ~950 |
 | **`SPEC_TEMPLATE_MOBILE.md`** | App map + per-screen content/copy/states + onboarding + auth + permission pre-prompts + push notifications + app store metadata. | ~860 |
+| **`QA_TEMPLATE.md`** | Premium **acceptance gate** the AI runs against its own build before "done" — WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget, token fidelity (no hardcoded values), responsive incl. ultra-wide, content-matches-SPEC, security. | ~150 |
 
 Plus one reference file:
 
@@ -39,11 +40,11 @@ Plus one reference file:
 | --- | --- |
 | `research.md` | The brand-agnostic premium-standard research (23 sections, ~4,000 lines) — the explanatory backing for everything in the templates. DESIGN templates cite specific sections. |
 
-Plus optional tooling (the six markdown templates stay dependency-free):
+Plus optional tooling (the markdown templates stay dependency-free):
 
 | Folder | Purpose |
 | --- | --- |
-| `tools/brand-kit/` | An OKLCH **palette generator** (model-only) + a **brand-kit viewer** that reads a project's `DESIGN.md` + `INFORMATION.md` and renders the whole design system (specimen + composition, light/dark, the project's real fonts + icon family). Run `npm run dev` to review before building. See `tools/brand-kit/README.md`. **Note:** the tooling lives in the repo — **clone it** to use the generator/viewer. It is intentionally excluded from the lean release download (the six markdown templates are self-contained and can be handed to any AI without it). |
+| `tools/brand-kit/` | An OKLCH **palette generator** (model-only) + a **brand-kit viewer** that reads a project's `DESIGN.md` + `INFORMATION.md` and renders the whole design system (specimen + composition, light/dark, the project's real fonts + icon family). Run `npm run dev` to review before building. See `tools/brand-kit/README.md`. **Note:** the tooling lives in the repo — **clone it** to use the generator/viewer. It is intentionally excluded from the lean release download (the markdown templates are self-contained and can be handed to any AI without it). |
 
 ---
 
@@ -82,6 +83,7 @@ Each template is operational, not aspirational. Specifically:
 - **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
 - **Microcopy** — voice principles, banned-word list, length budgets, premium positioning structure
 - **AI Agent Contract** — 26 hard rules (web) / 18 hard rules (mobile) the AI must follow
+- **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
 
 ---
 
@@ -227,9 +229,9 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.9.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.10.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
-This release: **v1.9.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
+This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
 ---
 

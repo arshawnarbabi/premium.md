@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # INFORMATION_TEMPLATE.md — Project / brand / business context
-# Version: 1.9.0
+# Version: 1.10.0
 # Scope: shared between web and mobile (the business is the same)
 # Companions: DESIGN_TEMPLATE_*.md (visual system) + SPEC_TEMPLATE_*.md (content)
 #
@@ -14,7 +14,7 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.9.0"
+template_version: "1.10.0"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════

@@ -690,8 +690,11 @@ Never mix margin and padding to achieve spacing — use `gap` on the parent and 
 | `lg` | 1024 px | Tablets landscape, small laptops |
 | `xl` | 1280 px | Desktop |
 | `2xl` | 1536 px | Large desktop |
+| `3xl` | 2560 px | Ultra-wide / 4K — content **caps + centers**, never stretches |
 
 (Tailwind-equivalent values — broad cross-tool compatibility.)
+
+The 2026 device range runs from a 4″ phone to a 34″ ultrawide. Two zones premium teams now handle explicitly: **ultra-wide / 4K (≥ 2560 px)** — keep a `max-width` on the page container and line length ≤ ~75ch; spend the extra space on margin or an intentional 2-up/side-rail treatment, never full-bleed body text. **Foldables / mini-tablets (~600–720 px, e.g. a Galaxy Z Fold unfolded)** — sit between `sm` and `md`; container queries (§F.3) absorb most of this since components respond to their container, not the viewport.
 
 ### F.2 Container widths — capped, centered
 

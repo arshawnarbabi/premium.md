@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.9.0
+# Version: 1.10.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.9.0"
+template_version: "1.10.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -690,6 +690,7 @@ breakpoints:
   lg: 1024
   xl: 1280
   "2xl": 1536
+  "3xl": 2560   # ultra-wide / 4K — content CAPS + centers here (see §Breakpoints), never stretches
 
 containers:
   prose: "65ch"
@@ -2069,7 +2070,10 @@ Spacing between adjacent targets: 12 px minimum.
 
 ## Breakpoints
 
-Mobile-first. Default styles target mobile; `min-width` media queries layer larger styles on top. See `breakpoints` table.
+Mobile-first. Default styles target mobile; `min-width` media queries layer larger styles on top. See `breakpoints` table. The device range now runs from a 4″ phone to a 34″ ultrawide — handle both ends:
+
+- **Ultra-wide / 4K (`3xl` ≥ 2560px):** content **caps and centers** — never stretches. Keep `max-width` on the page container, line length ≤ ~75ch (per §Measure). Use the extra space as wider margin/gutter, or an intentional treatment (a 2-up layout, a side rail) — never full-bleed body text or buttons spanning the whole monitor.
+- **Foldables / mini-tablets (~600–720px):** sit between `sm` and `md`; verify layouts reflow sanely here (e.g. a Galaxy Z Fold unfolds from a narrow phone into this zone). Container queries (above) handle most of this automatically since components respond to their container, not the viewport.
 
 ## Fluid scaling
 
