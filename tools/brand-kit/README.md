@@ -45,6 +45,10 @@ npm run gen -- --base "oklch(0.49 0.12 162)" [--neutral-hue 85] [--neutral-chrom
 - `--neutral-hue` — neutral tint hue (default = brand hue). `--neutral-chroma` — tint intensity
   (default `0.25`; lower = closer to a clean off-white).
 - Prints the `colors:` YAML block (stdout) + an APCA report (stderr).
+- *How it derives the scale* (hue held constant, fixed lightness curve with step 9 = your brand L,
+  chroma peaking mid-tone, a separately-authored dark ramp, sRGB gamut clamp, APCA targets) is the
+  algorithm spec'd in `DESIGN_TEMPLATE_WEB.md` §Colors → "Generating the scale" and `research.md` §C.15 —
+  this script is its exact implementation.
 
 ## Icons
 
