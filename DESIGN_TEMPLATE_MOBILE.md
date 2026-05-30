@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.4.0
+# Version: 1.5.0
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.4.0"
+template_version: "1.5.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1259,6 +1259,8 @@ This is the **mobile sibling** of `DESIGN_TEMPLATE_WEB.md`. The two files share 
 >
 > If `PROJECT.md` is present, use its full Interactive Population Protocol instead. The block below is the single-template fallback scoped to `DESIGN_MOBILE.md` alone.
 >
+> **Web companion — most values come from `DESIGN.md`; don't re-decide them.** If a `DESIGN.md` (web) already exists for this project, its brand identity, **full** color palette (light + dark), type families, icons, dataviz, photography, and shared profiles are the source of truth — **copy them here verbatim** rather than re-asking the user, so the two files can't disagree (per `PROJECT.md → §Cross-template consistency rules`). Only ask the user about the **mobile-only** items (platform scope + adherence, nav style, haptics, native font fallbacks). If there is no `DESIGN.md` yet, run the full intake below.
+>
 > **Partial-fill state — audit BEFORE producing PART 1:** Read the file in full, then walk every must-fill item. For each, classify as filled / suspected-stub / unfilled using BOTH mechanical patterns AND semantic reasoning:
 > - **Mechanical (unfilled):** still wrapped in `<...>` placeholder syntax, empty string / null, just `?`, contains `TBD` / `TODO` / `FIXME` (case-insensitive), or a list below its declared minimum cardinality.
 > - **Semantic (suspected stub):** value passes the mechanical checks but looks like a leftover example — known stubs like "Acme Labs", "example.com", "John Doe", "Lorem ipsum", "Your Brand"; generic placeholder language; one-word filler in slots needing real content; or contextually inconsistent with other filled values.
@@ -1276,6 +1278,8 @@ This is the **mobile sibling** of `DESIGN_TEMPLATE_WEB.md`. The two files share 
 # Intake — DESIGN_MOBILE.md
 
 This is everything you need to decide to fully populate your mobile design system file (iOS + Android). Each item has a short plain-English hint after the em dash.
+
+**Scope — read this first:** If you already filled `DESIGN.md` (the website), the brand, colors, fonts, icons, voice, and profiles are **shared** — I'll copy them from there, so most of the questions below are already answered. What actually matters here are the **mobile-only** choices (platform scope + adherence, nav style, haptics). If there's no web `DESIGN.md`, answer everything below.
 
 **How to answer:**
 - **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
@@ -1310,7 +1314,7 @@ I'll fill the template as your answers come in and run final verification at the
     - **Material Symbols** *(Android-strict; native, three weights/fills)*
     - **Lucide** *(cross-platform, free, clean)*
     - **Phosphor** *(cross-platform, free, multiple weights)*
-    - **HugeIcons** *(premium; requires Pro license)*
+    - **HugeIcons** *(free Stroke-Rounded tier ~4,500 icons; 51K more on Pro)*
     - **custom** *(your own SVG set)*
     Pick one (or one per platform if iOS-strict + Material-strict): ?
 
@@ -1384,6 +1388,7 @@ When generating any iOS or Android UI from this document, an AI agent **must** f
 15. **Mobile copy is shorter than web.** Button labels typically 1–2 words; toasts under 60 chars; tooltips don't apply (no hover).
 16. **Details are the product** — same rule as web. Premium is felt in haptics, micro-interactions, gesture responsiveness, and edge-case copy.
 17. **Dark mode is a required deliverable, authored not inverted.** Use the `colors.*.dark.*` ramps; never produce a screen that only works in light mode. On iOS use Color Sets / Image Sets with light + dark appearances and the *elevated* system backgrounds for raised surfaces; on Android use M3 tonal elevation (`surfaceContainer*`). Flip status-bar / nav-bar content per mode. Verify every screen, sheet, toast, keyboard, and system surface in both modes. See `§Colors → Dark mode (mobile)`.
+18. **Keep shared values in sync with the web design system.** This file shares brand identity, the **full** color palette (all 5 palettes × light + dark), type families, icons, dataviz, and profiles with `DESIGN.md`. Those are authored in `DESIGN.md` and copied here verbatim — when any of them change, re-copy from `DESIGN.md` (and update `PROJECT.md tech.web.icons` for icon changes), per `PROJECT.md → §Cross-template consistency rules`. The two design files must never disagree on a shared value. Only the mobile-specific tokens (`ios_system.*`, `material_*`, platform text-style maps, haptics, gestures) are authored here.
 
 ---
 
@@ -1924,7 +1929,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.4.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.5.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

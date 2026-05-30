@@ -1,7 +1,7 @@
 {
   "name": "brand-kit",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.5.0",
   "type": "module",
   "description": "Brand-kit viewer + OKLCH palette generator for premium-product-templates. Renders a project's DESIGN.md + INFORMATION.md.",
   "scripts": {

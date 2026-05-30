@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.4.0
+# Version: 1.5.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.4.0"
+template_version: "1.5.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1408,6 +1408,8 @@ The companion file `DESIGN_TEMPLATE_MOBILE.md` covers iOS + Android apps. Shared
 >
 > If `PROJECT.md` is present in the project, use its full Interactive Population Protocol instead (which orchestrates intake across all 6 templates). The block below is the single-template fallback scoped to `DESIGN.md` alone.
 >
+> **Mobile companion — disambiguate scope FIRST (do not skip).** The design system may span two files: `DESIGN.md` (web) and `DESIGN_MOBILE.md` (iOS/Android). Before producing the intake, determine whether this project also ships a mobile app — check `PROJECT.md project.type` for `mobile`/`hybrid`, or whether a `DESIGN_MOBILE.md` file exists. If it does (or you can't tell), state it plainly at the top of the intake: the design system has a **web file and a mobile file**, **nearly every value is shared and you will copy it into both automatically**, and there are only a **few mobile-only choices** (the "Mobile companion" block below). Then, when filling, you MUST populate `DESIGN_MOBILE.md` too — not just `DESIGN.md`. **Never let the user believe that completing `DESIGN.md` alone finishes their design system when a mobile app is in scope.** If the project is web-only, omit the mobile items and fill `DESIGN.md` alone.
+>
 > **Partial-fill state — audit BEFORE producing PART 1:** Read the file in full, then walk every must-fill item. For each, classify as filled / suspected-stub / unfilled using BOTH mechanical patterns AND semantic reasoning:
 > - **Mechanical (unfilled):** still wrapped in `<...>` placeholder syntax, empty string / null, just `?`, contains `TBD` / `TODO` / `FIXME` (case-insensitive), or a list below its declared minimum cardinality.
 > - **Semantic (suspected stub):** value passes the mechanical checks but looks like a leftover example — known stubs like "Acme Labs", "example.com", "John Doe", "Lorem ipsum", "Your Brand"; generic placeholder language like "Insert your tagline here"; one-word filler like "product" / "app" in slots needing real content; or contextually inconsistent with other filled values.
@@ -1422,9 +1424,11 @@ The companion file `DESIGN_TEMPLATE_MOBILE.md` covers iOS + Android apps. Shared
 ### OUTPUT THIS BLOCK VERBATIM when triggered (do not paraphrase, do not summarize, do not rewrite)
 
 ```
-# Intake — DESIGN.md (web)
+# Intake — your design system (DESIGN.md web + DESIGN_MOBILE.md mobile, if applicable)
 
-This is everything you need to decide to fully populate your web design system file. Each item has a short plain-English hint after the em dash.
+This is everything you need to decide to fully populate your design system. Each item has a short plain-English hint after the em dash.
+
+**Scope — read this first:** Your design system can live in two files — `DESIGN.md` (the website) and `DESIGN_MOBILE.md` (the iOS/Android app). **Almost everything is shared** — colors, fonts, icons, brand voice, profiles — so you answer once and I copy it into both files. There are only a **few mobile-only choices**, grouped under "Mobile companion" in PART 1. If this project is **web-only**, ignore that block and I'll fill `DESIGN.md` alone. So I scope it correctly: is this **web only**, or **web + a mobile app**?
 
 **How to answer:**
 - **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
@@ -1457,12 +1461,20 @@ I'll fill the template as your answers come in and run final verification at the
     - **Phosphor** *(free; multiple weights/variants)*
     - **Heroicons** *(free; Tailwind's official set)*
     - **Tabler** *(free; very large library)*
-    - **HugeIcons** *(premium; requires Pro license — most extensive)*
+    - **HugeIcons** *(free Stroke-Rounded tier ~4,500 icons; 51K more on Pro — very extensive)*
     - **custom** *(your own SVG set)*
     Pick one: ?
 
 ### Imagery
 12. **Photography style** — how product/marketing photos should look. Describe lighting, subject, and mood. E.g., "Natural light, real people in their workspaces, no stock-photo headsets.": ?
+
+### Mobile companion *(only if you also ship an iOS/Android app — skip these if web-only)*
+Everything above is shared with the mobile app and I copy it across automatically. These are the *extra* mobile-only decisions:
+13. **Target platforms** — which app stores: iOS-only / Android-only / both: ?
+14. **Platform adherence** — how strictly to follow each platform's design language: ios-strict *(SF Symbols, sheets, action sheets)* / material-strict *(FAB, Material sheets)* / cross-platform-hybrid *(balanced — recommended)*: ?
+15. **Mobile nav style** — primary navigation: tab-bar *(bottom tabs, iOS)* / navigation-bar *(bottom tabs, Material 3)* / nav-rail *(side rail, tablets)* / hybrid: ?
+16. **Haptic intensity** — vibration feedback: subtle / default / expressive: ?
+*(The mobile app inherits your icon, font, color, and voice choices from above — tell me only if you want something different on mobile.)*
 
 ## PART 2 — Customizable Defaults (accept or override)
 
@@ -1517,7 +1529,8 @@ I'll:
 6. Apply HTML mapping defaults appropriate to project type
 7. Run the 5-pattern verification: (a) `grep -n "<[^>]*>" DESIGN.md` for placeholders, (b) `grep -niE "\bTBD\b|\bTODO\b|\bFIXME\b" DESIGN.md` for plain-text deferrals, (c) `grep -nE ': *""\s*$|: *\?\s*$|: *null\s*$' DESIGN.md` for empty values, (d) stub scan for common surviving examples, (e) cardinality + semantic-reasoning check on each list slot
 8. Report: ✅ filled count, ⚠️ remaining (with reason per item), 🤔 suspected stubs needing confirmation, 📝 user-deferred items. If anything sits in "remaining" or "suspected stubs", do NOT declare complete
-9. Offer next steps (populate companion INFORMATION.md / SPEC.md, generate Tailwind config from tokens)
+9. **If a mobile app is in scope (web + mobile):** the design system is NOT complete until `DESIGN_MOBILE.md` is filled too. Copy the entire `colors:` block, `typography.families`, `icons` (family + library), `dataviz.palettes`, `images.photography_style`, and the `brand` block + Overview over **verbatim**, propagate all shared `profiles`, then fill the mobile-only slots (target platforms, platform adherence, nav style, haptics, native font fallbacks, and the native-only `ios_system.*` / `material_*` tokens). Run the same 5-pattern verification on `DESIGN_MOBILE.md` — zero unfilled slots — and confirm the two files agree on every shared value (per `PROJECT.md → §Cross-template consistency rules`). Report DESIGN_MOBILE.md's fill status separately.
+10. Offer next steps (populate companion INFORMATION.md / SPEC.md, generate Tailwind config from tokens)
 ```
 
 The AI MUST produce this output in full (or, if filling a partially-populated DESIGN.md, EXCLUDE already-filled items from PART 1 and only ask about gaps). Never improvise the format.
@@ -1553,6 +1566,7 @@ When generating any UI, code, or design artifact from this document, an AI agent
 23. **Details are the product.** Every micro-interaction, every edge-case copy, every focus ring, every loading state must be authored with the same care as the primary flow. Premium is felt in the corners, not the headlines.
 24. **Always resolve `{typography.families.*}` together with its fallback stack.** When emitting CSS `font-family`, the value is `<families.X>, <fallbacks[fallback_assignments.X]>` — never the custom family alone. Apply `font-display: swap` and metric overrides (`ascent-override`, `descent-override`, `line-gap-override`, `size-adjust`) on `@font-face` so the fallback renders at the custom font's metrics and the swap causes zero CLS.
 25. **Dark mode is a required deliverable, authored not inverted.** Emit both light and dark values from the `colors.*.dark.*` ramps; never ship a component that only resolves in light mode. In dark mode, raised surfaces get *lighter* (not darker), accent chroma drops 20–40%, and the page background is near-black (`L ≈ 0.18`), never `#000`. Switch via `prefers-color-scheme` or `[data-theme]`, and verify every component and state in both modes. See `§Dark mode`.
+26. **Keep shared values in sync across documents.** Colors (the full palette), type families, icons, brand identity, dataviz, and profiles are shared with `DESIGN_MOBILE.md` (and `icons` is also declared in `PROJECT.md tech.web.icons`). Whenever you change one of these here — at first fill **or on any later edit** — propagate it to every sibling document in the same pass, per `PROJECT.md → §Cross-template consistency rules`. Re-run derivations the change implies (e.g. a new brand color ⇒ regenerate the whole palette, then copy the `colors:` block to DESIGN_MOBILE.md). Never leave a sibling document stale; state which ones you updated.
 
 ---
 
@@ -2532,7 +2546,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.4.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.5.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 

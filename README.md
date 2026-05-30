@@ -1,10 +1,10 @@
-![premium-product-templates](./premium-product-templates_banner.png)
+![premium-product-templates](https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/premium-product-templates_banner.png)
 
 # premium-product-templates
 
 > A six-file template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.4.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.5.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -43,7 +43,7 @@ Plus optional tooling (the six markdown templates stay dependency-free):
 
 | Folder | Purpose |
 | --- | --- |
-| `tools/brand-kit/` | An OKLCH **palette generator** (model-only) + a **brand-kit viewer** that reads a project's `DESIGN.md` + `INFORMATION.md` and renders the whole design system (specimen + composition, light/dark, the project's real fonts + icon family). Run `npm run dev` to review before building. See `tools/brand-kit/README.md`. |
+| `tools/brand-kit/` | An OKLCH **palette generator** (model-only) + a **brand-kit viewer** that reads a project's `DESIGN.md` + `INFORMATION.md` and renders the whole design system (specimen + composition, light/dark, the project's real fonts + icon family). Run `npm run dev` to review before building. See `tools/brand-kit/README.md`. **Note:** the tooling lives in the repo — **clone it** to use the generator/viewer. It is intentionally excluded from the lean release download (the six markdown templates are self-contained and can be handed to any AI without it). |
 
 ---
 
@@ -81,7 +81,7 @@ Each template is operational, not aspirational. Specifically:
 - **Data visualization** — three-palette system (categorical / sequential / diverging), chart-type conventions
 - **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
 - **Microcopy** — voice principles, banned-word list, length budgets, premium positioning structure
-- **AI Agent Contract** — 25 hard rules (web) / 17 hard rules (mobile) the AI must follow
+- **AI Agent Contract** — 26 hard rules (web) / 18 hard rules (mobile) the AI must follow
 
 ---
 
@@ -108,7 +108,8 @@ grep -n "<[^>]*>" PROJECT.md INFORMATION.md DESIGN.md SPEC.md
 
 # 4. For DESIGN.md, generate the color palette with the bundled generator:
 #    cd tools/brand-kit && npm run gen -- --base "#2D6A4F"   (your brand HEX or oklch(L C H))
-#    (no install needed for the generator; or ask your AI. Algorithm in §Colors → Generating the scale.)
+#    (the generator/viewer live in tools/ — clone the repo to use them; or just ask your AI to
+#     derive the palette per §Colors → Generating the scale. No install needed for the generator.)
 
 # 5. Hand all four files to your AI tool. PROJECT.md is the entry point.
 
@@ -226,9 +227,9 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.4.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.5.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
-This release: **v1.4.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
+This release: **v1.5.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
 ---
 

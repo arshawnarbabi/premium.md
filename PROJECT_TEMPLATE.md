@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.4.0
+# Version: 1.5.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.4.0"
+template_version: "1.5.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -90,7 +90,7 @@ tech:
     component_library_note: "shadcn/ui is for product / dashboard contexts only; marketing sites use custom components built against DESIGN.md tokens"
     animation: "Framer Motion"
     forms: "React Hook Form + Zod"
-    icons: "<Lucide | Phosphor | Hugeicons (Pro for premium) | other — declare per project>"
+    icons: "<Lucide | Phosphor | Heroicons | Tabler | HugeIcons (free Stroke-Rounded + Pro) | custom — declare per project; keep in sync with DESIGN.md icons.library>"
     cms: "<Sanity | Contentlayer | MDX-in-repo | n/a>"
     auth: "<NextAuth / Auth.js | Clerk | Supabase Auth | custom | n/a>"
     db: "<Postgres on Neon | Supabase | PlanetScale | n/a>"
@@ -492,7 +492,7 @@ All defaults are premium-grade and I'll apply them unless you override. Skim and
 I'll:
 1. Apply your answers to the relevant templates (in order: PROJECT → INFORMATION → DESIGN → SPEC)
 2. Generate derived values (12-step color palette from your primary color with APCA verification, dark-mode counterpart, semantic palette dark variants, shadow tint)
-3. Propagate shared values across templates (voice descriptor → DESIGN voice slot + SPEC voice samples; brand color → DESIGN palettes + DESIGN_MOBILE; primary persona name → SPEC page references)
+3. Propagate **every** shared value across templates per `§Cross-template consistency rules` — including the full color palette, type families, **icons**, dataviz, and photography → `DESIGN_MOBILE.md` (and `icons` → `PROJECT.tech.web.icons`); voice → DESIGN voice slot + SPEC voice samples; persona name → SPEC pages. For a hybrid project, `DESIGN_MOBILE.md` is filled in this pass too — not left for later.
 4. If you asked me to draft voice samples, I'll show you 8-10 drafted from your voice descriptor + archetype for your approval BEFORE committing to SPEC.md (voice mimicry is high-stakes)
 5. Run the five final verification checks: multi-pattern slot fill (`<placeholder>` syntax + plain-text TBD/TODO + empty YAML + known stub strings like "Acme" / "example.com" + cardinality + semantic reasoning), cross-template consistency, YAML validity, propagation integrity, and completeness summary
 6. Report what was filled, what's still open, what's a suspected stub needing your confirmation, and what's intentionally marked `<TBD>` or `<SKIPPED>` for follow-up
@@ -661,19 +661,30 @@ Frame these as menu options. Wait for the user to choose.
 
 | Field | Lives in | Propagates to |
 | --- | --- | --- |
-| Brand name | `INFORMATION.project.name` | DESIGN.md Overview, DESIGN_MOBILE.md Overview, SPEC voice samples context, PROJECT.md `project.name` |
+| Brand name | `INFORMATION.project.name` | DESIGN.md Overview, DESIGN_MOBILE.md Overview + `brand.name`, SPEC voice samples context, PROJECT.md `project.name` |
+| Brand description / audience / voice | `INFORMATION.*` | DESIGN.md + DESIGN_MOBILE.md `brand.{description,audience,voice}` and the Overview prose (brief restatements) |
 | Voice descriptor | `INFORMATION.brand.voice_principles` | DESIGN.md voice slot (brief restatement), SPEC voice_samples generation seed |
 | Primary persona name | `INFORMATION.audience.primary_persona.name` | SPEC.md `pages.*.primary_persona` slots |
-| Brand primary color | DESIGN.md `colors.primary.base` | DESIGN_MOBILE.md identical value |
+| **Full color system** | DESIGN.md `colors.*` — every generated step of all 5 palettes (`{primary,neutral,success,warning,danger}.{1..12}` **and** `.dark.{1..12}`, the bases/hue), plus the role + semantic tokens (`surface`/`border`/`text`/`semantic`) and `shadow_tint` | DESIGN_MOBILE.md `colors.*` — **identical values** (copy the whole `colors:` block over; mobile additionally keeps its native-only keys `ios_system.*` and `material_*`). Not just the base color — the entire generated palette must match. |
+| **Icons** | DESIGN.md `icons.family` + `icons.library` | DESIGN_MOBILE.md `icons.library` + `icons.cross_platform_default`, **and** PROJECT.md `tech.web.icons` — all three must name the **same family** |
 | Type families | DESIGN.md `typography.families.*` | DESIGN_MOBILE.md `typography.families.*` (note: mobile also maps to platform text styles) |
+| Dataviz palettes | DESIGN.md `dataviz.palettes.*` (categorical / sequential / diverging) | DESIGN_MOBILE.md `dataviz.palettes.*` identical |
+| Photography style | DESIGN.md `images.photography_style` | DESIGN_MOBILE.md `images.photography_style` identical |
+| Shared profiles | DESIGN.md `profiles.*` | DESIGN_MOBILE.md identical values for all profiles except `section_padding` (web-only) |
 | SEO defaults | INFORMATION.md `seo.*` | Already token-referenced from SPEC.md `global.meta_defaults` via `{information.seo.*}` |
 | Tech stack | PROJECT.md `tech.*` | Implicit — AI generates code matching this stack |
 | Legal URLs | INFORMATION.md `legal.privacy_url`, `legal.terms_url` | SPEC.md footer columns, app store metadata |
 | Social handles | INFORMATION.md `social.*` | SPEC.md footer brand_column, app store URLs |
 | Project type | PROJECT.md `project.type` | Determines which templates are scoped in intake; informs HTML mapping defaults in DESIGN |
-| Shared profiles | DESIGN.md `profiles.*` | DESIGN_MOBILE.md identical values for all profiles except `section_padding` (web-only) |
 
 When the AI fills any field on the left, it also fills the propagation targets without asking the user again.
+
+**These rules are continuous, not one-time — they apply on every UPDATE, not just the first fill.** Whenever the user later *changes* a shared value, immediately re-propagate it to every target in its row so the documents never drift out of sync — and re-run any derivation the change implies. Examples:
+- **"Switch the icons to Phosphor"** → update `DESIGN.icons.family` + `DESIGN.icons.library` **and** `DESIGN_MOBILE.icons.library`/`cross_platform_default` **and** `PROJECT.tech.web.icons`. Never leave one document on the old family.
+- **"Make the brand color a bit darker"** → regenerate the **entire** 12-step palette (light + dark) in DESIGN.md via the generator, then copy the whole `colors:` block into DESIGN_MOBILE.md. Don't hand-edit a single step.
+- **"Change the body font"** → update `typography.families.*` in both DESIGN.md and DESIGN_MOBILE.md.
+
+After any such change, say which sibling documents you updated. If you update one document and its siblings would now be stale, that is a bug — fix all of them in the same pass.
 
 ## Edge cases
 
@@ -761,7 +772,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.4.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.5.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

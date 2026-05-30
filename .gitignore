@@ -1,0 +1,13 @@
+# OS / editor cruft
+.DS_Store
+*.swp
+*~
+Thumbs.db
+
+# Node (the brand-kit tool also has its own tools/brand-kit/.gitignore)
+node_modules/
+dist/
+*.log
+
+# Generated release asset — built on demand by make-release-zip.sh, never committed
+premium-product-templates-v*.zip
