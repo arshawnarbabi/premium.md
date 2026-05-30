@@ -100,11 +100,13 @@ Each template is operational, not aspirational. Specifically:
 ### Web project
 
 ```bash
-# 1. Get the templates
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/PROJECT_TEMPLATE.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/INFORMATION_TEMPLATE.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/DESIGN_TEMPLATE_WEB.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/SPEC_TEMPLATE_WEB.md
+# 1. Get the core templates (they live in templates/). Or download the release zip for all 10, flat.
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/PROJECT_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/INFORMATION_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/DESIGN_TEMPLATE_WEB.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/SPEC_TEMPLATE_WEB.md
+# Optional add-ons (same templates/ path, or let the intake create them):
+#   CONTENT_TEMPLATE.md · SEO_TEMPLATE.md · QA_TEMPLATE.md · DECISIONS_TEMPLATE.md
 
 # 2. Rename to project files. PROJECT.md is the generic entry-point name; you can
 #    rename it to CLAUDE.md / AGENTS.md / etc. to match your AI tool (see "Tool conventions" below).
@@ -132,7 +134,7 @@ Same pattern but with `DESIGN_TEMPLATE_MOBILE.md` → `DESIGN_MOBILE.md` and `SP
 
 ### Web + mobile in one project
 
-Use all six files. The brand-identity slots in `INFORMATION.md` are shared — fill once. The visual / content templates split by platform.
+Use all the relevant files — `PROJECT`, `INFORMATION`, `CONTENT`, `DESIGN` ×2, `SPEC` ×2, `SEO`, `QA`, `DECISIONS`. The brand-identity slots in `INFORMATION.md` are shared — fill once. The visual / content templates split by platform.
 
 ---
 
