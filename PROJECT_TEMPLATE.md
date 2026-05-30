@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.6.0
+# Version: 1.7.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.6.0"
+template_version: "1.7.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -81,6 +81,11 @@ priority_order:
 
 tech:
   web:
+    # Which web surfaces this project has. Drives WHICH DESIGN.md option groups apply:
+    #   marketing = landing/marketing site (hero, landing composition, top-nav, footer, bento, logo wall)
+    #   product   = a web app behind login (app shell, product nav, command palette, settings, tables, code)
+    #   both      = a marketing site AND a web app (apply each surface's patterns to its own pages)
+    surfaces: "<marketing | product | both>"   # see DESIGN.md §Web surface scope
     framework: "Next.js"                 # App Router by default
     framework_version: "<15.x | latest>"
     language: "TypeScript"
@@ -772,7 +777,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.6.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.7.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

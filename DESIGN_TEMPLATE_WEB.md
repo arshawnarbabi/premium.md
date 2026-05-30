@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.6.0
+# Version: 1.7.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.6.0"
+template_version: "1.7.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -1590,6 +1590,17 @@ When generating any UI, code, or design artifact from this document, an AI agent
 
 ---
 
+# Web surface scope
+
+"Web" can mean a **marketing / landing site**, a **product web-app** (behind login), or **both**. Read `PROJECT.tech.web.surfaces` (`marketing` / `product` / `both`) to know which this project has, and apply only the matching patterns — don't put a product app shell on a landing page, or a marketing hero inside the app.
+
+- **Marketing / landing surface** → hero variants, the canonical landing composition, **top nav** (not a sidebar), multi-column footer, `section_padding`, bento grids, logo wall, scroll-triggered animation. Built with custom components against these tokens.
+- **Product / web-app surface** → app shell, `options.product_nav_style` (sidebar or top), `options.command_palette`, `options.settings_ia`, `options.save_model`, code surfaces, data tables, optimistic UI. Often `shadcn/ui` per `PROJECT.tech.web.ui_primitives`.
+
+Some `options.*` are **product-only** and don't apply to a marketing-only site — `product_nav_style`, `command_palette`, `settings_ia`, `save_model`, `code_surface`. A few are **marketing-only** — `hero_variant`, `footer_style`, `section_padding`. If the project is a single surface, ignore the other's options; if `both`, apply each surface's patterns to *its own* pages (landing page → top-nav + hero; app → product nav + app shell). The **tokens** (color, type, spacing, components) are shared across both surfaces — never fork them per surface.
+
+---
+
 # Colors
 
 **Rule:** Author every color in OKLCH. Reference via tokens. Never inline raw values.
@@ -2559,7 +2570,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.6.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.7.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
