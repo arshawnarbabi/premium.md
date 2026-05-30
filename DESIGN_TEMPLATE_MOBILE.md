@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.7.0
+# Version: 1.8.0
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -17,7 +17,7 @@
 #    must follow when generating iOS / Android UI.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.7.0"
+template_version: "1.8.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -468,6 +468,16 @@ elevation:
     modal_android: "{elevation.android.4}"
     fab_android: "{elevation.android.2}"
     bottom_sheet_android: "{elevation.android.5}"
+
+  # ── Surface separation (same idea as DESIGN_TEMPLATE_WEB.md §Surface separation, mapped to native) ──
+  # Mobile is FLATTER than web. The strategy maps per platform; shadows are reserved for floating
+  # elements (FABs, sheets), not resting cards.
+  surface_separation:
+    strategy: "platform-native"  # platform-native (iOS material/tonal · Android M3 tonal elevation) | border | surface-tone | shadow
+    shadow_strength: "default"   # subtle | default | strong — applies to Android M3 / the few iOS shadows (keep light)
+    shadow_size: "default"       # tight | default | airy
+    border_width: 1              # hairline: 1px @1x → 0.5pt @2x+ on iOS; 1dp on Android (system ceiling = 2)
+    hover: "none"                # mobile has no hover; press/ripple is in §States
 
 # ═══════════════════════════════════════════════════════════════
 # MOTION (spring physics for gestures; native APIs)
@@ -1931,7 +1941,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.7.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.8.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

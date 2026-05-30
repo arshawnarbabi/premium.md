@@ -4,7 +4,7 @@
 
 > A six-file template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.7.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.8.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -69,7 +69,7 @@ Each template is operational, not aspirational. Specifically:
 - **Typography** — 8 semantic type roles, modular scale ratios, line-height + tracking inverse rules (font-category-aware: serif / sans / mono), variable fonts, fluid `clamp()` sizing
 - **Spacing** — 4 px base, 18-step scale, inset/stack/inline patterns, container queries
 - **Shapes** — 6-step radius scale, nested-radius math, continuous corners on iOS
-- **Elevation** — 6-level layered shadows (web) / materials + M3 elevation (mobile)
+- **Elevation & surface separation** — 6-level layered shadows (web) / materials + M3 (mobile), plus a tunable separation system (shadow / border / surface-tone, shadow strength + size, border width)
 - **Motion** — 5 duration tokens, 4 easings, 3 spring presets, FLIP, View Transitions API, reduced-motion variants
 - **States** — 10 canonical states, focus-visible spec, touch states (iOS dim / Android ripple), disabled-without-opacity
 - **Iconography** — 6 sizes, stroke-to-text-weight pairing, optical alignment, recommended free + premium libraries (Lucide / Phosphor / HugeIcons)
@@ -227,9 +227,9 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.7.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.8.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
-This release: **v1.7.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
+This release: **v1.8.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
 ---
 

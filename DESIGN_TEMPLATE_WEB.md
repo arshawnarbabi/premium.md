@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.7.0
+# Version: 1.8.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -20,7 +20,7 @@
 #    See `§Brand Kit` at the end of this file.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.7.0"
+template_version: "1.8.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -510,6 +510,16 @@ elevation:
     modal: "{elevation.scale.4}"
     sheet: "{elevation.scale.4}"
     fullscreen: "{elevation.scale.5}"
+
+# ─── SURFACE SEPARATION (how cards / panels / popovers stand apart from the canvas) ───
+# `profiles.elevation` picks the preset (flat → border, default → subtle shadow, dimensional → richer
+# shadow); the knobs below are the granular override. All premium-bounded — see body §Surface separation.
+surface_separation:
+  strategy: "shadow"          # shadow | border | surface-tone | shadow+border — the ONE primary strategy (never all three)
+  shadow_strength: "default"  # subtle (×0.7 alpha) | default (×1.0) | strong (×1.4) — multiplies each elevation layer's opacity
+  shadow_size: "default"      # tight (×0.85 blur+offset) | default (×1.0) | airy (×1.2) — multiplies shadow blur + offset
+  border_width: 1             # 1 | 1.5 | 2 (px) — stroke thickness when the strategy uses a border (system ceiling = 2px)
+  hover: "lift"               # lift (raise one elevation level) | border (darken to border.strong) | none
 
 # ─── Z-INDEX ───
 
@@ -1486,6 +1496,10 @@ All defaults are premium-grade. Skim and tell me which to change. Each option ha
 - **Density** — breathing room around components: **comfortable** ← compact *(packed)* / comfortable / spacious *(airy)*
 - **Motion** — how animated things feel: **default** ← subtle *(barely there)* / default *(polished)* / expressive *(playful, bouncy)*
 - **Elevation** — shadow depth between layers: **default** ← flat *(no shadows)* / default *(subtle)* / dimensional *(pronounced)*
+- **Card separation** — how cards / panels stand apart from the page: **shadow** ← shadow *(soft depth)* / border *(flat outline)* / surface-tone *(lighter fill)* / shadow+border *(both — soft but crisp)*
+- **Shadow strength** — shadow intensity *(if cards use shadow)*: **default** ← subtle *(airy, calm)* / default / strong *(pronounced)*
+- **Shadow size** — how far the shadow spreads: **default** ← tight *(crisp, close to the surface)* / default / airy *(floaty)*
+- **Border width** — stroke thickness *(if cards/inputs use a border)*: **1px** ← 1 / 1.5 / 2 *(2px max — thicker reads cheap)*
 - **Saturation** — color vividness: **default** ← muted *(desaturated)* / default / vivid *(punchy)*
 - **Warmth** — gray temperature: **neutral** ← cool *(blue-leaning)* / neutral *(pure gray)* / warm *(brown-leaning)*
 - **Section padding** — vertical space between page sections: **default** ← compact / default / generous
@@ -1854,17 +1868,24 @@ On hero-scale rounded elements (and on iOS surfaces in the mobile template), pre
 
 **Rule:** Six elevation levels (0–5). Every non-zero level combines at least two shadows (key + ambient). Shadow color is the darkest neutral of the palette tinted with low alpha — never pure black.
 
-## Separation strategy
+## Surface separation
 
-For any element requiring visual separation, use **exactly one** of: border, shadow, or surface-tone change. Never combine all three.
+How cards, panels, popovers, and sheets stand apart from the canvas. Pick **one primary strategy** per project — combining border + shadow + surface-tone all on one element is forbidden. `shadow+border` is the single sanctioned pairing (a 1px border *and* a soft shadow). Configure it all via the `surface_separation` frontmatter block.
 
-| Strategy | When |
-| --- | --- |
-| Border only | Flat / engineered aesthetic (default in dark-mode UIs where shadows render poorly) |
-| Shadow only | Warm / dimensional aesthetic (default in light-mode marketing + consumer products) |
-| Surface-tone only | Maximum minimalism (premium dark-mode products often use this) |
+| `strategy` | What it draws | Best for |
+| --- | --- | --- |
+| `shadow` | a tinted layered shadow (`elevation.*`), no border | warm / dimensional — marketing + consumer (default) |
+| `border` | a 1–2px `border.subtle`, no shadow | flat / engineered, dense product UI (Linear, Vercel) |
+| `surface-tone` | a lighter raised background (`surface.raised`) only | maximum minimalism; dark-first products |
+| `shadow+border` | a 1px border **and** a soft shadow together | soft consumer cards that still read crisp on busy backgrounds |
 
-`profiles.elevation` choice: `flat` = use borders, `default` = use subtle shadows, `dimensional` = use richer layered shadows.
+**Tunable values — all premium-bounded so you can't make it look cheap:**
+- **`shadow_strength`** multiplies every elevation layer's opacity: `subtle` ×0.7 (airy, calm) · `default` ×1.0 · `strong` ×1.4 (pronounced). Stay within ×0.5–×1.6 — below disappears, above muddies.
+- **`shadow_size`** multiplies blur + offset: `tight` ×0.85 (crisp, close to the surface) · `default` ×1.0 · `airy` ×1.2 (floatier). Keep blur ≥ offset so the shadow stays soft, never hard-edged.
+- **`border_width`** sets stroke thickness when a border is used: `1` (default, hairline-crisp) · `1.5` · `2` px. **2px is the ceiling** — thicker reads as cheap.
+- **`hover`** is the card affordance on hover: `lift` (raise one elevation level) · `border` (darken to `border.strong`) · `none`.
+
+The knobs **default from `profiles.elevation`** (`flat` → `border`; `default` → `shadow` at default strength/size; `dimensional` → `shadow` at `strong`/`airy`) — set any of them explicitly in `surface_separation` to override. **Dark mode:** shadows render poorly on near-black, so a `shadow` strategy should fall back to `surface-tone` or `shadow+border` with heavier shadow alpha (per §Dark mode and research §H.3–H.4).
 
 ## Z-index
 
@@ -2570,7 +2591,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.7.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.8.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 

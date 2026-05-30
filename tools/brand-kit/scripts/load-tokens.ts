@@ -120,6 +120,23 @@ const brand = {
   markColor: "#00150b",
 };
 
+// Apply surface_separation shadow tuning to the elevation scale, so the viewer's elevation
+// swatches + cards render the project's actual shadow_strength / shadow_size (per §Surface separation).
+const sep = tokens?.surface_separation ?? {};
+const STRENGTH = { subtle: 0.7, default: 1.0, strong: 1.4 };
+const SIZE = { tight: 0.85, default: 1.0, airy: 1.2 };
+const aMul = STRENGTH[sep.shadow_strength] ?? 1.0; // opacity multiplier
+const sMul = SIZE[sep.shadow_size] ?? 1.0;          // blur + offset multiplier
+if ((aMul !== 1.0 || sMul !== 1.0) && tokens?.elevation?.scale) {
+  for (const k of Object.keys(tokens.elevation.scale)) {
+    let v = tokens.elevation.scale[k];
+    if (typeof v !== "string" || v === "none") continue;
+    if (sMul !== 1.0) v = v.replace(/(-?\d*\.?\d+)px/g, (_, n) => `${+(parseFloat(n) * sMul).toFixed(2)}px`);
+    if (aMul !== 1.0) v = v.replace(/\/\s*(\d*\.?\d+)\s*\)/g, (_, n) => `/ ${+Math.min(1, parseFloat(n) * aMul).toFixed(3)})`);
+    tokens.elevation.scale[k] = v;
+  }
+}
+
 writeFileSync(join(dataDir, "tokens.json"), JSON.stringify(tokens, null, 2));
 writeFileSync(join(dataDir, "brand.json"), JSON.stringify(brand, null, 2));
 
