@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
-# Version: 1.10.0
+# Version: 1.12.0
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -30,7 +30,7 @@
 #    building the site. The AI renders copy EXACTLY as written here.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.11.0"
+template_version: "1.12.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -522,21 +522,17 @@ vocabulary:
 # ═══════════════════════════════════════════════════════════════
 
 proof_points:
-  trust_metrics:
-    # Real, verifiable numbers — never invent these
-    - "<10,000+ active teams>"
-    - "<$X processed monthly>"
-    - "<99.99% uptime>"
-  notable_customers:
-    # Customer logos for social proof — get permission before using
-    - { name: "<Company>", logo: "<path/url>" }
-  testimonial_library:
-    # Pool of approved customer quotes — pages reference these
-    - id: "testimonial_1"
-      quote: "<actual customer quote>"
-      attribution: { name: "<…>", role: "<…>", company: "<…>", photo: "<path/url>" }
-  press_mentions:
-    - { publication: "<…>", quote: "<…>", url: "<URL>" }
+  # ⚠️ MIGRATED → CONTENT.md. Reusable proof content (testimonials, metrics, logos,
+  # press) is now single-sourced as typed records in CONTENT.md. Pages reference them
+  # via {content.*} so the same quote/number can't drift across pages. Map:
+  #   testimonials → {content.testimonials.*}   metrics → {content.stats.*}
+  #   logos        → {content.notable_customers.*}   press  → {content.press_mentions.*}
+  source: "content"   # the home for these records; see CONTENT.md
+  # ── Legacy fallback ONLY if no CONTENT.md exists in the project (older instances): ──
+  # trust_metrics:        ["<10,000+ active teams>", "<99.99% uptime>"]   # real, verifiable — never invent
+  # notable_customers:    [{ name: "<Company>", logo: "<path/url>" }]      # logos — get permission first
+  # testimonial_library:  [{ id: "testimonial_1", quote: "<approved quote>", attribution: { name, role, company, photo } }]
+  # press_mentions:       [{ publication: "<…>", quote: "<…>", url: "<URL>" }]
 
 # ═══════════════════════════════════════════════════════════════
 # FORMS — every form on the site
@@ -993,7 +989,7 @@ When generating any page, copy, form, email, or content from this document, an A
 2. **Reference DESIGN.md vocabulary for visual choices.** When a section type is named (`hero`, `bento-grid`, `narrative-pair`), look up its spec in DESIGN.md. Don't invent new section types.
 3. **Reference INFORMATION.md for brand voice and audience.** When generating new copy that isn't pre-written here, anchor to the brand voice principles and primary persona declared there.
 4. **Mimic voice_samples.** When generating new copy, the cadence, vocabulary, and tone must match the `voice_samples`. Don't invent a different voice.
-5. **Never invent metrics or proof points.** Only use numbers from `proof_points.trust_metrics`. If a needed number isn't there, ask — don't fabricate.
+5. **Never invent metrics or proof points.** Reusable proof content (testimonials, metrics, logos, press) is single-sourced in `CONTENT.md` — reference it via `{content.*}` (e.g. `{content.stats.active_teams.value}`), never paste inline. Only use real, approved records; if a needed number isn't there, ask — don't fabricate. (Legacy projects without `CONTENT.md`: use `proof_points` here.)
 6. **Form copy is final.** When generating form code, use the labels, placeholders, helper text, and error messages exactly as written. Don't rephrase to "improve" them.
 7. **Email copy is the design.** Transactional emails are part of the product UX, not technical artifacts. Render them with the same care as a landing page hero.
 8. **Analytics events are part of the spec.** When generating component code, wire up the analytics events declared per-page. Naming follows the declared convention.
@@ -1064,7 +1060,8 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 - **Don't restate visual rules from DESIGN.md.** Section types, component specs, colors — DESIGN.md owns these.
 - **Don't restate brand context from INFORMATION.md.** Audience, voice, mission — INFORMATION.md owns these.
-- **Don't invent metrics, testimonials, or customer names.** Only use real, approved proof points.
+- **Don't restate reusable content from CONTENT.md.** Testimonials, stats, FAQs, team, pricing — CONTENT.md owns these; reference via `{content.*}`.
+- **Don't invent metrics, testimonials, or customer names.** Only use real, approved records from `CONTENT.md`.
 - **Don't write lorem ipsum.** Either write the real copy or mark `<TBD>` clearly. Lorem ipsum gets shipped accidentally.
 - **Don't skip the `purpose` field per page.** A page without a stated purpose is a page that won't convert.
 - **Don't ignore mobile layout.** Each page should consider how sections collapse / reorder on mobile (DESIGN.md provides the rules).
@@ -1077,7 +1074,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.11.0`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.12.0`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 

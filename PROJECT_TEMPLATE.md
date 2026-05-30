@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.10.0
+# Version: 1.12.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.11.0"
+template_version: "1.12.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -45,6 +45,11 @@ source_files:
     purpose: "Brand identity, audience, business context. The 'why' and 'who'."
     exists: true
     priority_for: ["voice", "audience", "positioning", "business decisions", "compliance"]
+  content_md:
+    file: "CONTENT.md"
+    purpose: "Reusable content records (testimonials, stats, features, FAQs, team, case studies, pricing) referenced by pages via {content.*}. Single source of content truth."
+    exists: "<true | false>"
+    priority_for: ["testimonials", "stats / metrics", "features", "FAQs", "team", "case studies", "pricing tiers"]
   design_md:
     file: "DESIGN.md"
     purpose: "Visual design system for web. The 'how it looks' on web."
@@ -80,6 +85,7 @@ priority_order:
   # When multiple files speak to the same decision, this is the precedence.
   # First listed wins. SPEC + INFORMATION are content/brand truth; DESIGN is
   # visual truth; PROJECT defines the project envelope.
+  - CONTENT.md                      # the content facts (testimonials/stats/FAQs/…) — single source; SPEC references it
   - SPEC.md / SPEC_MOBILE.md       # what to build (page content + layout instances)
   - INFORMATION.md                  # who it's for + how to talk about it
   - DESIGN.md / DESIGN_MOBILE.md   # how it looks
@@ -283,7 +289,7 @@ When working on this project, an AI agent **must** follow these rules:
 6. **Respect `agent_constraints.must_not`.** These are project-level red lines.
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
-9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → DESIGN web/mobile → SPEC web/mobile), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
+9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
 
 ---
 
@@ -446,7 +452,7 @@ Numbered list, grouped by source template. Each question gets a short plain-Engl
 
 ### Content fundamentals (SPEC.md / SPEC_MOBILE.md)
 29. **5-10 voice samples** — real sentences written in your brand's voice. The AI uses these to mimic tone everywhere. Say **"draft them"** for AI to propose drafts from your voice descriptor + archetype: ?
-30. **3-5 proof points** — concrete metrics, customer logos, or testimonials. Real only, no invented numbers. Or "none yet" if pre-launch: ?
+30. **Reusable content** *(CONTENT.md)* — the records pages will share: 3-5 **proof points** (metrics / logos / testimonials, real only), plus any **FAQs**, **features**, **team bios**, **case studies**, or **pricing tiers** you have. These become single-sourced records pages reference via `{content.*}`. Real + approved only, or "none yet" if pre-launch: ?
 ```
 
 ### PART 2 — Customizable Defaults (accept or override)
@@ -510,7 +516,7 @@ All defaults are premium-grade and I'll apply them unless you override. Skim and
 ## PART 3 — When you reply
 
 I'll:
-1. Apply your answers to the relevant templates (in order: PROJECT → INFORMATION → DESIGN → SPEC)
+1. Apply your answers to the relevant templates (in order: PROJECT → INFORMATION → CONTENT → DESIGN → SPEC → SEO)
 2. Generate derived values (12-step color palette from your primary color with APCA verification, dark-mode counterpart, semantic palette dark variants, shadow tint)
 3. Propagate **every** shared value across templates per `§Cross-template consistency rules` — including the full color palette, type families, **icons**, dataviz, and photography → `DESIGN_MOBILE.md` (and `icons` → `PROJECT.tech.web.icons`); voice → DESIGN voice slot + SPEC voice samples; persona name → SPEC pages. For a hybrid project, `DESIGN_MOBILE.md` is filled in this pass too — not left for later.
 4. If you asked me to draft voice samples, I'll show you 8-10 drafted from your voice descriptor + archetype for your approval BEFORE committing to SPEC.md (voice mimicry is high-stakes)
@@ -698,6 +704,7 @@ Frame these as menu options. Wait for the user to choose.
 | Project type | PROJECT.md `project.type` | Determines which templates are scoped in intake; informs HTML mapping defaults in DESIGN |
 | Entity (brand/people/social) | INFORMATION.md `project.name`, `people.*`, `social.*` | SEO.md `structured_data.organization` (name/logo/**sameAs**) + Person schema for founders (E-E-A-T) — keep identical for GEO entity consistency |
 | Page list + copy | SPEC.md `sitemap` + `pages.*` | SEO.md `page_type_schema` (which schema per page) + answer-first page copy; SEO `social_cards` pull SPEC page title/description |
+| Content records (testimonials/stats/FAQs/team/pricing) | CONTENT.md `testimonials.*`, `stats.*`, `faqs.*`, … | SPEC pages reference via `{content.*}` (single-sourced — no inline duplication); SEO.md uses `stats`/`testimonials` for GEO, `faqs` for FAQPage, `team_members` for Person schema; voice-checked vs INFORMATION |
 
 When the AI fills any field on the left, it also fills the propagation targets without asking the user again.
 
@@ -794,7 +801,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.11.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.12.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

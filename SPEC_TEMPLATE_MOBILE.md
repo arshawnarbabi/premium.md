@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.10.0
+# Version: 1.12.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -28,11 +28,12 @@
 # 5. Verify with `grep -n "<[^>]*>" SPEC_MOBILE.md` — zero matches means complete.
 # 6. Reference DESIGN_MOBILE.md vocabulary for layout sections and components.
 # 7. Reference INFORMATION.md for brand voice and audience.
-# 8. Hand SPEC_MOBILE.md alongside DESIGN_MOBILE.md and INFORMATION.md to
+# 8. Reference CONTENT.md for reusable content (testimonials/stats/FAQs) via {content.*}.
+# 9. Hand SPEC_MOBILE.md alongside DESIGN_MOBILE.md and INFORMATION.md to
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.11.0"
+template_version: "1.12.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -894,15 +895,16 @@ When generating any screen, copy, or interaction from this document, an AI agent
 1. **`SPEC_MOBILE.md` is canonical for screen content, layout, AND every word of copy.** Every screen's layout and every word that appears in the app lives here. Layouts declared here override DESIGN_MOBILE.md's defaults. **Copy declared here is the final text that ships** — never paraphrase, summarize, rewrite, or "improve" it. Render it exactly as written, character-for-character. If a content slot still contains placeholder guidance (e.g., `"<≤44 chars, brand voice>"`), surface the gap to the human — don't invent the copy yourself.
 2. **Reference DESIGN_MOBILE.md vocabulary** for component names, state styles, and platform conventions.
 3. **Reference INFORMATION.md for brand voice and audience.** Anchor all new copy to voice principles + primary persona.
-4. **Mimic voice_samples for any generated copy.** Don't average toward generic app copy.
-5. **Every screen declares loading / empty / error states.** Never ship a screen without all four states (loaded + 3 alternates).
-6. **Permission pre-prompts are mandatory.** Never trigger system permission dialog without showing the custom in-app explanation first.
-7. **Settings architecture is final.** Use the declared section ordering and item types — don't reorder or invent items.
-8. **App store copy is brand voice.** Treat the store listing as a marketing surface, not a technical artifact.
-9. **Analytics events must use the declared naming convention.** Don't invent ad-hoc event names.
-10. **Honor accessibility settings declared per-screen.** Dynamic Type, VoiceOver labels, color-independence are non-negotiable.
-11. **Use native components first (per DESIGN_MOBILE.md).** Custom UI only when native doesn't satisfy.
-12. **System gestures stay system gestures.** Don't override back-swipe, pull-to-refresh, sheet-dismiss-swipe.
+4. **Reference CONTENT.md for reusable content.** Testimonials, stats, FAQs, features — when `CONTENT.md` exists, reference records via `{content.*}` (e.g. an onboarding social-proof screen pulls `{content.testimonials.maria.quote}`); never invent or inline-duplicate them.
+5. **Mimic voice_samples for any generated copy.** Don't average toward generic app copy.
+6. **Every screen declares loading / empty / error states.** Never ship a screen without all four states (loaded + 3 alternates).
+7. **Permission pre-prompts are mandatory.** Never trigger system permission dialog without showing the custom in-app explanation first.
+8. **Settings architecture is final.** Use the declared section ordering and item types — don't reorder or invent items.
+9. **App store copy is brand voice.** Treat the store listing as a marketing surface, not a technical artifact.
+10. **Analytics events must use the declared naming convention.** Don't invent ad-hoc event names.
+11. **Honor accessibility settings declared per-screen.** Dynamic Type, VoiceOver labels, color-independence are non-negotiable.
+12. **Use native components first (per DESIGN_MOBILE.md).** Custom UI only when native doesn't satisfy.
+13. **System gestures stay system gestures.** Don't override back-swipe, pull-to-refresh, sheet-dismiss-swipe.
 
 ---
 
@@ -991,7 +993,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.11.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.12.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

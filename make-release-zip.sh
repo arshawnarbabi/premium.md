@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Curated release asset: the six templates + research + README + LICENSE only.
+# Curated release asset: all markdown templates + research + README + LICENSE only.
 # (Matches what GitHub's auto-generated source archive ships, per .gitattributes —
 #  i.e. excludes tools/, the banner, and the build/dev scripts.)
 # Usage: ./make-release-zip.sh v1.3.0

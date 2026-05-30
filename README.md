@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.11.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.12.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -28,6 +28,7 @@ The system is built from ~4,000 lines of cross-referenced research on what makes
 | --- | --- | --- |
 | **`PROJECT_TEMPLATE.md`** | Entry-point orchestration — tells the AI which sibling files exist and in what priority. Lightweight index. | ~300 |
 | **`INFORMATION_TEMPLATE.md`** | Brand identity, audience persona (with anti-personas), business model, voice principles, product features + non-features, social, SEO defaults. The "why" and "who." Shared between web and mobile. | ~500 |
+| **`CONTENT_TEMPLATE.md`** | **Reusable content model** — typed records (testimonials, stats, features, FAQs, team, case studies, integrations, pricing) the AI maintains *once* and pages reference via `{content.*}`. Single source of content truth; no drift across pages. Shared web + mobile. | ~130 |
 | **`DESIGN_TEMPLATE_WEB.md`** | Visual design system for web — colors (OKLCH), typography, spacing, ~25 component specs, motion, accessibility (APCA + WCAG 2.2). | ~2,300 |
 | **`DESIGN_TEMPLATE_MOBILE.md`** | Visual design system for mobile — iOS HIG + Material 3 native specs, gestures, haptics, safe areas, Dynamic Type / sp scaling. | ~1,800 |
 | **`SPEC_TEMPLATE_WEB.md`** | Site map + per-page content/layout/copy + forms + system messages + transactional email + legal pages + analytics events. | ~950 |
@@ -59,7 +60,7 @@ These templates are that anchor. They encode:
 - **Structural defaults** representing the broad-premium-middle of what mature design teams choose
 - **Brand-specific slots** you fill in per project
 
-The AI now references concrete tokens (`{colors.primary.9}`, `{spacing.scale.4}`, `{typography.roles.body-md}`) instead of guessing. Every session lands on the same answer. Cross-page, cross-tool, cross-team consistency becomes the default rather than a constant battle.
+The AI now references concrete tokens (`{colors.primary.9}`, `{spacing.scale.4}`, `{typography.roles.body-md}`) — and reusable content the same way (`{content.testimonials.maria.quote}`, `{content.stats.active_teams.value}`) — instead of guessing. Every session lands on the same answer. Cross-page, cross-tool, cross-team consistency becomes the default rather than a constant battle.
 
 ---
 
@@ -84,6 +85,7 @@ Each template is operational, not aspirational. Specifically:
 - **Internationalization & RTL** — CSS logical properties, mirror rules, tall-script line-height, CJK exceptions, locale formatting
 - **Microcopy** — voice principles, banned-word list, length budgets, premium positioning structure
 - **AI Agent Contract** — 26 hard rules (web) / 18 hard rules (mobile) the AI must follow
+- **Content model** (`CONTENT.md`) — reusable typed records (testimonials, stats, features, FAQs, team, case studies, pricing) maintained *once* and referenced by pages via `{content.*}` — the same mechanism as design tokens, so the same quote or metric never drifts across pages
 - **Discoverability** (`SEO.md`) — three layers: **SEO** (rank), **AEO** (be the direct answer in AI Overviews), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini): JSON-LD structured data per page type, answer-first patterns, citability signals (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`
 - **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
 
@@ -231,7 +233,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.11.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.12.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
@@ -239,7 +241,7 @@ This release: **v1.10.0** — stable. Future updates follow [semantic versioning
 
 ## Credits
 
-The DESIGN.md format used here — YAML token frontmatter + a human-readable rationale body, with `{group.path}` token references and sections like Overview / Colors / Typography / Elevation / Shapes / Components / Do's & Don'ts — builds on [Google Labs' **DESIGN.md**](https://github.com/google-labs-code/design.md) (Apache-2.0). This project extends that single-file format into a six-file product system (brand, content, and web + mobile design), adds an interactive intake protocol and OKLCH brand-kit tooling, and backs the rules with ~4,000 lines of research.
+The DESIGN.md format used here — YAML token frontmatter + a human-readable rationale body, with `{group.path}` token references and sections like Overview / Colors / Typography / Elevation / Shapes / Components / Do's & Don'ts — builds on [Google Labs' **DESIGN.md**](https://github.com/google-labs-code/design.md) (Apache-2.0). This project extends that single-file format into a multi-file product system (brand, content, web + mobile design, discoverability, and a QA gate), adds an interactive intake protocol and OKLCH brand-kit tooling, and backs the rules with ~4,000 lines of research.
 
 ---
 
