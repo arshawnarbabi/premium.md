@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.20.0
+# Version: 1.21.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -33,7 +33,14 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.20.0"
+# ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: PROJECT.md → §Status protocol) ───
+# An inline comment on a value marks its state; unmarked + filled = "given" (the user's own input).
+#   <slot>/<TBD> = unfilled · # draft = AI-inferred, needs approval · # default = out-of-box default,
+#   not consciously chosen · # approved = signed off · # locked = approved + logged in DECISIONS.md.
+# Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
+# — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
+
+template_version: "1.21.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -993,7 +1000,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.20.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.21.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

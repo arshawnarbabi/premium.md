@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.20.0
+# Version: 1.21.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,14 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.20.0"
+# ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: §Status protocol, below) ───
+# An inline comment on a value marks its state; unmarked + filled = "given" (your own input).
+#   <slot>/<TBD> = unfilled · # draft = AI-inferred, needs your approval · # default = out-of-box default,
+#   not consciously chosen · # approved = you signed off · # locked = approved + logged in DECISIONS.md.
+# Rule: the AI NEVER writes an inferred value without `# draft`, nor accepts a default without `# default`
+# — so an unmarked filled value is, by construction, yours. Nothing fabricated slips through unverified.
+
+template_version: "1.21.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -300,7 +307,37 @@ When working on this project, an AI agent **must** follow these rules:
 6. **Respect `agent_constraints.must_not`.** These are project-level red lines.
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
-9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. **Also surface AI-drafted values (any slot carrying a `# DRAFT` / `confirm/refine` marker) as PART 0 "Drafts awaiting your approval" — so "what do I have to fill out or approve" returns both the empty slots AND the unapproved drafts; never treat a `# DRAFT` value as approved.** The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
+9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. **Also surface AI-drafted values (any slot carrying a `# DRAFT` / `confirm/refine` marker) as PART 0 "Drafts awaiting your approval" — so "what do I have to fill out or approve" returns both the empty slots AND the unapproved drafts; never treat a `# DRAFT` value as approved.** The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise. **Honor the §Status protocol:** mark AI-inferred values `# draft` and accepted out-of-box defaults `# default` at fill time, emit the state ledger on every audit, and never let an unmarked value imply an approval it didn't get.
+
+---
+
+# Status protocol
+
+Every value in every template instance is in exactly one **state**, and the state is always knowable — so a fresh model can tell, for any value, whether it is verified or still needs the human. This is what keeps inferences and defaults from silently passing as approved truth.
+
+## The six states
+
+| State | Marker | Meaning |
+|---|---|---|
+| **unfilled** | `<slot>` / `<TBD>` / empty | no value yet → intake PART 1 |
+| **draft** | `# draft` (also `# DRAFT — confirm` / `confirm/refine` / `# proposed`) | AI-**inferred** value the human hasn't signed off → intake PART 0 |
+| **default** | `# default` | template **out-of-box** value the user never consciously chose → intake PART 2 review |
+| **given** | *(no marker on a filled value)* | the human's own input (or a trivially factual value) |
+| **approved** | `# approved` | the human confirmed a draft, or reviewed an unconfirmed default |
+| **locked** | `# locked` | approved AND recorded in DECISIONS.md (strongest; reopening requires the DECISIONS protocol) |
+
+## The two invariants (what makes it trustworthy)
+
+1. **Producer rule.** The AI MUST never write an **inferred** value without a `# draft` marker, nor accept a template **default** without a `# default` marker. Because of this, an **unmarked filled value is, by construction, human-given** — so "no marker" is unambiguous, not "forgotten."
+2. **Audit completeness.** Every intake / verification run emits a **state ledger** (Behavioral protocol Step 11, Check E): each must-fill slot mapped to exactly one state, with unmarked filled values double-checked by semantic stub-reasoning. If a value can't be classified, it is surfaced — never assumed.
+
+## Lifecycle
+
+`unfilled → (draft | default) → approved → locked`. On human sign-off, the AI swaps `# draft` / `# default` → `# approved` (or removes the marker if the value is now genuinely the user's). When a decision is logged to DECISIONS.md, → `# locked`. State only moves toward more-verified; to move a locked value back, the DECISIONS reopen protocol applies.
+
+## Why draft AND default are separate states
+
+A `# draft` is **unverified content** — it could be wrong or fabricated, so it must be approved before it seeds DESIGN/SPEC. A `# default` is **verified-safe but unchosen** — fine to ship, but the user should be able to see what they're implicitly accepting. Collapsing them loses information; keeping them separate lets intake route drafts to PART 0 (approve before building) and defaults to PART 2 (skim, confirm the consequential ones) without forcing line-by-line sign-off on safe defaults.
 
 ---
 
@@ -379,12 +416,17 @@ Use judgment for these. For each value, read it and ask: *"is this real content 
 - For descriptions: at least one full sentence with brand-specific details (not generic)
 - For computed/derived values: matches the declared algorithm output (e.g., palette step 9 = brand primary color)
 
-### Awaiting approval — AI-proposed drafts (a distinct THIRD state)
+### Value states — populated-but-unverified (drafts and unconfirmed defaults)
 
-A slot can be *populated* yet **not approved**. When the AI fills a high-stakes slot by **inference** (brand voice, tagline, mission/vision, positioning, persona, competitors, story) rather than from the user's own words, it marks the value with an inline **`# DRAFT`** / `# DRAFT — confirm` / `confirm/refine` / `# proposed` comment. These are **neither unfilled** (they hold real, brand-specific values) **nor done** (the human hasn't signed off). Treat any slot whose value carries such a marker as **awaiting approval**:
+Two states sit between "unfilled" and "approved", and BOTH must round-trip back to the human (see §Status protocol for the full six-state model + ledger):
+
+- **`# draft`** — the AI filled a high-stakes slot by **inference** (brand voice, tagline, mission/vision, positioning, persona, competitors, story) rather than from the user's own words. Real and brand-specific, but unsigned-off → intake **PART 0**.
+- **`# default`** — the AI accepted a template **out-of-box default** (a PART 2 dial: radius, density, motion, hero variant, onboarding pattern, command palette, etc.) the user never consciously chose. Safe to ship, but invisible without the marker → intake **PART 2 review**.
+
+Treat any slot carrying either marker as **populated-but-unverified**:
 
 - **Mark on fill (producer side):** whenever YOU populate a high-stakes slot by **inference** (not from the user's own words), add a `# DRAFT — confirm` comment at fill time. That marker is what makes the value round-trip into the next intake's PART 0 instead of silently passing as approved.
-- **Detect mechanically:** scan slot values for inline `# DRAFT`, `DRAFT — confirm`, `confirm/refine`, `— confirm`, `# proposed` markers.
+- **Detect mechanically:** scan slot values for inline `# draft` / `DRAFT — confirm` / `confirm/refine` / `# proposed` (→ PART 0) and `# default` (→ PART 2 review) markers. Together with semantic stub-reasoning on UNMARKED filled values, this guarantees nothing AI-touched escapes review.
 - **Surface them as a distinct group** in the intake — the **"Drafts awaiting your approval"** block (see Output format), separate from the unfilled `?` items — so *"what do I have to fill out **or approve**"* returns BOTH.
 - **High-stakes drafts first.** Brand **voice / positioning / persona / tagline** propagate into DESIGN.md and SPEC.md — get these approved **before** writing page copy, or the copy is built on unapproved foundations.
 - **On approval** ("confirmed" / "approve all" / an edit), **remove the `# DRAFT` marker** so the slot becomes Definitively FILLED. Never silently treat a `# DRAFT` value as approved.
@@ -580,11 +622,12 @@ For every scoped template file:
 
 1. **Read the file in full** (not a partial read — the whole file).
 2. **Walk every must-fill item** in that template's canonical intake. For each one, locate its corresponding YAML slot path and classify it using the rules in §"What counts as 'filled' vs 'unfilled'".
-3. **Build four buckets**:
+3. **Build five buckets** (this IS the state ledger):
    - **Unfilled** — fails one of the mechanical checks. Goes into PART 1.
    - **Suspected stub** — passes the mechanical checks but fails the semantic reasoning checks (looks like a leftover example, contextually inconsistent, generic placeholder language). Goes into PART 1 with confirmation framing.
-   - **Awaiting approval** — populated with a real value but carries an inline `# DRAFT` / `confirm/refine` / `# proposed` marker (an AI-inferred draft the human hasn't signed off). Goes into **PART 0** (approve or revise), NOT PART 1.
-   - **Definitively filled** — passes all checks, no DRAFT marker. Excluded from both PART 0 and PART 1.
+   - **Draft (awaiting approval)** — populated with a real value carrying an inline `# draft` / `confirm/refine` / `# proposed` marker (AI-inferred, unsigned). Goes into **PART 0** (approve or revise), NOT PART 1.
+   - **Unconfirmed default** — populated with a template out-of-box value carrying a `# default` marker, never consciously chosen. Goes into the **PART 2 review** note (skimmable; user confirms the consequential ones if they want — not forced).
+   - **Definitively filled** — `# approved`, `# locked`, or unmarked-and-user-given; passes all checks. Excluded from PART 0 and PART 1.
 4. **Cardinality pass**: for any list slot with a declared minimum ("3-5 trust metrics", "at least 2 non-features", "2 founders"), count items and mark unfilled if the list is short OR if any item is missing required sub-fields.
 5. **Cross-template propagation pass**: if a slot is filled in its source template (e.g., `INFORMATION.project.name`), check that its propagation targets match (e.g., `PROJECT.project.name`). If they don't match, fix automatically and note in the final report — don't re-ask the user.
 6. **Intentional-skip pass**: items the user explicitly skipped on a prior pass (marked `<SKIPPED>`, `<N/A>`, `"n/a"`) stay excluded.
@@ -711,8 +754,8 @@ Run `yaml.safe_load` on each frontmatter. Surface and offer to fix any errors.
 **Check D — propagation integrity:**
 Walk the propagation table (below). For each row, the source value must match all targets exactly. Surface any drift, even if it would otherwise pass Check A.
 
-**Check E — completeness summary:**
-Final counts per file: `total slots / filled / remaining / suspected-stubs / user-deferred / skipped`. **If anything sits in `remaining` or `suspected-stubs`, the templates are NOT complete — do NOT declare done.** Surface the buckets clearly so the user can tell what still needs attention vs. what they intentionally deferred.
+**Check E — completeness summary + state ledger:**
+Emit the **state ledger** — every must-fill slot classified into exactly ONE of the six states (`unfilled / draft / default / approved / locked / given`); if any value can't be classified, surface it rather than guessing. Then per-file counts: `total / given+approved+locked / unfilled / draft / unconfirmed-default / suspected-stub / user-deferred / skipped`. **If anything sits in `unfilled`, `draft`, or `suspected-stub`, the templates are NOT verified — do NOT declare done.** An `unconfirmed-default` is shippable but must be shown, not hidden. This ledger is the guarantee that every value's state is known — nothing fabricated is left behind unverified.
 
 ### Step 12: Offer next steps
 After completion, proactively offer (don't wait for user to ask):
@@ -841,7 +884,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.20.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.21.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # INFORMATION_TEMPLATE.md — Project / brand / business context
-# Version: 1.20.0
+# Version: 1.21.0
 # Scope: shared between web and mobile (the business is the same)
 # Companions: DESIGN_TEMPLATE_*.md (visual system) + SPEC_TEMPLATE_*.md (content)
 #
@@ -14,7 +14,14 @@
 #    context. DESIGN.md and SPEC.md reference this file rather than restating.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.20.0"
+# ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: PROJECT.md → §Status protocol) ───
+# An inline comment on a value marks its state; unmarked + filled = "given" (the user's own input).
+#   <slot>/<TBD> = unfilled · # draft = AI-inferred, needs approval · # default = out-of-box default,
+#   not consciously chosen · # approved = signed off · # locked = approved + logged in DECISIONS.md.
+# Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
+# — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
+
+template_version: "1.21.0"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -616,7 +623,7 @@ Paths or URLs to the actual files. AI can generate `<img>` / `<Image>` reference
 
 # Versioning
 
-`template_version: 1.20.0`. Per-project `INFORMATION.md` instances should preserve this field so you can track which template version they were authored against.
+`template_version: 1.21.0`. Per-project `INFORMATION.md` instances should preserve this field so you can track which template version they were authored against.
 
 # Source
 

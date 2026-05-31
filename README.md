@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.20.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.21.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -94,6 +94,7 @@ Each template is operational, not aspirational. Specifically:
 - **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
 - **Decision log** (`DECISIONS.md`) — append-only ADR-style record of locked choices + rationale, so a fresh agent reads what's settled before reopening it; plus an `AGENTS.md` emitted to the built repo (the open standard 20+ coding agents read) for the docs→code handoff
 - **Build process** (`research.md §X4`) — recognizes the real ways you build: **docs-first → build**, **explore-build → design-off-it → document → rebuild**, or **hybrid**; how to use uploaded **reference images / sketches** (translate their structure into your tokens, don't copy a brand); and the **visual-iteration loop** — drive a browser (e.g. Claude in Chrome) to view the running dev server and iterate until it *looks* right, not just compiles
+- **Value-state tracking** (`PROJECT.md §Status protocol`) — every value carries a knowable state via a tiny inline-marker vocabulary: `# draft` (AI-inferred, needs your approval → intake PART 0), `# default` (out-of-box default you never chose → PART 2 review), `# approved` / `# locked`, and *unmarked = your own input*. A hard producer rule (the AI never writes an inferred value or accepts a default without its marker) plus a **state ledger** at every audit guarantee that nothing fabricated ever passes silently as approved truth
 
 ---
 
@@ -148,7 +149,7 @@ You don't have to fill the templates manually. Once they're copied into your pro
 
 It produces a **structured intake form** — must-fill brand identity at the top, customizable defaults below — covering every decision you need to make. Answer in your own time. The AI fills the templates for you, derives the 12-step color palette + dark mode counterpart, propagates shared values across every template, and runs final verification. For a **web + mobile** project it confirms scope up front and fills **both** design files — shared values (colors, fonts, icons) are copied across automatically, so the mobile system never gets left behind.
 
-Trigger phrases the AI listens for: *"help me populate this"* / *"what do you need to know?"* / *"run the intake"* / *"walk me through this"*.
+Trigger phrases the AI listens for: *"help me populate this"* / *"what do you need to know?"* / *"run the intake"* / *"walk me through this"*. The intake also returns a **state ledger** — empty slots in PART 1, **AI-drafted values awaiting your sign-off in PART 0**, and unconfirmed defaults flagged for review — so *"what's left to fill out or approve?"* has a complete, honest answer (see `PROJECT.md §Status protocol`).
 
 The full Interactive Population Protocol lives in `PROJECT.md`. See it for the exact intake structure, behavioral steps, and cross-template consistency rules.
 
@@ -241,7 +242,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.20.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.21.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 

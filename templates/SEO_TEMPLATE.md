@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SEO_TEMPLATE.md — Discoverability: SEO + AEO + GEO
-# Version: 1.20.0
+# Version: 1.21.0
 # Scope: web. How the site gets FOUND (search) and CITED (AI answer engines).
 # Companions: INFORMATION.md (the entity — brand/people/social), SPEC.md (the pages),
 #            QA.md (validates the output). Basic per-page meta lives in INFORMATION.seo
@@ -21,7 +21,14 @@
 #    QA.md validates them. Re-review pages quarterly (freshness drives AI citations).
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.20.0"
+# ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: PROJECT.md → §Status protocol) ───
+# An inline comment on a value marks its state; unmarked + filled = "given" (the user's own input).
+#   <slot>/<TBD> = unfilled · # draft = AI-inferred, needs approval · # default = out-of-box default,
+#   not consciously chosen · # approved = signed off · # locked = approved + logged in DECISIONS.md.
+# Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
+# — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
+
+template_version: "1.21.0"
 file_role: "seo"   # information | design | spec | project | content | seo | qa | decisions
 
 # ── Structured data (JSON-LD) — the machine-readable layer AI engines read to CITE you ──
@@ -125,7 +132,7 @@ If `crawl.llms_txt.enabled`, emit a `/llms.txt`: a markdown index of the site's 
 5. **Don't invent** stats, quotes, ratings, or citations — pull from CONTENT.md / INFORMATION.md or ask.
 
 # Versioning
-`template_version: 1.20.0`. Per-project `SEO.md` instances should preserve this field.
+`template_version: 1.21.0`. Per-project `SEO.md` instances should preserve this field.
 
 # Source
 The brand-agnostic *why* behind this template is **`research.md §X3 — Discoverability (SEO + AEO + GEO)`** (technical foundation, structured data/JSON-LD, E-E-A-T, answer-first/AEO, citability/GEO, freshness). Originating findings: `docs/SYSTEM_RESEARCH.md` (F2, F5, F14). Entity data lives in `INFORMATION.md`; page copy in `SPEC.md` (answer-first per `research §X2.10 + §X3.6`); this file is the operational discoverability layer over both.

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # QA_TEMPLATE.md — Premium acceptance checklist (the "done" gate)
-# Version: 1.20.0
+# Version: 1.21.0
 # Scope: the AI runs this against its OWN build before declaring done.
 # Companions: DESIGN_TEMPLATE_*.md (token/a11y/perf targets), SEO_TEMPLATE.md
 #            (discoverability), SPEC_TEMPLATE_*.md (the copy that must match).
@@ -20,7 +20,14 @@
 # 4. Fix → re-check → repeat. Report ✅/❌ per gate; never ship with an open ❌.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.20.0"
+# ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: PROJECT.md → §Status protocol) ───
+# An inline comment on a value marks its state; unmarked + filled = "given" (the user's own input).
+#   <slot>/<TBD> = unfilled · # draft = AI-inferred, needs approval · # default = out-of-box default,
+#   not consciously chosen · # approved = signed off · # locked = approved + logged in DECISIONS.md.
+# Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
+# — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
+
+template_version: "1.21.0"
 file_role: "qa"   # information | design | spec | project | content | seo | qa | decisions
 
 # Hard thresholds the build is measured against (machine-readable).
@@ -122,7 +129,7 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 ```
 
 # Versioning
-`template_version: 1.20.0`. Per-project `QA.md` instances should preserve this field.
+`template_version: 1.21.0`. Per-project `QA.md` instances should preserve this field.
 
 # Source
 Acceptance bars synthesized from 2026 premium-launch standards (WCAG 2.2 AA / axe zero-critical, Core Web Vitals budget, JSON-LD/AEO, token fidelity) — see `docs/SYSTEM_RESEARCH.md` (F6, F9, F10). Contrast/perf/a11y target *values* live in `DESIGN.md`; this file references them rather than restating.

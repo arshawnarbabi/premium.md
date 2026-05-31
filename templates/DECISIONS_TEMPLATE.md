@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DECISIONS_TEMPLATE.md — Decision log (append-only; AI-maintained)
-# Version: 1.20.0
+# Version: 1.21.0
 # Scope: any project. The short record of WHY the locked choices are locked, so a
 #        fresh agent (or teammate) doesn't relitigate settled decisions next session.
 # Companions: PROJECT.md (the contract rule that says to read + append here).
@@ -20,7 +20,14 @@
 #    unless the human explicitly reopens them.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.20.0"
+# ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: PROJECT.md → §Status protocol) ───
+# An inline comment on a value marks its state; unmarked + filled = "given" (the user's own input).
+#   <slot>/<TBD> = unfilled · # draft = AI-inferred, needs approval · # default = out-of-box default,
+#   not consciously chosen · # approved = signed off · # locked = approved + logged in DECISIONS.md.
+# Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
+# — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
+
+template_version: "1.21.0"
 file_role: "decisions"   # information | design | spec | project | content | seo | qa | decisions
 
 # Append-only. Newest entry at the top. One entry per locked, non-trivial decision.
@@ -58,7 +65,7 @@ What belongs here: choices that were genuinely decided and would be costly or co
 4. **Supersede, don't overwrite.** To change a past decision, add a new entry and mark the old one `superseded by <date>`. The log is append-only; never delete or rewrite a prior entry.
 
 # Versioning
-`template_version: 1.20.0`. Per-project `DECISIONS.md` instances should preserve this field.
+`template_version: 1.21.0`. Per-project `DECISIONS.md` instances should preserve this field.
 
 # Source
 ADR (Architecture Decision Record) practice, adapted as an append-only log for agentic builds — so locked choices survive across sessions. See `docs/SYSTEM_RESEARCH.md` (F11).
