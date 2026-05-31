@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.17.0
+# Version: 1.18.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.17.0"
+template_version: "1.18.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -299,7 +299,7 @@ When working on this project, an AI agent **must** follow these rules:
 6. **Respect `agent_constraints.must_not`.** These are project-level red lines.
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
-9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
+9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. **Also surface AI-drafted values (any slot carrying a `# DRAFT` / `confirm/refine` marker) as PART 0 "Drafts awaiting your approval" — so "what do I have to fill out or approve" returns both the empty slots AND the unapproved drafts; never treat a `# DRAFT` value as approved.** The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise.
 
 ---
 
@@ -378,6 +378,16 @@ Use judgment for these. For each value, read it and ask: *"is this real content 
 - For descriptions: at least one full sentence with brand-specific details (not generic)
 - For computed/derived values: matches the declared algorithm output (e.g., palette step 9 = brand primary color)
 
+### Awaiting approval — AI-proposed drafts (a distinct THIRD state)
+
+A slot can be *populated* yet **not approved**. When the AI fills a high-stakes slot by **inference** (brand voice, tagline, mission/vision, positioning, persona, competitors, story) rather than from the user's own words, it marks the value with an inline **`# DRAFT`** / `# DRAFT — confirm` / `confirm/refine` / `# proposed` comment. These are **neither unfilled** (they hold real, brand-specific values) **nor done** (the human hasn't signed off). Treat any slot whose value carries such a marker as **awaiting approval**:
+
+- **Mark on fill (producer side):** whenever YOU populate a high-stakes slot by **inference** (not from the user's own words), add a `# DRAFT — confirm` comment at fill time. That marker is what makes the value round-trip into the next intake's PART 0 instead of silently passing as approved.
+- **Detect mechanically:** scan slot values for inline `# DRAFT`, `DRAFT — confirm`, `confirm/refine`, `— confirm`, `# proposed` markers.
+- **Surface them as a distinct group** in the intake — the **"Drafts awaiting your approval"** block (see Output format), separate from the unfilled `?` items — so *"what do I have to fill out **or approve**"* returns BOTH.
+- **High-stakes drafts first.** Brand **voice / positioning / persona / tagline** propagate into DESIGN.md and SPEC.md — get these approved **before** writing page copy, or the copy is built on unapproved foundations.
+- **On approval** ("confirmed" / "approve all" / an edit), **remove the `# DRAFT` marker** so the slot becomes Definitively FILLED. Never silently treat a `# DRAFT` value as approved.
+
 ### Intentional skips
 
 If the user explicitly said "skip [section]" / "skip 14" / "n/a" — or the value is `<SKIPPED>` / `<N/A>` / `"n/a"` — treat as resolved. Do NOT include in the unfilled list. Track separately and surface in the final report ("3 items intentionally skipped by user: 14, 27, 38").
@@ -399,15 +409,33 @@ When triggered, the AI produces a **single response** containing exactly this st
 ```
 # Intake — <Project Name or "Premium Product Templates">
 
-This is everything you need to decide to fully populate <scope: e.g., "your design template" / "your full project (PROJECT + INFORMATION + DESIGN + SPEC)">. Each item has a short plain-English hint after the em dash.
+This is everything you need to **fill out or approve** to fully populate <scope: e.g., "your design template" / "your full project (PROJECT + INFORMATION + DESIGN + SPEC)">. PART 0 is drafts I already wrote that need your sign-off; PART 1 is what only you can answer; PART 2 is defaults to accept or override. Each item has a short plain-English hint after the em dash.
 
 **How to answer:**
 - **All at once** — reply with answers numbered, freeform, or both. I'll figure it out.
 - **One at a time** — say "let's go one at a time" and I'll walk you through each question, waiting for your answer before moving on.
+- For **PART 0** (drafts I pre-filled), say "approve all" to accept, or correct any by number.
 - For PART 2, either accept the defaults ("looks good, accept all") or list overrides ("override saturation to vivid, switch radius to soft").
 - Say "skip [section]" for anything that doesn't apply.
 
 I'll fill the templates as your answers come in and surface gaps at the end.
+```
+
+### PART 0 — Approve or revise (AI-drafted items)
+
+**Include this block ONLY when the files contain `# DRAFT`-marked values** (the AI pre-filled high-stakes slots by inference — per §"What counts as 'filled' vs 'unfilled'" → Awaiting approval). These are populated but unapproved, so they're NOT in PART 1. **List the high-stakes ones first** (brand voice / positioning / tagline / persona) — they propagate into DESIGN + SPEC, so they must be approved before page copy. Show each draft's current value so the human can accept or rewrite it.
+
+```
+# PART 0 — Drafts awaiting your approval
+I drafted these for you (inferred from your brand + thesis). Approve as-is or rewrite — brand voice/positioning seed your design system and page copy, so lock these first.
+
+1. **Tagline** — currently: "An AI assistant for a measured life". Approve, or give me your line?
+2. **Mission** — currently: "<current value>". Approve / edit?
+3. **Brand voice (4 sample lines)** — currently: <list>. Approve / rewrite?
+4. **Primary persona** — currently: "Maya — busy non-technical person". Approve / refine?
+…one line per DRAFT-marked slot…
+
+Say "approve all" to accept every draft as-is, or correct any by number.
 ```
 
 ### PART 1 — Must Fill (no defaults possible)
@@ -531,7 +559,7 @@ I'll:
 3. Propagate **every** shared value across templates per `§Cross-template consistency rules` — including the full color palette, type families, **icons**, dataviz, and photography → `DESIGN_MOBILE.md` (and `icons` → `PROJECT.tech.web.icons`); voice → DESIGN voice slot + SPEC voice samples; persona name → SPEC pages. For a hybrid project, `DESIGN_MOBILE.md` is filled in this pass too — not left for later.
 4. If you asked me to draft voice samples, I'll show you 8-10 drafted from your voice descriptor + archetype for your approval BEFORE committing to SPEC.md (voice mimicry is high-stakes)
 5. Run the five final verification checks: multi-pattern slot fill (`<placeholder>` syntax + plain-text TBD/TODO + empty YAML + known stub strings like "Acme" / "example.com" + cardinality + semantic reasoning), cross-template consistency, YAML validity, propagation integrity, and completeness summary
-6. Report what was filled, what's still open, what's a suspected stub needing your confirmation, and what's intentionally marked `<TBD>` or `<SKIPPED>` for follow-up
+6. Report what was filled, what's still open, **what drafts are awaiting your approval (the `# DRAFT`-marked values)**, what's a suspected stub needing your confirmation, and what's intentionally marked `<TBD>` or `<SKIPPED>` for follow-up
 7. Offer next steps (draft page copy, scaffold code, etc.) — your choice
 ```
 
@@ -551,10 +579,11 @@ For every scoped template file:
 
 1. **Read the file in full** (not a partial read — the whole file).
 2. **Walk every must-fill item** in that template's canonical intake. For each one, locate its corresponding YAML slot path and classify it using the rules in §"What counts as 'filled' vs 'unfilled'".
-3. **Build three buckets**:
+3. **Build four buckets**:
    - **Unfilled** — fails one of the mechanical checks. Goes into PART 1.
    - **Suspected stub** — passes the mechanical checks but fails the semantic reasoning checks (looks like a leftover example, contextually inconsistent, generic placeholder language). Goes into PART 1 with confirmation framing.
-   - **Definitively filled** — passes all checks. Excluded from PART 1.
+   - **Awaiting approval** — populated with a real value but carries an inline `# DRAFT` / `confirm/refine` / `# proposed` marker (an AI-inferred draft the human hasn't signed off). Goes into **PART 0** (approve or revise), NOT PART 1.
+   - **Definitively filled** — passes all checks, no DRAFT marker. Excluded from both PART 0 and PART 1.
 4. **Cardinality pass**: for any list slot with a declared minimum ("3-5 trust metrics", "at least 2 non-features", "2 founders"), count items and mark unfilled if the list is short OR if any item is missing required sub-fields.
 5. **Cross-template propagation pass**: if a slot is filled in its source template (e.g., `INFORMATION.project.name`), check that its propagation targets match (e.g., `PROJECT.project.name`). If they don't match, fix automatically and note in the final report — don't re-ask the user.
 6. **Intentional-skip pass**: items the user explicitly skipped on a prior pass (marked `<SKIPPED>`, `<N/A>`, `"n/a"`) stay excluded.
@@ -811,7 +840,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.17.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.18.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 
