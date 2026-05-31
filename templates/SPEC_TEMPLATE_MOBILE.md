@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.18.0
+# Version: 1.19.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -33,7 +33,7 @@
 #    any AI tool building the app. The AI renders copy EXACTLY as written.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.18.0"
+template_version: "1.19.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -993,7 +993,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.18.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.19.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

@@ -7,6 +7,8 @@
 > **Out of scope.** Brand-specific decisions (specific colors, fonts, product copy) are not included here. They belong in a project's `DESIGN.md` instance.
 >
 > **Status:** Active. Populated phase by phase per `plan.md`. See `§Z` for open questions.
+>
+> **Freshness protocol.** Most of this research is **durable** — color, typography, spacing, layout, motion, states, components, and accessibility *principles* don't move year to year; **never re-research them** (it wastes effort and invites drift). A few areas **are** time-sensitive and are tagged **`[verify-current · last verified YYYY-MM]`** at their heading: **§X3 — Discoverability (SEO/AEO/GEO)** (fastest-moving), **§X2.9 — app-store / ASO**, the **tech-stack tables** (§Y.6 + `PROJECT.tech`), the **AI-builder market** (§Y), and **standards versions** (WCAG level, browser-support claims in §N/§C). **Rule:** *if you have web access and today is materially past a tagged section's `last verified` date (≳6 months), run a quick search to confirm its specifics still hold and flag any drift before relying on them.* No web access → treat the tagged specifics as "confirm before shipping," not gospel.
 
 ---
 
@@ -3376,6 +3378,7 @@ The highest-converting copy is **mined, not authored**: it uses the customer's o
 - **Lifecycle & transactional email** — subject lines earn the open (specific, benefit/curiosity, no clickbait); the body has one job and one CTA; transactional emails are brand surfaces, not plumbing (SPEC.emails holds the actual copy).
 
 ### X2.9 App / mobile copy (distinct discipline)
+`[verify-current · last verified 2026-05]` — App Store / Play Store rules (indexed fields, screenshot-caption indexing, review/paywall policy) change yearly; re-confirm ASO specifics if dated.
 App stores and onboarding have their own copy rules (ties to SPEC_MOBILE):
 - **App Store / Play listing.** The **app name + subtitle** must say *what it does, for whom, and the result* in the first characters — both are indexed for search (ASO). Build the **description as a funnel: problem → promise → proof → CTA.** **Don't repeat keywords** across title/subtitle/keyword field — the store cross-references them, so repetition wastes character budget. As of 2025, **Apple indexes screenshot caption text** for ranking — write keyword-aware, benefit-led captions, not decorative ones. The first 1–3 lines of the description (and the first 2–3 screenshots) carry almost all the weight.
 - **Onboarding copy.** Get the user to the **"aha" / first value moment** as fast as possible; explain the core feature *early*; make the user feel "this was built for me." Value-first, progressive (don't front-load every feature), and tied to the activation event, not a feature tour.
@@ -3428,6 +3431,8 @@ What makes copy read as cheap/AI-average (extends §S Anti-Patterns + §X.10):
 ---
 
 ## §X3 — Discoverability (SEO + AEO + GEO)
+
+`[verify-current · last verified 2026-05]` — the fastest-moving area in this doc (engine rules, AEO/GEO behavior, structured-data eligibility, ASO all shift yearly). Per the Freshness protocol, re-confirm specifics against current sources if today is well past the stamp.
 
 **Scope.** §X2 covered how to *write* copy that converts; this section covers how that copy gets **found and cited** — by search engines (SEO), by answer features/snippets (AEO), and by generative AI assistants (GEO). This is the brand-agnostic *why* behind `SEO.md` (the operational template). Per-page metadata lives in `INFORMATION.seo` + `SPEC.meta`; this section is the standard those slots encode. **The 2026 reality: a page must satisfy three readers — the crawler, the human, and the LLM — and the same fundamentals (crawlable, fast, structured, credible, fresh) serve all three.**
 
@@ -3690,6 +3695,8 @@ Six case studies inspected (Cluely, Huly, Vantage, Gitness, AgentQL, Slash). Rec
 - §Q (Web Patterns): a `modular component library` is itself a deliverable, not just a side effect
 
 ### Y.6 Common premium tech stack — context for the AI agent
+
+`[verify-current · last verified 2026-05]` — framework versions and the AI-builder market (v0 / Lovable / Bolt) move fast; re-confirm the stack + tooling currency if dated, and keep `PROJECT.tech` aligned.
 
 The published / observed implementation stack across Pixel Point, Vercel, Linear, Stripe, Mercury, Anthropic:
 
