@@ -153,6 +153,12 @@ npx skills add arshawnarbabi/premium-product-templates --skill premium-product
 
 Then just ask — e.g. *"set up the design system for my new app"* — and the agent loads the skill; or invoke it directly with `/premium-product`.
 
+By default this installs into the **current project** (`./.agents/skills/` or `./.claude/skills/`). Add **`-g`** to install it **globally** (available in every project):
+
+```
+npx skills add arshawnarbabi/premium-product-templates --skill premium-product -g
+```
+
 **Fallback (no Node, any tool)** — clone and copy the skill folder into your agent's skills directory:
 
 ```
