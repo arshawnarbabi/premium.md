@@ -4,6 +4,8 @@
 premium-product-templates_banner.png    export-ignore
 tools/                                   export-ignore
 docs/                                    export-ignore
+skills/                                  export-ignore
+scripts/                                 export-ignore
 .gitattributes                           export-ignore
 .gitignore                               export-ignore
 make-release-zip.sh                      export-ignore

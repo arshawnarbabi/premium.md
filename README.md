@@ -141,6 +141,30 @@ Use all the relevant files — `PROJECT`, `INFORMATION`, `CONTENT`, `DESIGN` ×2
 
 ---
 
+## Install the skill
+
+Beyond copying the raw templates, the whole system ships as a cross-tool **[Agent Skill](https://agentskills.io)** (`SKILL.md`, the open standard) — so your coding agent loads it automatically when you ask it to build or design a premium product, and reaches the templates + research + brand-kit on demand. The skill is **self-contained** (the reference material travels with it).
+
+**One command** — installs into every detected agent (Claude Code, Codex, Cursor, OpenCode, …) via the [`skills` CLI](https://github.com/vercel-labs/skills):
+
+```
+npx skills add arshawnarbabi/premium-product-templates --skill premium-product
+```
+
+Then just ask — e.g. *"set up the design system for my new app"* — and the agent loads the skill; or invoke it directly with `/premium-product`.
+
+**Fallback (no Node, any tool)** — clone and copy the skill folder into your agent's skills directory:
+
+```
+git clone https://github.com/arshawnarbabi/premium-product-templates
+cp -r premium-product-templates/skills/premium-product ~/.claude/skills/    # Claude Code
+cp -r premium-product-templates/skills/premium-product ~/.agents/skills/    # Codex / Cursor
+```
+
+Either way you get the same thing the raw templates give you — just auto-loaded and kept together. The plain-template path above still works for any tool or for browsing.
+
+---
+
 ## Guided fill-in (new in v1.2)
 
 You don't have to fill the templates manually. Once they're copied into your project, ask your AI:
