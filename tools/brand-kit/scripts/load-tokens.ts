@@ -117,7 +117,7 @@ const brand = {
     brandmark: copyAsset(logo.icon_only),
     darkVariant: copyAsset(logo.dark_mode_variant), // null until produced
   },
-  markColor: "#00150b",
+  markColor: tokens?.colors?.primary?.base ?? tokens?.colors?.primary?.["9"] ?? tokens?.colors?.neutral?.["12"] ?? "#111111",
 };
 
 // Apply surface_separation shadow tuning to the elevation scale, so the viewer's elevation

@@ -33,9 +33,18 @@ export function buildTokenCss(t: any): string {
   const elev = Object.entries(elevScale).map(([k, v]) => `--elev-${k}:${v};`).join("");
 
   const fam = t.typography?.families ?? {};
-  // --font-sans = BODY font (DM Sans); --font-display = heading font (overridden live by the toolbar)
-  const font = `--font-sans:"${fam.body ?? fam.display ?? "DM Sans"}", system-ui, sans-serif;` +
-    `--font-display:"${fam.display ?? fam.body ?? "DM Sans"}", Georgia, serif;`;
+  const fb = t.typography?.fallbacks ?? {};
+  const assign = t.typography?.fallback_assignments ?? {};
+  // Fallback stack per font CATEGORY — pulled from the PROJECT's typography (DESIGN.md), never brand-specific.
+  const stack = (cat?: string) =>
+    cat === "serif" ? (fb.serif ?? "ui-serif, Georgia, serif")
+    : cat === "mono" ? (fb.mono ?? "ui-monospace, SFMono-Regular, Menlo, monospace")
+    : (fb.sans ?? "ui-sans-serif, system-ui, sans-serif");
+  const ff = (name: string | undefined, cat?: string) => (name ? `"${name}", ${stack(cat)}` : stack(cat));
+  // --font-sans = body · --font-display = heading (toolbar can override) · --font-mono = code/data.
+  const font = `--font-sans:${ff(fam.body ?? fam.display, assign.body)};` +
+    `--font-display:${ff(fam.display ?? fam.body, assign.display)};` +
+    `--font-mono:${ff(fam.mono, assign.mono ?? "mono")};`;
 
   return `
 .bk-root[data-theme="light"]{${light.join("")}}

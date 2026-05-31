@@ -191,7 +191,7 @@ export interface GenInput {
   base: LCH;                 // primary brand color (anchored to step 9)
   saturation?: string;       // muted | default | vivid
   neutralHue?: number;       // default = brand hue
-  neutralChromaScale?: number; // warmth/tint intensity (default 0.25; Temperance uses 0.2 at hue 85)
+  neutralChromaScale?: number; // warmth/tint intensity (default 0.25)
   success?: LCH; warning?: LCH; danger?: LCH;
 }
 

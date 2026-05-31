@@ -75,7 +75,7 @@ export default function Specimen({ tokens, brand, theme, icons, iconMeta }:
       </Sub>
 
       {/* Typography */}
-      <Sub title="Typography — DM Sans · 8 roles">
+      <Sub title={`Typography — ${tokens.typography?.families?.body ?? "system"} · 8 roles`}>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           {roleOrder.filter((r) => roles[r]).map((r) => {
             const role = roles[r];

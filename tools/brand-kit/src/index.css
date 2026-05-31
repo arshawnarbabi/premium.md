@@ -3,11 +3,12 @@
 /* ── Viewer chrome (NOT token-driven) ─────────────────────────────────── */
 html, body, #root { margin: 0; padding: 0; }
 body {
-  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  /* Viewer chrome only — a neutral system font, NOT any project/brand font. */
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.bk-mono { font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+.bk-mono { font-family: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace); }
 
 /* ── The kit canvas adopts the project's surface + text per active theme ── */
 .bk-root {
