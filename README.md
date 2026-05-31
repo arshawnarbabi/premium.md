@@ -274,7 +274,7 @@ The research file is informational — you don't need it to use the templates. I
 
 All templates carry `template_version: "1.21.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
-This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
+This release: **v1.21.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 
 ---
 
