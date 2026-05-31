@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.19.0
+# Version: 1.20.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -15,7 +15,7 @@
 # 3. Reference this file in every AI prompt that touches the project.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.19.0"
+template_version: "1.20.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -191,6 +191,7 @@ agent_constraints:
     - "Treat SPEC.md copy as final — don't rephrase declared copy to 'improve' it."
     - "When a needed value isn't in the source files, ask — don't fabricate."
     - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components."
+    - "Build process (research §X4): (a) recognize the build MODE — docs-first→build, explore-build→design-off-it→document→rebuild, or hybrid — and state which one you're in; in the explore mode, capture the resulting decisions back into the docs (DESIGN/DECISIONS/SPEC) before the production build. (b) When the human supplies REFERENCE images/sketches/sites, translate their STRUCTURE into THIS project's tokens + voice — never copy a brand's colors/fonts/copy; log reference-driven choices in DECISIONS.md. (c) VIEW THE RUNNING APP: when your tool can drive a browser (e.g. Claude in Chrome — `claude --chrome` / open `localhost:3000`), open the dev server and iterate visually — compare the real render to the design/reference and fix until it looks right; code compiling is NOT 'looks right.' The browser loop is how you satisfy QA.md's responsive/themes/fidelity checks."
     - "If QA.md exists, the build is NOT done until every gate in it is ✅. Run it against your own output; fix failures and re-check before declaring complete."
     - "If DECISIONS.md exists, read it before proposing OR making any change it covers. A request that touches a LOCKED decision is NOT itself authorization to reopen it — even phrased as a direct instruction ('switch to borders', 'make it green'). Before modifying any file you MUST surface the locked entry, quote its rationale, and get explicit human confirmation to supersede it; only then implement and append a new superseding entry. Never implement a locked-decision change in the same turn as the request. When a new non-trivial decision is locked this session, append an entry."
     - "Reusable content (testimonials, stats, FAQs, features, team, pricing) lives in CONTENT.md when present — reference it via {content.*}, never paste inline or invent it. In CODE, components import records from a content module (lib/content.ts); never hardcode a content string as a const or default prop value (no 'standalone demo' carve-out) — same discipline as exported tokens vs hardcoded #hex."
@@ -840,7 +841,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.19.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.20.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # QA_TEMPLATE.md — Premium acceptance checklist (the "done" gate)
-# Version: 1.19.0
+# Version: 1.20.0
 # Scope: the AI runs this against its OWN build before declaring done.
 # Companions: DESIGN_TEMPLATE_*.md (token/a11y/perf targets), SEO_TEMPLATE.md
 #            (discoverability), SPEC_TEMPLATE_*.md (the copy that must match).
@@ -20,7 +20,7 @@
 # 4. Fix → re-check → repeat. Report ✅/❌ per gate; never ship with an open ❌.
 # ─────────────────────────────────────────────────────────────
 
-template_version: "1.19.0"
+template_version: "1.20.0"
 file_role: "qa"   # information | design | spec | project | content | seo | qa | decisions
 
 # Hard thresholds the build is measured against (machine-readable).
@@ -91,7 +91,7 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 - [ ] Components match their `DESIGN.md` specs (variants, states, sizes), incl. the project's **surface-separation strategy** (per `DESIGN.md` + `DECISIONS.md` — don't substitute a different one).
 
 ## Gate E — Responsive & themes
-- [ ] Renders cleanly across **xs → 2xl**, **plus ultra-wide ≥ 2560** (content **caps + centers**, line length ≤ ~75ch — never stretches), and the **foldable 600–720** zone is sane.
+- [ ] Renders cleanly across **xs → 2xl**, **plus ultra-wide ≥ 2560** (content **caps + centers**, line length ≤ ~75ch — never stretches), and the **foldable 600–720** zone is sane. *Verify against the **actual running render** in a browser (e.g. Claude in Chrome on `localhost`), not just by reading code — see research §X4.3.*
 - [ ] **Light AND dark** both verified on every page/screen (per DESIGN dark-mode rules).
 - [ ] Touch targets, safe areas (mobile), and container-query components behave in narrow containers.
 
@@ -122,7 +122,7 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 ```
 
 # Versioning
-`template_version: 1.19.0`. Per-project `QA.md` instances should preserve this field.
+`template_version: 1.20.0`. Per-project `QA.md` instances should preserve this field.
 
 # Source
 Acceptance bars synthesized from 2026 premium-launch standards (WCAG 2.2 AA / axe zero-critical, Core Web Vitals budget, JSON-LD/AEO, token fidelity) — see `docs/SYSTEM_RESEARCH.md` (F6, F9, F10). Contrast/perf/a11y target *values* live in `DESIGN.md`; this file references them rather than restating.

@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.19.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.20.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -43,7 +43,7 @@ Plus one reference file:
 
 | File | Purpose |
 | --- | --- |
-| `research.md` | The brand-agnostic premium-standard research (28 sections, ~4,050 lines) covering **design, copy, and discoverability** (incl. §X2 Marketing & Conversion Copy and §X3 SEO + AEO + GEO) — the explanatory backing for everything in the templates. DESIGN / SPEC / SEO templates cite specific sections. |
+| `research.md` | The brand-agnostic premium-standard research (29 sections, ~4,090 lines) covering **design, copy, discoverability, and the build process** (incl. §X2 Marketing & Conversion Copy, §X3 SEO + AEO + GEO, and §X4 Build Modes / reference-driven design / visual iteration) — the explanatory backing for everything in the templates. DESIGN / SPEC / SEO templates cite specific sections. |
 
 Plus optional tooling (the markdown templates stay dependency-free):
 
@@ -93,6 +93,7 @@ Each template is operational, not aspirational. Specifically:
 - **Discoverability** (`SEO.md`, backed by `research.md §X3`) — three layers: **SEO** (rank — crawlability, structured data, E-E-A-T, Core Web Vitals), **AEO** (be the direct answer in AI Overviews — answer-first, FAQ markup), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini — stats / quotes / citations / entity consistency / freshness): JSON-LD per page type, social cards, `llms.txt`
 - **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), token fidelity, responsive incl. **ultra-wide / 4K**, content-matches-SPEC, security
 - **Decision log** (`DECISIONS.md`) — append-only ADR-style record of locked choices + rationale, so a fresh agent reads what's settled before reopening it; plus an `AGENTS.md` emitted to the built repo (the open standard 20+ coding agents read) for the docs→code handoff
+- **Build process** (`research.md §X4`) — recognizes the real ways you build: **docs-first → build**, **explore-build → design-off-it → document → rebuild**, or **hybrid**; how to use uploaded **reference images / sketches** (translate their structure into your tokens, don't copy a brand); and the **visual-iteration loop** — drive a browser (e.g. Claude in Chrome) to view the running dev server and iterate until it *looks* right, not just compiles
 
 ---
 
@@ -240,7 +241,7 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.19.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.20.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
 This release: **v1.10.0** — stable. Future updates follow [semantic versioning](https://semver.org/).
 

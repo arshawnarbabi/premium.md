@@ -40,6 +40,7 @@
 - §X — Microcopy & UX Writing
 - §X2 — Marketing & Conversion Copy
 - §X3 — Discoverability (SEO + AEO + GEO)
+- §X4 — Build Process: Modes, Reference-Driven Design & Visual Iteration
 - §Y — Measured Reference Data
 - §Z — Open Questions
 - Sources
@@ -3511,6 +3512,41 @@ Content **decays**. Pages not refreshed within a quarter lose AI citations at ro
 - **AI Agent Contract hook:** emit valid JSON-LD per page type (0 errors), keep the entity consistent with INFORMATION, write informational pages answer-first, stamp `last_reviewed`, and **never fabricate** schema fields, stats, reviews, or authorship.
 
 **Source.** Synthesized from current (2026) discoverability standards: technical SEO / crawlability / CWV / SSR ([NoGood](https://nogood.io/blog/technical-seo-checklist/), [DebugBear](https://www.debugbear.com/blog/technical-seo-checklist), [ALM Corp](https://almcorp.com/blog/technical-seo-checklist/)); JSON-LD / schema types + the FAQPage rich-result restriction ([Digital Applied — Structured Data 2026](https://www.digitalapplied.com/blog/structured-data-seo-2026-rich-results-guide), [SALT.agency](https://salt.agency/blog/json-ld-structured-data-beginners-guide-for-seos/)); E-E-A-T + authorship ([Search Engine Journal](https://www.searchenginejournal.com/google-e-e-a-t-how-to-demonstrate-first-hand-experience/474446/), [Keywords Everywhere](https://keywordseverywhere.com/blog/google-e-e-a-t-guidelines-an-overview/)); AEO / GEO ([Frase AEO 2026](https://www.frase.io/blog/what-is-answer-engine-optimization-the-complete-guide-to-getting-cited-by-ai), [eMarketer GEO/AEO 2026](https://www.emarketer.com/content/faq-on-geo-aeo--where-ai-search-seo-overlap-2026)). Operational layer in `SEO.md`; answer-first copy craft in §X2; CWV values in §M / QA.
+
+---
+
+## §X4 — Build Process: Modes, Reference-Driven Design & Visual Iteration
+
+**Scope.** The other sections define *what* to build (design, copy, discoverability) and *what "done" means* (QA). This section defines *how the human and AI actually build together* — the build **modes** a human may be in, how **reference material** (images, sketches, other work) feeds the build, and the **visual-iteration loop** that closes the gap between "the code compiles" and "it looks perfect." The system is deliberately **neutral about build order**: the docs are the source of truth in every mode; what differs is *when* they get filled relative to the build.
+
+### X4.1 Build modes — recognize which one you're in
+- **Mode A — Docs-first → build** (the default). DESIGN + SPEC (+ CONTENT/SEO) are filled, then the AI builds against them — section by section, against the exported tokens, self-QA'ing per QA.md. Best when the design is already decided.
+- **Mode B — Explore-build → design-off-it → document → rebuild** (the reverse / draft-first flow). The human has the AI build a *rough base* of the whole thing first; the human **designs off that working draft**; the AI then **captures the resulting decisions back into the docs** (DESIGN tokens, DECISIONS entries, SPEC sections/copy) — the intake can populate docs *from* an existing build — and rebuilds production docs-driven. Treat the base as **exploration, not production**: formalize the decisions into the docs *before* the final build, or drift creeps in.
+- **Mode C — Hybrid.** Mix per area (AI base-builds some sections; human-sketched section-by-section for others) in one project. Nothing forces a single order; the only invariant is **the docs end up reflecting the real decisions.**
+- **Recognize + state the mode.** Infer it from the human's framing ("build me a rough version of the dashboard" → Mode B; "build the hero to this spec" → Mode A) or ask. State which mode you're in and where the docs currently sit, so nothing silently ships from an exploratory draft.
+
+### X4.2 Reference-driven design — translate, don't copy
+The human frequently supplies **reference material**: images of work they admire, competitor/inspiration screenshots, hand sketches or wireframes to replicate professionally, links to sites.
+- **Extract intent, not pixels.** Pull the *structure* from a reference — layout, hierarchy, spacing rhythm, component patterns, density, motion feel — then **render it in THIS project's tokens, type, and voice.** Never import the reference's colors / fonts / brand; map its *structure* onto your DESIGN system.
+- **Sketches → premium fidelity.** Treat a sketch or wireframe as the **layout spec**: replicate its composition with the project's real components, tokens, spacing, and states — elevating it to premium polish while preserving the intended structure.
+- **IP + honesty.** Replicate *craft level and structure*, not a specific brand's identity, copyrighted assets, or exact copy. If a reference's quality comes from a proprietary illustration or a competitor's exact wording, achieve the same *effect* with original execution — don't reproduce it.
+- **Capture it.** When a reference drives a real decision (a hero pattern, a layout), log it in `DECISIONS.md` (e.g. "hero = split-asymmetric, per the uploaded sketch") so the rationale isn't lost.
+
+### X4.3 Visual iteration — build against the running app, not just the code
+`[verify-current · last verified 2026-05]` (browser-tool specifics move) — Reading code can't tell you if it *looks* right. If your AI tool can drive a browser, **close the loop visually**:
+- **Claude in Chrome** (Claude Code's browser integration) is the tightest path: install at `claude.ai/chrome`, then run `claude --chrome` (or `/chrome` in a session). Claude opens the running dev server (`localhost:3000`) in a **real, visible Chrome window**, sees the rendered page, reads console errors + DOM state, and iterates — without leaving the terminal. (Beta; Chrome + Edge.)
+- **The loop:** `npm run dev` → open the page in the browser → **view the actual render** → compare to the design intent / reference / DESIGN specs → adjust code → reload → re-view → repeat **until it looks right**, not just until it compiles. Verify **responsive** (resize), **light + dark**, and **interactive states** in the real browser.
+- **This is how you satisfy `QA.md`.** The QA gate's responsive / themes / token-fidelity / a11y checks are confirmed against the **real render**, not asserted from the code. The browser loop is the *mechanism*; QA.md is the *bar*.
+- **Tool-agnostic:** any way the AI can see the running app works — a browser-automation MCP, the human pasting screenshots, a preview/brand-kit viewer. Claude in Chrome is the most integrated.
+
+### X4.4 The combined build loop
+Putting it together (this extends the PROJECT "build as a loop" rule):
+
+**read docs (+ references) → plan → generate against exported tokens → view in the running dev server → compare to design/reference → fix → repeat → self-QA against `QA.md` → done.**
+
+Mode A starts at "read docs." Mode B starts with the exploratory build, then *back-fills the docs*, then runs this loop for production. The **"view in the running app"** step is what makes *"iterate until it looks perfect"* actually achievable — without it, "done" is a guess.
+
+**Source.** Build-workflow practice for AI-assisted design — docs-first vs explore-from-scaffold vs section-by-section; reference-driven translation (structure not brand); browser-in-the-loop visual iteration. Tooling: Claude in Chrome / Claude Code browser integration ([Claude Code — Chrome docs](https://code.claude.com/docs/en/chrome), [setup at claude.ai/chrome](https://claude.ai/chrome)). Ties to the PROJECT build-loop contract, DESIGN component specs, `DECISIONS.md` (capturing reference-driven choices), and `QA.md` (the bar the visual loop satisfies).
 
 ---
 
