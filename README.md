@@ -1,6 +1,6 @@
-![premium-product-templates](https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/premium-product-templates_banner.png)
+![premium.md](https://raw.githubusercontent.com/arshawnarbabi/premium.md/main/premium.md_banner.png)
 
-# premium-product-templates
+# premium.md
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
@@ -104,10 +104,10 @@ Each template is operational, not aspirational. Specifically:
 
 ```bash
 # 1. Get the core templates (they live in templates/). Or download the release zip for all 10, flat.
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/PROJECT_TEMPLATE.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/INFORMATION_TEMPLATE.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/DESIGN_TEMPLATE_WEB.md
-curl -O https://raw.githubusercontent.com/arshawnarbabi/premium-product-templates/main/templates/SPEC_TEMPLATE_WEB.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium.md/main/templates/PROJECT_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium.md/main/templates/INFORMATION_TEMPLATE.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium.md/main/templates/DESIGN_TEMPLATE_WEB.md
+curl -O https://raw.githubusercontent.com/arshawnarbabi/premium.md/main/templates/SPEC_TEMPLATE_WEB.md
 # Optional add-ons (same templates/ path, or let the intake create them):
 #   CONTENT_TEMPLATE.md · SEO_TEMPLATE.md · QA_TEMPLATE.md · DECISIONS_TEMPLATE.md
 
@@ -148,23 +148,23 @@ Beyond copying the raw templates, the whole system ships as a cross-tool **[Agen
 **One command** — installs into every detected agent (Claude Code, Codex, Cursor, OpenCode, …) via the [`skills` CLI](https://github.com/vercel-labs/skills):
 
 ```
-npx skills add arshawnarbabi/premium-product-templates --skill premium-product
+npx skills add arshawnarbabi/premium.md --skill premium-md
 ```
 
-Then just ask — e.g. *"set up the design system for my new app"* — and the agent loads the skill; or invoke it directly with `/premium-product`.
+Then just ask — e.g. *"set up the design system for my new app"* — and the agent loads the skill; or invoke it directly with `/premium-md`.
 
 By default this installs into the **current project** (`./.agents/skills/` or `./.claude/skills/`). Add **`-g`** to install it **globally** (available in every project):
 
 ```
-npx skills add arshawnarbabi/premium-product-templates --skill premium-product -g
+npx skills add arshawnarbabi/premium.md --skill premium-md -g
 ```
 
 **Fallback (no Node, any tool)** — clone and copy the skill folder into your agent's skills directory:
 
 ```
-git clone https://github.com/arshawnarbabi/premium-product-templates
-cp -r premium-product-templates/skills/premium-product ~/.claude/skills/    # Claude Code
-cp -r premium-product-templates/skills/premium-product ~/.agents/skills/    # Codex / Cursor
+git clone https://github.com/arshawnarbabi/premium.md
+cp -r premium.md/skills/premium-md ~/.claude/skills/    # Claude Code
+cp -r premium.md/skills/premium-md ~/.agents/skills/    # Codex / Cursor
 ```
 
 Either way you get the same thing the raw templates give you — just auto-loaded and kept together. The plain-template path above still works for any tool or for browsing.

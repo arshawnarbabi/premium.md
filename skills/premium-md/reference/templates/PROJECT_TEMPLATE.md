@@ -888,4 +888,4 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Source
 
-Part of the `premium-product-templates` family. Companion files: `INFORMATION.md` (brand / business / audience), `DESIGN.md` / `DESIGN_MOBILE.md` (visual systems), `SPEC.md` / `SPEC_MOBILE.md` (content + layout).
+Part of the `premium.md` family. Companion files: `INFORMATION.md` (brand / business / audience), `DESIGN.md` / `DESIGN_MOBILE.md` (visual systems), `SPEC.md` / `SPEC_MOBILE.md` (content + layout).

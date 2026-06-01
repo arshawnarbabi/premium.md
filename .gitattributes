@@ -1,7 +1,7 @@
 # Keep GitHub's downloadable archives lean. `export-ignore` drops these from `git archive`
 # (Download-ZIP + release source tarballs) — they still live in the repo.
 # KEPT in downloads: templates/*_TEMPLATE*.md, research.md, README.md, LICENSE.
-premium-product-templates_banner.png    export-ignore
+premium.md_banner.png    export-ignore
 tools/                                   export-ignore
 docs/                                    export-ignore
 skills/                                  export-ignore

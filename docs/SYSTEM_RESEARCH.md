@@ -1,13 +1,13 @@
 # Research — Optimal AI-Agent Workflow for Designing Premium Websites
 
 > **Status:** ✅ RESEARCH COMPLETE. 12 findings (§5), verdicts (§6), ranked recommendations + workflow (§7), next step (§8). Awaiting the user's pick of what to implement.
-> **Last updated:** research complete, against `premium-product-templates` v1.8.1.
+> **Last updated:** research complete, against `premium.md` v1.8.1.
 
 ---
 
 ## 0. What this document is (read me first)
 
-This is a **living research log**. Its job: figure out what to **add to / change in** the `premium-product-templates` system so it becomes the *optimal* way to design **premium websites** with AI agents — tailored to one specific division of labour (see §2).
+This is a **living research log**. Its job: figure out what to **add to / change in** the `premium.md` system so it becomes the *optimal* way to design **premium websites** with AI agents — tailored to one specific division of labour (see §2).
 
 **Rules for maintaining this doc (for the AI writing it):**
 - **Append findings as you go**, not at the end. Every research session adds to §5.
@@ -19,7 +19,7 @@ This is a **living research log**. Its job: figure out what to **add to / change
 
 ## 1. Baseline — the system as it exists today (v1.8.1)
 
-`premium-product-templates` (GitHub: `arshawnarbabi/premium-product-templates`, MIT) is a markdown template system that turns an AI agent into a reliable premium-grade product builder. A human fills ~30 brand-identity slots; everything else (design tokens, component specs, page patterns, voice rules, accessibility floors) is pre-decided based on what premium design teams do. Inspired by and extending **Google Labs' DESIGN.md** format.
+`premium.md` (GitHub: `arshawnarbabi/premium.md`, MIT) is a markdown template system that turns an AI agent into a reliable premium-grade product builder. A human fills ~30 brand-identity slots; everything else (design tokens, component specs, page patterns, voice rules, accessibility floors) is pre-decided based on what premium design teams do. Inspired by and extending **Google Labs' DESIGN.md** format.
 
 **The six template files (instantiated per project by dropping `_TEMPLATE`):**
 1. **`PROJECT.md`** — entry-point orchestration. Declares which sibling files exist + priority order, the tech stack, repo conventions, the **Interactive Population Protocol** (intake), and the **Cross-template consistency rules** (which shared values propagate where, on every update).

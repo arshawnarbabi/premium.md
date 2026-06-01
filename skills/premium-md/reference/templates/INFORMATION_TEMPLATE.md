@@ -627,4 +627,4 @@ Paths or URLs to the actual files. AI can generate `<img>` / `<Image>` reference
 
 # Source
 
-This template is part of the `premium-product-templates` family. Companion files: `PROJECT.md` (orchestration), `DESIGN.md` / `DESIGN_MOBILE.md` (visual system), `SPEC.md` / `SPEC_MOBILE.md` (content + layout per page/screen).
+This template is part of the `premium.md` family. Companion files: `PROJECT.md` (orchestration), `DESIGN.md` / `DESIGN_MOBILE.md` (visual system), `SPEC.md` / `SPEC_MOBILE.md` (content + layout per page/screen).

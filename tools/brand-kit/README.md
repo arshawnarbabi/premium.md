@@ -1,6 +1,6 @@
 # Brand Kit — viewer + palette generator
 
-Optional tooling for `premium-product-templates`. Two pieces that share one OKLCH/APCA library:
+Optional tooling for `premium.md`. Two pieces that share one OKLCH/APCA library:
 
 - **Palette generator** (`scripts/generate-palette.ts`) — *model-only, headless*. Given a brand color it
   derives the full 12-step color section of `DESIGN.md` (5 palettes × light + dark = 120 values),

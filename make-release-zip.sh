@@ -7,7 +7,7 @@
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")" && pwd)"
 VERSION="${1:-vX.Y.Z}"
-OUT="$REPO/premium-product-templates-${VERSION}.zip"
+OUT="$REPO/premium.md-${VERSION}.zip"
 STAGE="$(mktemp -d)"
 cp "$REPO"/templates/*_TEMPLATE*.md "$STAGE/"   # flatten templates/ into the zip root
 cp "$REPO"/research.md "$STAGE/"

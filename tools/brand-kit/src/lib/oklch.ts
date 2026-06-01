@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────
-// oklch.ts — shared color math for the premium-product-templates tooling.
+// oklch.ts — shared color math for the premium.md tooling.
 // Used by BOTH the headless palette generator (scripts/generate-palette.ts)
 // and the brand-kit viewer (for hex rendering + live APCA badges).
 //

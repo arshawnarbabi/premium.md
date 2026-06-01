@@ -1004,4 +1004,4 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Source
 
-Part of the `premium-product-templates` family. Companion files: `PROJECT.md` (orchestration), `DESIGN_MOBILE.md` (visual system), `INFORMATION.md` (brand / business context), `SPEC.md` (web sibling — for projects that ship both).
+Part of the `premium.md` family. Companion files: `PROJECT.md` (orchestration), `DESIGN_MOBILE.md` (visual system), `INFORMATION.md` (brand / business context), `SPEC.md` (web sibling — for projects that ship both).

@@ -1,5 +1,5 @@
 ---
-name: premium-product
+name: premium-md
 description: >-
   Build a premium product's website and/or app end to end from a single source of truth — set up the
   brand and design system, run a structured intake to populate the docs, generate an OKLCH color palette
@@ -12,7 +12,7 @@ version: "1.21.0"
 
 # Premium Product Builder
 
-This skill turns you into a reliable premium-product builder using the **premium-product-templates** system (v1.21.0): a set of markdown docs that hold a brand's design system, content, and final copy, plus a QA gate — so you build a premium website and/or app from one source of truth, **without inventing brand decisions**.
+This skill turns you into a reliable premium-md builder using the **premium.md** system (v1.21.0): a set of markdown docs that hold a brand's design system, content, and final copy, plus a QA gate — so you build a premium website and/or app from one source of truth, **without inventing brand decisions**.
 
 ## Reference material (load on demand — do NOT read it all up front)
 
@@ -37,4 +37,4 @@ Pull a template or a research section into context **only when the step needs it
 
 ## Provenance
 
-Generated from the **premium-product-templates** repo, v1.21.0 (MIT). The `reference/` bundle is produced from the repo's canonical sources by `scripts/build-skill.sh` — treat it as read-only; edit the canonical templates/research instead.
+Generated from the **premium.md** repo, v1.21.0 (MIT). The `reference/` bundle is produced from the repo's canonical sources by `scripts/build-skill.sh` — treat it as read-only; edit the canonical templates/research instead.
