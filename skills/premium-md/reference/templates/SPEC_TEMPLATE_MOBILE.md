@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.23.0
+# Version: 1.23.1
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -45,7 +45,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 file_role: "spec"
 platform: "mobile"
 
@@ -1072,7 +1072,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.23.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.23.1`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

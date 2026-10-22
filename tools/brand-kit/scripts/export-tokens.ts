@@ -8,7 +8,14 @@
 //                        type size / leading / weight / letter_spacing per role, measure, spacing (scale +
 //                        roles), radius, elevation, motion (profile multiplier applied), containers,
 //                        section padding (active profile), focus ring, touch targets, z-index, icon sizes,
-//                        and component dimensions / colours from `components`.
+//                        and component dimensions / colours from `components`, breakpoints (--bp-*),
+//                        variable-font axes (--axis-*), role-to-family bindings (--font-role-*), and
+//                        @media (min-width) tier blocks for size_<tier> / X_<tier> keys.
+//                        Colour roles repeat in the dark block and in a [data-theme="light"] block, so a
+//                        dark SECTION in a light page (and the reverse) resolves against its own ramp.
+//                        LEGACY NAMES: every name an older exporter emitted for the same DESIGN.md is
+//                        still emitted, as a deprecated alias (--old: var(--new)) in its own block at the
+//                        end of :root. Check an upgrade with scripts/compare-tokens.ts (README, Upgrading).
 //   <out>/theme.css    — Tailwind v4 @theme block (maps the tokens to utilities: bg-primary-9, font-display, …).
 //   <out>/tokens.json  — W3C DTCG (2025.10) token file (the standard interchange; string $value for portability).
 //
@@ -102,6 +109,13 @@ const refToVar = (v: any, depth = 0): string =>
       })
     : String(v);
 const dim = (n: any): string => (typeof n === "number" ? `${n}px` : String(n));
+// Legacy names (the v1.21 exporter as projects extended it in their tools/brand-kit/): a dot in a key became "-" instead of
+// "_" (--text-heading-5-5xl, --space-0-5), spacing roles had no --space- prefix (--container-padding-desktop),
+// container keys kept "-" for "_" (--container-full-cap), the measure was --measure-max. Each is emitted as
+// `--legacy: var(--current)` unless a current token already owns that name.
+const dashKey = (k: string | number) => String(k).replace(/[^a-zA-Z0-9_-]/g, "-");
+const legacy = new Map<string, string>();                   // legacy name → current name
+const alias = (oldName: string, current: string) => { if (oldName !== current && !legacy.has(oldName)) legacy.set(oldName, current); };
 
 // ── tokens.css ──────────────────────────────────────────────────────────
 const isScalarColor = (v: any) => typeof v === "string" || typeof v === "number";
@@ -112,8 +126,22 @@ for (const p of PALETTES) {
   const dk = colors[p].dark ?? {};
   for (let i = 1; i <= 12; i++) if (dk[i] != null) darkLines.push(`  --${p}-${i}: ${dk[i]};`);
 }
-for (const g of ROLEGROUPS) for (const [k, v] of Object.entries(colors[g])) if (isScalarColor(v)) lightLines.push(`  --${g}-${k}: ${refToVar(v)};`);
-if (typeof colors.shadow_tint === "string") lightLines.push(`  --shadow-tint: ${refToVar(colors.shadow_tint)};`);
+// Colour roles go into the dark block too, and into a [data-theme="light"] block with the light ramp.
+// A custom property's var() is substituted on the element that declares it, so a role declared only on
+// :root resolves once against the light ramp and every descendant inherits that resolved colour: a
+// data-theme="dark" SECTION would swap its ramp and change no role. Re-declaring the roles on each theme
+// selector makes them resolve against the ramp in scope there, which is what makes a dark section in a
+// light page (and a light section in a dark page) work, not only a dark document.
+const lightThemeLines: string[] = [];
+for (const p of PALETTES) for (let i = 1; i <= 12; i++) if (colors[p][i] != null) lightThemeLines.push(`  --${p}-${i}: ${colors[p][i]};`);
+for (const g of ROLEGROUPS) for (const [k, v] of Object.entries(colors[g])) if (isScalarColor(v)) {
+  const line = `  --${g}-${k}: ${refToVar(v)};`;
+  lightLines.push(line); darkLines.push(line); lightThemeLines.push(line);
+}
+if (typeof colors.shadow_tint === "string") {
+  const line = `  --shadow-tint: ${refToVar(colors.shadow_tint)};`;
+  lightLines.push(line); darkLines.push(line); lightThemeLines.push(line);
+}
 /** A family plus its assigned fallback stack (DESIGN: family and fallback always travel together). */
 function fontStack(k: string, v: any): string {
   const s = String(v);
@@ -122,6 +150,10 @@ function fontStack(k: string, v: any): string {
   return fb ? `"${s}", ${fb}` : `"${s}"`;
 }
 for (const [k, v] of Object.entries(fams)) lightLines.push(`  --font-${k}: ${fontStack(k, v)};`);
+// Variable-font axes from any family that declares them (typography.axes.<family>.<tag>), so a variable
+// face renders at the brand instance rather than its fvar defaults.
+const axes: Record<string, unknown> = Object.assign({}, ...Object.values(typo.axes ?? {}).filter((v) => v && typeof v === "object"));
+for (const [tag, v] of Object.entries(axes)) if (isScalarColor(v)) lightLines.push(`  --axis-${tag.toLowerCase()}: ${v};`);
 // The DESIGN templates name letter-spacing `letter_spacing` (web: an em string, mobile: a number in pt/sp);
 // `tracking` is still read for older docs. Every role gets every var, "0" included, so the CSS never
 // has to guess which roles define one.
@@ -134,17 +166,26 @@ for (const [k, r] of Object.entries(roles)) {                              // ty
     if (role.line_height != null) lightLines.push(`  --leading-${n}: ${role.line_height};`);
     if (role.weight != null) lightLines.push(`  --weight-${n}: ${refToVar(role.weight)};`);
     if (trackingOf(role) != null) lightLines.push(`  --tracking-${n}: ${trackingOf(role)};`);
+    // Bind the role to its family, so --text-<role> never renders in whatever face is inherited.
+    // font_family is the unresolved ref "{typography.families.body}" or the literal family name.
+    if (role.font_family != null) {
+      const fm = /families\.([A-Za-z0-9_-]+)/.exec(String(role.font_family));
+      const fk = fm ? fm[1] : Object.entries(fams).find(([, v]) => v === role.font_family)?.[0];
+      if (fk && fk in fams) lightLines.push(`  --font-role-${n}: var(--font-${fk});`);
+    }
+    for (const pre of ["text", "leading", "weight", "tracking", "font-role"]) alias(`--${pre}-${dashKey(k)}`, `--${pre}-${n}`);
   }
 }
-if (typo.measure_max_ch != null) lightLines.push(`  --measure: ${typo.measure_max_ch}ch;`);
+if (typo.measure_max_ch != null) { lightLines.push(`  --measure: ${typo.measure_max_ch}ch;`); alias("--measure-max", "--measure"); }
 for (const [k, v] of Object.entries(typo.font_features ?? {})) lightLines.push(`  --font-features-${k}: ${v};`);
-for (const [k, v] of Object.entries(spacing)) lightLines.push(`  --space-${ck(k)}: ${typeof v === "number" ? `${v}${spaceUnit}` : v};`);
-for (const [k, v] of Object.entries(radii)) lightLines.push(`  --radius-${ck(k)}: ${dim(v)};`);
-for (const [k, v] of Object.entries(elev)) lightLines.push(`  --elev-${k}: ${refToVar(v)};`);
+for (const [k, v] of Object.entries(spacing)) { lightLines.push(`  --space-${ck(k)}: ${typeof v === "number" ? `${v}${spaceUnit}` : v};`); alias(`--space-${dashKey(k)}`, `--space-${ck(k)}`); }
+for (const [k, v] of Object.entries(radii)) { lightLines.push(`  --radius-${ck(k)}: ${dim(v)};`); alias(`--radius-${dashKey(k)}`, `--radius-${ck(k)}`); }
+for (const [k, v] of Object.entries(elev)) { lightLines.push(`  --elev-${k}: ${refToVar(v)};`); alias(`--elev-${dashKey(k)}`, `--elev-${k}`); }
 if (sep.border_width != null) lightLines.push(`  --border-width: ${dim(sep.border_width)};`);
 // Everything else the CSS needs from DESIGN, so nothing is hand-transcribed (QA Gate D).
 const isScalar = (v: any) => typeof v === "string" || typeof v === "number";
-for (const [k, v] of Object.entries(d.spacing?.roles ?? {})) if (isScalar(v)) lightLines.push(`  --space-${kebab(k)}: ${refToVar(v)};`);
+// Keys starting with "_" are records for humans (breakpoints._freeze_points), never values.
+for (const [k, v] of Object.entries(d.spacing?.roles ?? {})) if (!k.startsWith("_") && isScalar(v)) { lightLines.push(`  --space-${kebab(k)}: ${refToVar(v)};`); alias(`--${kebab(k)}`, `--space-${kebab(k)}`); }
 for (const [k, v] of Object.entries(d.radius?.components ?? {})) if (isScalar(v)) lightLines.push(`  --radius-${kebab(k)}: ${refToVar(v)};`);
 for (const [k, v] of Object.entries(d.elevation?.components ?? {})) if (isScalar(v)) lightLines.push(`  --elev-${kebab(k)}: ${refToVar(v)};`);
 const motionMult = Number(motion.profile_modifiers?.[d.profiles?.motion ?? "default"]?.duration_multiplier ?? 1);
@@ -153,9 +194,15 @@ for (const [k, v] of Object.entries(motion.duration ?? {})) {
   lightLines.push(`  --duration-${k}: ${Number.isFinite(ms) ? `${Math.round(ms * motionMult)}ms` : v};`);
 }
 for (const [k, v] of Object.entries(motion.easing ?? {})) lightLines.push(`  --ease-${k}: ${v};`);
-for (const [k, v] of Object.entries(d.containers ?? {})) if (k !== "default" && isScalar(v)) lightLines.push(`  --container-${ck(k)}: ${dim(v)};`);
+for (const [k, v] of Object.entries(d.containers ?? {})) if (k !== "default" && !k.startsWith("_") && isScalar(v)) {
+  // a container whose value names another container key is a pointer: var() it, never `max-width: full`
+  const points = typeof v === "string" && v !== k && d.containers[v] != null;
+  lightLines.push(`  --container-${ck(k)}: ${points ? `var(--container-${ck(v)})` : dim(v)};`);
+  alias(`--container-${dashKey(k).replace(/_/g, "-")}`, `--container-${ck(k)}`);
+}
 const containerDefault = d.options?.container_width ?? d.containers?.default;
 if (containerDefault != null && d.containers?.[containerDefault] != null) lightLines.push(`  --container-default: var(--container-${ck(containerDefault)});`);
+for (const [k, v] of Object.entries(d.breakpoints ?? {})) if (!k.startsWith("_") && isScalar(v)) lightLines.push(`  --bp-${ck(k)}: ${dim(v)};`);
 // section_padding.<kind>.<profile>.<device> (template) or .<kind>.<device> (already resolved)
 const padProfile = d.profiles?.section_padding ?? "default";
 for (const [kind, v] of Object.entries<any>(d.section_padding ?? {})) {
@@ -202,10 +249,49 @@ for (const g of ROLEGROUPS) {
 }
 for (const [path, v] of Object.entries(d.colors_dark_overrides ?? {})) darkLines.push(`  --${String(path).replace(/^colors\./, "").replace(/\./g, "-")}: ${refToVar(v)};`);
 
+// ── Tiers: one @media (min-width: breakpoints.<tier>) :root block per tier ─────────────────────
+// A role's size_<tier> overrides --text-<role>; a spacing role X_<tier> whose X_desktop sibling exists
+// overrides --space-X-desktop; a container key <base>_<tier> overrides --container-<base>. So a value can
+// keep growing above the width where its clamp() freezes without any component changing. The tier is the
+// LAST "_" segment and must be a declared breakpoint; size_<tier> with no such breakpoint is warned about.
+const bps = d.breakpoints ?? {};
+const tierLines = new Map<string, string[]>();
+const addTier = (tier: string, line: string) => tierLines.set(tier, [...(tierLines.get(tier) ?? []), line]);
+for (const [k, v] of Object.entries<any>(d.containers ?? {})) {
+  const m = /^(.+)_(\w+)$/.exec(k);
+  if (!m || !isScalar(v) || !(m[1] in d.containers) || bps[m[2]] == null || m[2].startsWith("_")) continue;
+  addTier(m[2], `    --container-${ck(m[1])}: ${dim(v)};`);
+}
+for (const [k, v] of Object.entries<any>(d.spacing?.roles ?? {})) {
+  const m = /^(.+)_(\w+)$/.exec(k);
+  if (!m || !isScalar(v) || !(`${m[1]}_desktop` in d.spacing.roles) || bps[m[2]] == null || m[2].startsWith("_")) continue;
+  addTier(m[2], `    --space-${kebab(`${m[1]}_desktop`)}: ${refToVar(v)};`);
+}
+for (const [k, r] of Object.entries<any>(roles)) {
+  if (!r || typeof r !== "object") continue;
+  for (const [field, val] of Object.entries<any>(r)) {
+    const m = /^size_(.+)$/.exec(field);
+    if (!m || val == null) continue;
+    if (bps[m[1]] == null) { console.warn(`  ! role "${k}" declares ${field} but breakpoints.${m[1]} does not exist, skipped`); continue; }
+    addTier(m[1], `    --text-${ck(k)}: ${typeof val === "number" ? `${val}px` : val};`);
+  }
+}
+const tierCss = [...tierLines.entries()]
+  .sort((a, b) => parseFloat(String(bps[a[0]])) - parseFloat(String(bps[b[0]])))
+  .map(([t, lines]) => `@media (min-width: ${dim(bps[t])}) {\n  :root {\n${lines.join("\n")}\n  }\n}\n`)
+  .join("\n");
+
+// Legacy aliases last in :root, skipping any name a current token already defines.
+const defined = new Set(lightLines.map((l) => l.trim().split(":")[0]));
+const legacyLines = [...legacy].filter(([o, c]) => !defined.has(o) && defined.has(c)).map(([o, c]) => `  ${o}: var(${c});`);
 const tokensCss =
   `/* Generated from ${designPath.split("/").pop()} by export-tokens.ts — do not hand-edit. */\n` +
-  `:root {\n${lightLines.join("\n")}\n}\n\n` +
-  `[data-theme="dark"] {\n${darkLines.join("\n")}\n}\n`;
+  `:root {\n${lightLines.join("\n")}\n` +
+  (legacyLines.length ? `\n  /* Deprecated names from older exporters (v1.21 and project copies of it), kept so existing CSS keeps working.\n     Each points at its current name; move to the current name, these will be removed in a major release. */\n${legacyLines.join("\n")}\n` : "") +
+  `}\n\n` +
+  `[data-theme="dark"] {\n${darkLines.join("\n")}\n}\n\n` +
+  `[data-theme="light"] {\n${lightThemeLines.join("\n")}\n}\n` +
+  (tierCss ? `\n${tierCss}` : "");
 writeFileSync(join(outDir, "tokens.css"), tokensCss);
 
 // ── theme.css (Tailwind v4) ─────────────────────────────────────────────
@@ -214,8 +300,21 @@ for (const p of PALETTES) for (let i = 1; i <= 12; i++) if (colors[p][i] != null
 for (const g of ROLEGROUPS) for (const [k, v] of Object.entries(colors[g])) if (isScalarColor(v)) themeLines.push(`  --color-${g}-${k}: var(--${g}-${k});`);
 for (const k of Object.keys(fams)) themeLines.push(`  --font-${k}: var(--font-${k});`);
 for (const [k, r] of Object.entries(roles)) if (r && typeof r === "object" && (r as any).size != null) themeLines.push(`  --text-${ck(k)}: var(--text-${ck(k)});`);
+// Tailwind v4's font-weight namespace, so a role's weight reaches utilities next to its size.
+for (const [k, r] of Object.entries(roles)) if (r && typeof r === "object" && (r as any).weight != null) themeLines.push(`  --font-weight-${ck(k)}: var(--weight-${ck(k)});`);
 for (const k of Object.keys(radii)) themeLines.push(`  --radius-${ck(k)}: var(--radius-${ck(k)});`);
 for (const k of Object.keys(spacing)) themeLines.push(`  --spacing-${ck(k)}: var(--space-${ck(k)});`);
+// Deprecated legacy utility names (a dot in a key became "-"), so existing class names keep working.
+const themeNames = new Set(themeLines.map((l) => l.trim().split(":")[0]));
+const themeLegacy: string[] = [];
+const themeAlias = (name: string, target: string) => { if (!themeNames.has(name)) { themeNames.add(name); themeLegacy.push(`  ${name}: var(${target});`); } };
+for (const [k, r] of Object.entries<any>(roles)) if (r && typeof r === "object" && dashKey(k) !== ck(k)) {
+  if (r.size != null) themeAlias(`--text-${dashKey(k)}`, `--text-${ck(k)}`);
+  if (r.weight != null) themeAlias(`--font-weight-${dashKey(k)}`, `--weight-${ck(k)}`);
+}
+for (const k of Object.keys(radii)) if (dashKey(k) !== ck(k)) themeAlias(`--radius-${dashKey(k)}`, `--radius-${ck(k)}`);
+for (const k of Object.keys(spacing)) if (dashKey(k) !== ck(k)) themeAlias(`--spacing-${dashKey(k)}`, `--space-${ck(k)}`);
+if (themeLegacy.length) themeLines.push("  /* Deprecated names from older exporters (v1.21 and project copies of it); use the names above. */", ...themeLegacy);
 const themeCss =
   `/* Tailwind v4 theme — @import "./tokens.css" first so the vars resolve (and switch in dark). */\n` +
   `@import "tailwindcss";\n@import "./tokens.css";\n\n@theme inline {\n${themeLines.join("\n")}\n}\n`;
@@ -242,6 +341,6 @@ for (const [k, v] of Object.entries(radii)) dt.radius[ck(k)] = { $type: "dimensi
 writeFileSync(join(outDir, "tokens.json"), JSON.stringify(dt, null, 2));
 
 console.log(`✓ exported design tokens from ${designPath.split("/").pop()} → ${outDir}`);
-console.log(`  tokens.css   (${lightLines.length} CSS vars incl. ${componentVars} component vars, light + ${darkLines.length} dark)`);
+console.log(`  tokens.css   (${lightLines.length} CSS vars incl. ${componentVars} component vars, light + ${darkLines.length} dark${legacyLines.length ? `, + ${legacyLines.length} deprecated legacy aliases` : ""})`);
 console.log(`  theme.css    (Tailwind v4 @theme — ${themeLines.length} mapped tokens)`);
 console.log(`  tokens.json  (DTCG: ${PALETTES.length} palettes, ${Object.keys(fams).length} fonts, ${Object.keys(dt.fontSize).length} type roles, ${Object.keys(spacing).length} spacing, ${Object.keys(radii).length} radii)`);

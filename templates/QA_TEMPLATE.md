@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # QA_TEMPLATE.md — Premium acceptance checklist (the "done" gate)
-# Version: 1.23.0
+# Version: 1.23.1
 # Scope: the AI runs this against its OWN build before declaring done.
 # Companions: DESIGN_TEMPLATE_*.md (tokens, contrast targets, effects registry),
 #            SEO_TEMPLATE.md (discoverability), SPEC_TEMPLATE_*.md (the copy that must
@@ -36,7 +36,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 file_role: "qa"   # information | design | spec | project | content | seo | qa | decisions
 
 # The shipped checkers. Run these instead of writing your own; a hand-written checker is only for a
@@ -45,7 +45,7 @@ file_role: "qa"   # information | design | spec | project | content | seo | qa |
 # and tools/doc-sync/check-drift.mjs. Mirrors PROJECT.md `workflow.qa_harness` / `workflow.doc_sync`.
 tools:
   qa_harness: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT> [--root .] [--out qa] [--only E,E2,A,B,B2] [--paths /] [--expect <css>] [--shots full] [--concurrency 4]"   # default: runs Gates E, E2, A (motion part), B (lab) and B2; writes qa/results/<date>.{json,md} + qa/viewports/<date>/; needs Playwright as a project devDependency
-  doc_sync: "node <skill>/reference/doc-sync/check-drift.mjs [--root .] [--since <ref>] [--src ...] [--keys ...] [--min 12] [--json]"   # default: Gate H
+  doc_sync: "node <skill>/reference/doc-sync/check-drift.mjs [--root .] [--since <ref>] [--src ...] [--keys ...] [--min 12] [--reverse] [--json]"   # default: Gate H
 
 # Hard thresholds the build is measured against (machine-readable).
 # Every value below is a template default; tune only with a DECISIONS.md entry.
@@ -162,7 +162,8 @@ gates:
     checks:
       - "copy drift: SPEC/CONTENT strings under the copy keys missing from the code"
       - "code changed with no doc update"
-      - "token export older than DESIGN.md"
+      - "token export that differs from a fresh export of DESIGN.md (re-exported into a temp dir with the project's exporter; timestamp only when no exporter is found, and said so)"
+      - "copy in code, not in docs (opt-in: --reverse, or PROJECT.md doc_sync.reverse: true): user-visible strings in JSX, copy attributes and copy-key fields that no SPEC / CONTENT / SEO / INFORMATION doc holds"
     copy_keys: "PROJECT.md `copy_keys:` when set; else eyebrow, headline, subhead, heading, title, tagline, one_line, intro_line, trust_marker, body, copy, description, caption, detail, summary, bio, quote, cta, label, alt, accessibility_label, placeholder, helper, helper_text, legal_consent, sign_up_link, yearly_discount_label, question, answer, q, a, message, banner, empty_message, error_message, success_message, if_denied_settings_link, reason, required, min_length, copied, saved, sent, deleted, subscribed, syncing, generic, network, network_slow, not_found, permission_denied, rate_limited, quota_near_limit, unsaved_changes, subject, preview, body_template"
     docs_in_repo: true          # PROJECT.md and its sibling docs live inside the project's git repo (root or docs/)
 
@@ -260,7 +261,7 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 - [ ] **`node <skill>/reference/doc-sync/check-drift.mjs --root .` exits 0** (add `--since <ref>`, e.g. `--since main`, to scope it to the change), **or every finding is listed in the QA results with its reason** (e.g. "copy intentionally pending: SPEC holds the approved line, the component ships it next release"). An unexplained finding fails the gate.
 - [ ] **Copy:** every SPEC / SPEC_MOBILE / CONTENT string under the copy keys (PROJECT.md `copy_keys:`, else the defaults in `gates.doc_sync.copy_keys`) appears verbatim in the code. A copy change made in code without the same change in SPEC/CONTENT fails here. Fix the side that is wrong: a new line the human approved goes into SPEC/CONTENT in the same change (status marker per PROJECT.md §Status protocol); an unapproved rewording in code goes back to the SPEC line.
 - [ ] **Code changed, docs did not:** every flagged code change has its owning doc updated (copy → SPEC/CONTENT, visual system → DESIGN, locked choice or reversal → DECISIONS, brand and voice → INFORMATION, SEO → SEO, new check or result → QA), or the finding says why none was needed (e.g. a refactor with no visible change).
-- [ ] **Token export fresh:** the exported tokens are not older than DESIGN.md. A token change re-runs the export (`npm run export` / `export-tokens.ts`) in the same change.
+- [ ] **Token export fresh:** the exported tokens match a fresh export of DESIGN.md (Gate H re-exports into a temp dir and compares content). A token change re-runs the export (`npm run export` / `export-tokens.ts`) in the same change.
 - [ ] **Docs tracked:** PROJECT.md and its sibling docs live inside the project's git repo (root or `docs/`), and the doc edits are in the same commit as the code they describe.
 
 ---
@@ -285,7 +286,7 @@ A build is **done** only when **every** gate below is ✅. Run after building; f
 6. **Docs before done.** Gate H runs at the end of every change. A change whose owning doc still describes the old version is not done, whatever the other gates say.
 
 # Versioning
-`template_version: 1.23.0`. Per-project `QA.md` instances should preserve this field.
+`template_version: 1.23.1`. Per-project `QA.md` instances should preserve this field.
 
 # Source
 Acceptance bars synthesized from 2026 premium-launch standards (WCAG 2.2 AA / axe zero-critical, Core Web Vitals budget, JSON-LD/AEO, token fidelity), with the viewport matrix and iOS Safari behaviour from research.md §F.5 and the runtime budgets and effect cost ladder from research.md §I.14. Background findings F6, F9 and F10 are in `docs/SYSTEM_RESEARCH.md` (in the premium.md repo, the release zip and the skill bundle). **This file is the single owner of every numeric performance budget and of the viewport matrix**; DESIGN.md and PROJECT.md point here. Only the contrast targets live in `DESIGN.md §Accessibility`, referenced above as `{design.a11y.contrast}`.

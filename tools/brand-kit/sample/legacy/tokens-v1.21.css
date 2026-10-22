@@ -1,0 +1,81 @@
+/* Generated from DESIGN.md by export-tokens.ts — do not hand-edit. */
+:root {
+  --neutral-1: oklch(0.99 0.005 287);
+  --neutral-6: oklch(0.83 0.006 287);
+  --neutral-12: oklch(0.22 0.0096 287);
+  --surface-canvas: var(--neutral-1);
+  --text-primary: var(--neutral-12);
+  --border-subtle: var(--neutral-6);
+  --shadow-tint: var(--neutral-12);
+  --font-body: "Manrope", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --axis-wght: 500;
+  --text-heading-5-5xl: clamp(4.25rem, 1.2rem + 13.5vw, 13.375rem);
+  --leading-heading-5-5xl: 0.95;
+  --tracking-heading-5-5xl: -0.036em;
+  --weight-heading-5-5xl: 500;
+  --font-role-heading-5-5xl: var(--font-body);
+  --text-body-base: 1rem;
+  --leading-body-base: 1.5;
+  --weight-body-base: 400;
+  --font-role-body-base: var(--font-body);
+  --space-1: 4px;
+  --space-3: 12px;
+  --space-6: 24px;
+  --space-10: 40px;
+  --space-0-5: 2px;
+  --space-1-5: 6px;
+  --radius-none: 0px;
+  --radius-md: 8px;
+  --elev-1: 0 1px 2px var(--shadow-tint);
+  --bp-sm: 640px;
+  --bp-3xl: 1920px;
+  --bp-5xl: 3440px;
+  --container-prose: 65ch;
+  --container-full: 100%;
+  --container-full-cap: 2560px;
+  --container-full-cap-5xl: 3200px;
+  --container-default: var(--container-full);
+  --text-to-icon-inline: var(--space-1-5);
+  --container-padding-mobile: var(--space-3);
+  --container-padding-desktop: var(--space-6);
+  --container-padding-ramp-vw: 1.575;
+  --container-padding-3xl: var(--space-10);
+  --column-offset-subtle: 1lh;
+  --ui-scale-desktop: 1;
+  --ui-scale-3xl: 1.25;
+  --measure-max: 65ch;
+}
+
+[data-theme="dark"] {
+  --neutral-1: oklch(0.17 0.0099 287);
+  --neutral-6: oklch(0.37 0.0087 287);
+  --neutral-12: oklch(0.93 0.0054 287);
+  --surface-canvas: var(--neutral-1);
+  --text-primary: var(--neutral-12);
+  --border-subtle: var(--neutral-6);
+  --shadow-tint: var(--neutral-12);
+}
+
+[data-theme="light"] {
+  --neutral-1: oklch(0.99 0.005 287);
+  --neutral-6: oklch(0.83 0.006 287);
+  --neutral-12: oklch(0.22 0.0096 287);
+  --surface-canvas: var(--neutral-1);
+  --text-primary: var(--neutral-12);
+  --border-subtle: var(--neutral-6);
+  --shadow-tint: var(--neutral-12);
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --container-padding-desktop: var(--space-10);
+    --ui-scale-desktop: 1.25;
+    --text-heading-5-5xl: 17.9375rem;
+  }
+}
+
+@media (min-width: 3440px) {
+  :root {
+    --container-full-cap: 3200px;
+  }
+}

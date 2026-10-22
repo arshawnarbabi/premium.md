@@ -59,33 +59,91 @@ trap 'rm -rf "$TMP"' EXIT
     || { cat dark/tokens.css; echo "export-tokens dropped a dark role override"; exit 1; }
   node -e 'const t=require(process.argv[1]); const bad=[]; (function w(o,p){for(const k in o){if(k.startsWith("$"))continue; if(k.includes("."))bad.push(p+k); if(o[k]&&typeof o[k]==="object")w(o[k],p+k+"/")}})(t,""); if(bad.length){console.log(bad);process.exit(1)}' "$TMP/dark/tokens.json" \
     || { echo "export-tokens wrote a DTCG token name containing a dot"; exit 1; }
+  # Upgrade compatibility: for a DESIGN.md using every shape whose name changed after v1.21 (dotted
+  # role and step keys, unprefixed spacing roles, underscore containers, tiers, breakpoints, axes),
+  # every property the v1.21-era exporter wrote must exist with the same computed value in every scope.
+  node "$REF/brand-kit/scripts/export-tokens.ts" --design "$KIT/sample/legacy/DESIGN.md" --out "$TMP/legacy" > /dev/null
+  node "$REF/brand-kit/scripts/compare-tokens.ts" --old "$KIT/sample/legacy/tokens-v1.21.css" --new "$TMP/legacy/tokens.css" > compat.txt \
+    || { cat compat.txt; echo "export-tokens dropped or changed a v1.21 token"; exit 1; }
+  grep -q 'missing: 0' compat.txt && grep -q 'changed value: 0 ' compat.txt || { cat compat.txt; exit 1; }
+  if grep -nE -- '--[a-z0-9_-]*\.[0-9]' "$TMP/legacy/tokens.css" "$TMP/legacy/theme.css"; then echo "a legacy alias contains a dot"; exit 1; fi
+  for v in $(grep -oE -- '^ *--[A-Za-z0-9_-]+' "$KIT/sample/legacy/theme-v1.21.css" | tr -d ' ' | sort -u); do
+    grep -q -- "^ *$v:" "$TMP/legacy/theme.css" || { echo "theme.css dropped v1.21 name $v"; exit 1; }
+  done
+  # the comparer itself must catch a dropped alias and a changed value
+  grep -v -- '--container-padding-desktop: var(' "$TMP/legacy/tokens.css" > dropped.css
+  if node "$REF/brand-kit/scripts/compare-tokens.ts" --old "$KIT/sample/legacy/tokens-v1.21.css" --new dropped.css > /dev/null; then echo "compare-tokens missed a dropped property"; exit 1; fi
+  sed 's/--space-6: 24px/--space-6: 25px/' "$TMP/legacy/tokens.css" > changed.css
+  if node "$REF/brand-kit/scripts/compare-tokens.ts" --old "$KIT/sample/legacy/tokens-v1.21.css" --new changed.css > /dev/null; then echo "compare-tokens missed a changed value"; exit 1; fi
 ) || { echo "Smoke test FAILED: a bundled brand-kit script does not run standalone"; exit 1; }
 
 # qa-harness: --help needs neither Playwright nor a site, so it proves the bundled file loads.
 node "$REF/qa-harness/run-qa.mjs" --help | grep -q -- '--url' \
   || { echo "Smoke test FAILED: bundled qa-harness/run-qa.mjs --help"; exit 1; }
 
-# doc-sync on a tiny fixture: clean must exit 0; a copy edit made only in code, and a code change
-# with no doc change, must each exit 1.
-( F="$TMP/drift-fixture"; mkdir -p "$F/src" "$F/design-tokens"; cd "$F"
+# doc-sync on a tiny fixture: clean must exit 0; a copy edit made only in code, a code change with no doc
+# change, a token export that no longer matches DESIGN.md, and copy that is only in code must each exit 1.
+( F="$TMP/drift-fixture"; mkdir -p "$F/src/dev"; cd "$F"
+  CD="$REF/doc-sync/check-drift.mjs"
   printf -- '---\nfile_role: "project"\n---\n# Project\n' > PROJECT.md
-  printf -- '---\nfile_role: "design"\n---\n# Design\n' > DESIGN.md
-  printf -- '---\npages:\n  home:\n    hero:\n      headline: "Coffee roasted every Thursday"\n      copy: "Small batches, shipped the same day."\n      cta: { label: "<Order now>" }\n---\n# Spec\n' > SPEC.md
-  printf 'export const Hero = () => <><h1>Coffee roasted every\n  Thursday</h1><p>Small batches, shipped the same day.</p></>;\n' > src/Hero.tsx
-  sleep 1; printf '/* Generated from DESIGN.md by export-tokens.ts */\n:root {}\n' > design-tokens/tokens.css
-  node "$REF/doc-sync/check-drift.mjs" --root . > clean.txt || { cat clean.txt; echo "clean fixture reported drift"; exit 1; }
-  grep -q 'COPY    ok: 2 strings checked' clean.txt || { cat clean.txt; echo "default copy keys did not pick up headline and copy"; exit 1; }
+  printf -- '---\nfile_role: "design"\nradius: { scale: { md: 8 } }\n---\n# Design\n' > DESIGN.md
+  printf -- '---\npages:\n  home:\n    hero:\n      headline: "Coffee roasted every Thursday"\n      copy: "Small batches, shipped the same day."\n      cta: { label: "<Order now>" }\n    later:\n      fresh: "Roasted fresh in small lots every week"\n      order: "Order before noon on Wednesday"\n      ship: "Do you ship outside the city?"\n      yes: "Yes, anywhere in the country."\n---\n# Spec\n' > SPEC.md
+  # the shipped copy is split across a "+" concatenation over two lines: the forward check must join it
+  printf 'export const Hero = () => <><h1>Coffee roasted every\n  Thursday</h1><p>{"Small batches, " +\n  "shipped the same day."}</p></>;\n' > src/Hero.tsx
+  node "$REF/brand-kit/scripts/export-tokens.ts" --design DESIGN.md --out design-tokens > /dev/null
+  node "$CD" --root . > clean.txt || { cat clean.txt; echo "clean fixture reported drift"; exit 1; }
+  grep -q 'COPY    ok: 2 strings checked' clean.txt || { cat clean.txt; echo "default copy keys did not pick up headline and copy, or a concatenation was not joined"; exit 1; }
+  grep -q 'TOKENS  ok: 3 generated file(s); 3 verified by content' clean.txt || { cat clean.txt; echo "token exports not verified by content"; exit 1; }
   sed -i.bak 's/every/each/' src/Hero.tsx && rm src/Hero.tsx.bak
-  if node "$REF/doc-sync/check-drift.mjs" --root . > copy.txt; then cat copy.txt; echo "copy drift not caught"; exit 1; fi
+  if node "$CD" --root . > copy.txt; then cat copy.txt; echo "copy drift not caught"; exit 1; fi
   grep -q 'COPY    DRIFT' copy.txt || { cat copy.txt; exit 1; }
   sed -i.bak 's/each/every/' src/Hero.tsx && rm src/Hero.tsx.bak
+  # TOKENS by content: a prose-only DESIGN.md edit made after the export is not drift (by timestamp it was)
+  SUMS="$(shasum design-tokens/*)"
+  sleep 1; printf '\nProse only, no token changed.\n' >> DESIGN.md
+  node "$CD" --root . > prose.txt || { cat prose.txt; echo "a prose-only DESIGN edit was reported as token drift"; exit 1; }
+  if node "$CD" --root . --tokens-mtime > mtime.txt; then cat mtime.txt; echo "--tokens-mtime did not flag the newer DESIGN.md"; exit 1; fi
+  grep -q 'could not verify, timestamp only' mtime.txt || { cat mtime.txt; exit 1; }
+  sed -i.bak 's/md: 8/md: 12/' DESIGN.md && rm DESIGN.md.bak
+  if node "$CD" --root . > tok.txt; then cat tok.txt; echo "a changed token was not caught"; exit 1; fi
+  grep -q 'design-tokens/tokens.css: differs from a fresh export' tok.txt || { cat tok.txt; exit 1; }
+  test "$SUMS" = "$(shasum design-tokens/*)" || { echo "check-drift wrote into the project's token exports"; exit 1; }
+  node "$REF/brand-kit/scripts/export-tokens.ts" --design DESIGN.md --out design-tokens > /dev/null
+  # no exporter for a file: falls back to timestamps and says so
+  printf '/* Generated from DESIGN.md by tools/missing-exporter.ts */\n:root {}\n' > design-tokens/extra.css
+  node "$CD" --root . > fallback.txt || { cat fallback.txt; exit 1; }
+  grep -q 'extra.css: could not verify, timestamp only (no exporter found' fallback.txt || { cat fallback.txt; echo "no-exporter fallback not reported"; exit 1; }
+  # REVERSE: copy in code that no doc holds. Matched (inline tags joined, "a" + "b" joined) and ignored
+  # strings (className, URL, import, comment, control definition, dev and test files) must not be listed.
+  cat > src/More.tsx <<'TSX'
+import { thing } from "./a-module-path-that-is-long";
+// A comment that says something long enough to count.
+export const More = ({ n }: { n: number }) => (
+  <section className="grid grid-cols-2 gap-4 md:grid-cols-3">
+    <p>Roasted <em>fresh</em> in small lots every week</p>
+    <a href="https://example.com/a/long/path" title={"Order " + "before noon on Wednesday"}>Order</a>
+    <p>{`${n} bags left this week`}</p>
+    <p>Free delivery on orders over ten dollars</p>
+  </section>
+);
+export const FAQ = [{ q: "Do you ship outside the city?", a: "Yes, anywhere in the " + "country." }];
+export const SLIDER = { label: "Grain amount in the hero", min: 0, max: 1, step: 0.1 };
+TSX
+  printf 'export const P = () => <p>Developer panel text that never ships</p>;\n' > src/dev/Panel.tsx
+  printf 'it("works", () => <p>A test string that never ships</p>);\n' > src/More.test.tsx
+  if node "$CD" --root . --reverse > rev.txt; then cat rev.txt; echo "copy only in code not caught"; exit 1; fi
+  grep -q '^REVERSE DRIFT: .* 2 in code, not in docs' rev.txt || { cat rev.txt; echo "reverse check: wrong findings"; exit 1; }
+  grep -q 'src/More.tsx:8 "Free delivery on orders over ten dollars"' rev.txt || { cat rev.txt; exit 1; }
+  grep -q 'src/More.tsx:7 "bags left this week"' rev.txt || { cat rev.txt; exit 1; }
+  grep -q '^REVERSE off' clean.txt || { cat clean.txt; echo "reverse check should be opt-in"; exit 1; }
+  rm src/More.tsx src/More.test.tsx src/dev/Panel.tsx design-tokens/extra.css
   git init -q . && git add -A && git -c user.name=smoke -c user.email=smoke@example.com commit -qm docs+code
-  node "$REF/doc-sync/check-drift.mjs" --root . > git-clean.txt || { cat git-clean.txt; echo "committed fixture reported drift"; exit 1; }
+  node "$CD" --root . > git-clean.txt || { cat git-clean.txt; echo "committed fixture reported drift"; exit 1; }
   printf 'export const More = 1;\n' > src/More.ts
-  if node "$REF/doc-sync/check-drift.mjs" --root . > git.txt; then cat git.txt; echo "code-without-doc change not caught"; exit 1; fi
+  if node "$CD" --root . > git.txt; then cat git.txt; echo "code-without-doc change not caught"; exit 1; fi
   grep -q 'GIT     DRIFT' git.txt || { cat git.txt; exit 1; }
 ) || { echo "Smoke test FAILED: bundled doc-sync/check-drift.mjs"; exit 1; }
 
-echo "Built skill reference at: $REF (smoke test passed: brand-kit, qa-harness and doc-sync run on node $NODE_VERSION)"
+echo "Built skill reference at: $REF (smoke test passed: brand-kit incl. v1.21 token compatibility, qa-harness and doc-sync incl. content token check and reverse copy check, on node $NODE_VERSION)"
 echo "Files:"
 ( cd "$REF" && find . -type f | sort | sed 's/^/  /' )

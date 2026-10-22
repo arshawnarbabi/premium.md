@@ -1,7 +1,7 @@
 # Research — Optimal AI-Agent Workflow for Designing Premium Websites
 
 > **Status:** ✅ RESEARCH COMPLETE. 12 findings (§5), verdicts (§6), ranked recommendations + workflow (§7), next step (§8). Awaiting the user's pick of what to implement.
-> **Last updated:** research done against `premium.md` v1.8.1 (six templates at the time); its recommendations shipped in v1.9.0 to v1.15.0 (§9). The system is now **v1.23.0 with ten templates**: §1 below is the v1.8.1 baseline, kept as history, and the templates and `research.md` are the current record.
+> **Last updated:** research done against `premium.md` v1.8.1 (six templates at the time); its recommendations shipped in v1.9.0 to v1.15.0 (§9). The system is now **v1.23.1 with ten templates**: §1 below is the v1.8.1 baseline, kept as history, and the templates and `research.md` are the current record.
 
 ---
 
@@ -21,7 +21,7 @@ This is a **living research log**. Its job: figure out what to **add to / change
 
 `premium.md` (GitHub: `arshawnarbabi/premium.md`, MIT) is a markdown template system that turns an AI agent into a reliable premium-grade product builder. A human fills ~30 brand-identity slots; everything else (design tokens, component specs, page patterns, voice rules, accessibility floors) is pre-decided based on what premium design teams do. Inspired by and extending **Google Labs' DESIGN.md** format.
 
-**The six template files at v1.8.1 (instantiated per project by dropping `_TEMPLATE`; v1.23.0 has ten, adding CONTENT, SEO, QA and DECISIONS):**
+**The six template files at v1.8.1 (instantiated per project by dropping `_TEMPLATE`; v1.23.1 has ten, adding CONTENT, SEO, QA and DECISIONS):**
 1. **`PROJECT.md`** — entry-point orchestration. Declares which sibling files exist + priority order, the tech stack, repo conventions, the **Interactive Population Protocol** (intake), and the **Cross-template consistency rules** (which shared values propagate where, on every update).
 2. **`INFORMATION.md`** — brand identity, audience personas (+ anti-personas), business model, voice principles, product features/non-features, social, SEO defaults. The "why/who." Shared web+mobile.
 3. **`DESIGN.md`** (web) — the visual system: colors (OKLCH, 12-step Radix-style), typography (8 roles, font-category-aware metrics), spacing, ~25 component specs, motion, **surface separation** (shadow/border/surface-tone, tunable), elevation, **Web surface scope** (marketing vs product app), accessibility (APCA + WCAG 2.2).

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.23.0
+# Version: 1.23.1
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -27,7 +27,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -2806,7 +2806,7 @@ npm run dev                              # review;  npm run build → static exp
 npm run export -- --root <your project> # docs→code: emit tokens.css + Tailwind v4 theme.css + DTCG tokens.json
 ```
 
-**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). Exported names are dot-safe: a scale key with a dot is written with an underscore (`spacing.scale.0.5` → `--space-0_5`, Tailwind `--spacing-0_5`, DTCG `spacing.0_5`), because a dot is invalid in a CSS custom-property name; reference it in code by that name. The export scripts need Node ≥ 22.18 and no `npm install` (only the viewer does). See `tools/brand-kit/README.md → Token export`. **A token change here re-runs the export in the same change** (commit DESIGN.md and the exported files together); QA Gate H (`check-drift.mjs`) fails when the export is older than DESIGN.md.
+**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). Exported names are dot-safe: a scale key with a dot is written with an underscore (`spacing.scale.0.5` → `--space-0_5`, Tailwind `--spacing-0_5`, DTCG `spacing.0_5`), because a dot is invalid in a CSS custom-property name; reference it in code by that name. The export scripts need Node ≥ 22.18 and no `npm install` (only the viewer does). See `tools/brand-kit/README.md → Token export`. **A token change here re-runs the export in the same change** (commit DESIGN.md and the exported files together); QA Gate H (`check-drift.mjs`) fails when the committed export differs from a fresh export of DESIGN.md.
 
 The kit has two sections:
 
@@ -2837,7 +2837,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.23.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.23.1`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 

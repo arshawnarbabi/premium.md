@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SEO_TEMPLATE.md — Discoverability: SEO + AEO + GEO
-# Version: 1.23.0
+# Version: 1.23.1
 # Scope: web. How the site gets FOUND (search) and CITED (AI answer engines).
 # Companions: INFORMATION.md (the entity — brand/people/social), SPEC.md (the pages),
 #            QA.md (validates the output). Basic per-page meta lives in INFORMATION.seo
@@ -28,7 +28,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 file_role: "seo"   # information | design | spec | project | content | seo | qa | decisions
 
 # ── Structured data (JSON-LD) — the machine-readable layer AI engines read to CITE you ──
@@ -133,7 +133,7 @@ If `crawl.llms_txt.enabled`, emit a `/llms.txt`: a markdown index of the site's 
 5. **Don't invent** stats, quotes, ratings, or citations — pull from CONTENT.md / INFORMATION.md or ask.
 
 # Versioning
-`template_version: 1.23.0`. Per-project `SEO.md` instances should preserve this field.
+`template_version: 1.23.1`. Per-project `SEO.md` instances should preserve this field.
 
 # Source
 The brand-agnostic *why* behind this template is **`research.md §X3 — Discoverability (SEO + AEO + GEO)`** (technical foundation, structured data/JSON-LD, E-E-A-T, answer-first/AEO, citability/GEO, freshness). Originating findings: F2, F5 and F14 (see `docs/SYSTEM_RESEARCH.md`, in the premium.md repo, the release zip and the skill bundle). Entity data lives in `INFORMATION.md`; page copy in `SPEC.md` (answer-first per `research §X2.10 + §X3.6`); this file is the operational discoverability layer over both.

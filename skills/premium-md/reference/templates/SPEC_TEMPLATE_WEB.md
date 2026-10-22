@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
-# Version: 1.23.0
+# Version: 1.23.1
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -42,7 +42,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -1197,7 +1197,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.23.0`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.23.1`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.23.0
+# Version: 1.23.1
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -24,7 +24,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -1282,7 +1282,7 @@ derivation:
   # finds DESIGN_MOBILE.md when there's no web DESIGN.md (mobile-only projects). Mobile-only surfaces
   # (haptics, gestures) aren't drawn, but colors / type / spacing / radius / elevation are. `npm run dev` to review.
   # A token change here re-runs the token export in the same change (`npm run export`, or the project's own
-  # native token step) and is committed with it; QA Gate H (`check-drift.mjs`) flags an export older than its DESIGN file.
+  # native token step) and is committed with it; QA Gate H (`check-drift.mjs`) flags an export whose content differs from a fresh export of its DESIGN file.
 
 ---
 
@@ -2005,7 +2005,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.23.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.23.1`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

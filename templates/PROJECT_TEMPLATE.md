@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.23.0
+# Version: 1.23.1
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -22,7 +22,7 @@
 # Rule: the AI NEVER writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, yours. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -208,6 +208,14 @@ repository:
 # Uncomment to override. The list REPLACES the defaults, so keep the ones you still use and add your
 # own, e.g. a project whose SPEC has `closing_line:` and `scope_line:` strings:
 # copy_keys: [headline, subhead, eyebrow, heading, body, copy, cta, label, title, description, question, answer, q, a, quote, closing_line, scope_line]
+#
+# doc_sync: OPTIONAL. The reverse copy check lists user-visible copy in the code that no SPEC / CONTENT /
+# SEO / INFORMATION doc holds ("in code, not in docs"). It is off unless `--reverse` is passed; turn it on
+# for every Gate H run here, and skip paths that are not shipped copy:
+# doc_sync:
+#   reverse: true
+#   reverse_ignore: ["components/devtools/"]      # path prefixes, relative to the project root
+#   reverse_keys: [closing_line]                  # extra object-field names that hold copy in code
 
 # ═══════════════════════════════════════════════════════════════
 # AI AGENT GROUND RULES (project-level constraints)
@@ -268,7 +276,7 @@ workflow:
   qa_harness: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT>"   # default: runs QA Gates E, E2, A (motion part), B (lab) and B2; writes qa/results/<date>.{json,md} + qa/viewports/<date>/. Needs Playwright as a project devDependency. Flags: [--root .] [--out qa] [--only E,E2,A,B,B2] [--paths /] [--expect <css>] [--shots full] [--concurrency 4]
   viewport_sweep: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT> --only E,E2"   # default: the harness's sweep of QA.md gates.viewport_matrix (QA Gate E + E2): overflow and edge asserts + screenshots per entry into qa/viewports/<date>/
   perf_trace: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT> --only B,B2; then a DevTools Performance trace on each real device in QA.md runtime.devices via remote debugging"   # default: lab pass from the harness; the real-device frame-time numbers for every effect (QA Gate B2), both scroll directions, are still required
-  doc_sync: "node <skill>/reference/doc-sync/check-drift.mjs --root ."   # default: QA Gate H: copy drift (SPEC/CONTENT strings under `copy_keys` missing from the code), code changed with no doc update, stale token export. Flags: [--since <ref>] [--src ...] [--keys ...] [--min 12] [--json]
+  doc_sync: "node <skill>/reference/doc-sync/check-drift.mjs --root ."   # default: QA Gate H: copy drift (SPEC/CONTENT strings under `copy_keys` missing from the code), code changed with no doc update, token export that differs from a fresh export (checked by content), and with --reverse copy in code that no doc holds. Flags: [--since <ref>] [--src ...] [--keys ...] [--min 12] [--reverse] [--json]
 
   ai_collaboration_pattern:
     # How the human + AI typically work together on this project. Every workflow ends with the doc-sync
@@ -873,7 +881,7 @@ When the AI fills any field on the left, it also fills the propagation targets w
 
 After any such change, say which sibling documents you updated. If you update one document and its siblings would now be stale, that is a bug — fix all of them in the same pass.
 
-**The same continuous rule covers code ↔ doc, not only doc ↔ doc.** The table keeps the docs in agreement with each other; the "Docs ↔ code" row and `agent_constraints.must` → "The docs move with the code" keep them in agreement with the build. A change that starts in code (copy edited in a component, a token nudged in CSS, a locked choice undone in a commit) goes back into its owning doc in the same change, with its status marker, and from there through the rows above; a change that starts in a doc is built in the same change. A doc that still describes the old version after the code moved on is the same bug as a stale sibling. `check-drift.mjs` (`workflow.doc_sync`, QA Gate H) checks the code side mechanically: SPEC/CONTENT copy missing from the code, code changed with no doc update, a token export older than DESIGN.md.
+**The same continuous rule covers code ↔ doc, not only doc ↔ doc.** The table keeps the docs in agreement with each other; the "Docs ↔ code" row and `agent_constraints.must` → "The docs move with the code" keep them in agreement with the build. A change that starts in code (copy edited in a component, a token nudged in CSS, a locked choice undone in a commit) goes back into its owning doc in the same change, with its status marker, and from there through the rows above; a change that starts in a doc is built in the same change. A doc that still describes the old version after the code moved on is the same bug as a stale sibling. `check-drift.mjs` (`workflow.doc_sync`, QA Gate H) checks the code side mechanically: SPEC/CONTENT copy missing from the code, code changed with no doc update, a token export that no longer matches DESIGN.md.
 
 ## Edge cases
 
@@ -964,7 +972,7 @@ Every workflow ends with the same doc-sync step (QA Gate H), so keep it when you
 
 # Versioning
 
-`template_version: 1.23.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.23.1`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

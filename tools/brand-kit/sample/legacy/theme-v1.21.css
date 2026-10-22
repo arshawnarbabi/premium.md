@@ -1,0 +1,25 @@
+/* Tailwind v4 theme — @import "./tokens.css" first so the vars resolve (and switch in dark). */
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme inline {
+  --color-neutral-1: var(--neutral-1);
+  --color-neutral-6: var(--neutral-6);
+  --color-neutral-12: var(--neutral-12);
+  --color-surface-canvas: var(--surface-canvas);
+  --color-text-primary: var(--text-primary);
+  --color-border-subtle: var(--border-subtle);
+  --font-body: var(--font-body);
+  --text-heading-5-5xl: var(--text-heading-5-5xl);
+  --text-body-base: var(--text-body-base);
+  --font-weight-heading-5-5xl: var(--weight-heading-5-5xl);
+  --font-weight-body-base: var(--weight-body-base);
+  --radius-none: var(--radius-none);
+  --radius-md: var(--radius-md);
+  --spacing-1: var(--space-1);
+  --spacing-3: var(--space-3);
+  --spacing-6: var(--space-6);
+  --spacing-10: var(--space-10);
+  --spacing-0-5: var(--space-0-5);
+  --spacing-1-5: var(--space-1-5);
+}

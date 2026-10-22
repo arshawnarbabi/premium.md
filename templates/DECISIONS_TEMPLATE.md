@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DECISIONS_TEMPLATE.md — Decision log (append-only; AI-maintained)
-# Version: 1.23.0
+# Version: 1.23.1
 # Scope: any project. The short record of WHY the locked choices are locked, so a
 #        fresh agent (or teammate) doesn't relitigate settled decisions next session.
 # Companions: PROJECT.md (the contract rule that says to read + append here).
@@ -27,7 +27,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.23.0"
+template_version: "1.23.1"
 file_role: "decisions"   # information | design | spec | project | content | seo | qa | decisions
 
 # Append-only. Newest entry at the top. One entry per locked, non-trivial decision.
@@ -101,7 +101,7 @@ Most entries use the plain format above. Two kinds of decision come up on every 
 6. **Reversals made in code are logged in the same change.** A locked choice undone in code (a token, a layout, a component, copy), after the confirmation rule 2 requires, gets its superseding entry in the same commit as the code; a reversal that exists only in the code or in chat is invisible to the next session. QA Gate H (`check-drift.mjs`) flags code changed with no doc update.
 
 # Versioning
-`template_version: 1.23.0`. Per-project `DECISIONS.md` instances should preserve this field.
+`template_version: 1.23.1`. Per-project `DECISIONS.md` instances should preserve this field.
 
 # Source
 ADR (Architecture Decision Record) practice, adapted as an append-only log for agentic builds — so locked choices survive across sessions. Background (finding F11) is in `docs/SYSTEM_RESEARCH.md` (in the premium.md repo, the release zip and the skill bundle).
