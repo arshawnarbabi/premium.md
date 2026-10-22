@@ -9,11 +9,13 @@
 //   node scripts/load-tokens.ts                          # the bundled sample
 //   node scripts/load-tokens.ts --root <projectRoot>     # finds DESIGN.md/INFORMATION.md
 //   node scripts/load-tokens.ts --design <p> --information <p>   # explicit paths
+//   ... --out <dir>   # write tokens.json + brand.json (and assets/) there instead of src/data/
+//                     # (use it when running from the Agent Skill bundle, which has no viewer)
 // ─────────────────────────────────────────────────────────────────────────
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync } from "node:fs";
 import { join, basename, dirname, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parse as parseYaml } from "yaml";
+import { parse as parseYaml } from "./vendor/yaml.mjs"; // vendored `yaml` parse(): runs on plain node, no install
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -45,8 +47,9 @@ const designPath = arg("design") ?? (root ? findDoc(root, ["DESIGN.md", "DESIGN_
 const infoPath = arg("information") ?? (root ? findDoc(root, ["INFORMATION.md"]) : join(appDir, "sample/INFORMATION.md"));
 // Asset base: refined below from INFORMATION.md `assets.assets_base_path` if declared.
 let assetBase = root ?? dirname(infoPath);
-const dataDir = join(appDir, "src/data");
-const publicAssets = join(appDir, "public/assets");
+const outArg = arg("out");
+const dataDir = outArg ?? join(appDir, "src/data");
+const publicAssets = outArg ? join(outArg, "assets") : join(appDir, "public/assets");
 mkdirSync(dataDir, { recursive: true });
 mkdirSync(publicAssets, { recursive: true });
 
@@ -117,7 +120,7 @@ const brand = {
     brandmark: copyAsset(logo.icon_only),
     darkVariant: copyAsset(logo.dark_mode_variant), // null until produced
   },
-  markColor: "#00150b",
+  markColor: tokens?.colors?.primary?.base ?? tokens?.colors?.primary?.["9"] ?? tokens?.colors?.neutral?.["12"] ?? "#111111",
 };
 
 // Apply surface_separation shadow tuning to the elevation scale, so the viewer's elevation
@@ -140,7 +143,7 @@ if ((aMul !== 1.0 || sMul !== 1.0) && tokens?.elevation?.scale) {
 writeFileSync(join(dataDir, "tokens.json"), JSON.stringify(tokens, null, 2));
 writeFileSync(join(dataDir, "brand.json"), JSON.stringify(brand, null, 2));
 
-console.log("✓ tokens.json + brand.json written to src/data/");
+console.log(`✓ tokens.json + brand.json written to ${dataDir}`);
 console.log(`  brand: ${brand.name} — "${brand.tagline}"`);
 console.log(`  logos: lockup=${brand.logos.lockup} mark=${brand.logos.brandmark} dark=${brand.logos.darkVariant}`);
 console.log(`  palettes: ${Object.keys(tokens.colors ?? {}).filter((k) => tokens.colors[k]?.["9"]).join(", ")}`);

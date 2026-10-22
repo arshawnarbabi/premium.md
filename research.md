@@ -1,14 +1,22 @@
 # Research — Premium Design System Standards (Brand-Agnostic)
 
-> **Purpose.** This document compiles brand-agnostic premium-standard design conventions across color, typography, spacing, motion, components, web patterns, and mobile patterns. It is the source material for `DESIGN_TEMPLATE.md` — a reusable, AI-consumable design system template.
+> **Purpose.** This document compiles brand-agnostic premium-standard design conventions across color, typography, spacing, motion, components, web patterns, and mobile patterns. It is the source material for `templates/DESIGN_TEMPLATE_WEB.md` and `templates/DESIGN_TEMPLATE_MOBILE.md` (and is cited by SPEC, SEO and QA) — reusable, AI-consumable templates.
 >
 > **Audience.** A fresh-context AI agent or human reading this document alone should understand (a) what each design dimension is, (b) the rule premium products follow, (c) the concrete values or ranges used at top-tier studios, and (d) how the rule differs for web vs mobile where relevant.
 >
 > **Out of scope.** Brand-specific decisions (specific colors, fonts, product copy) are not included here. They belong in a project's `DESIGN.md` instance.
 >
-> **Status:** Active. Populated phase by phase per `plan.md`. See `§Z` for open questions.
+> **Status:** Active. Workflow-level research (how the system itself should work) lives in `docs/SYSTEM_RESEARCH.md`; this file is the design and platform standard. See `§Z` for open questions.
 >
-> **Freshness protocol.** Most of this research is **durable** — color, typography, spacing, layout, motion, states, components, and accessibility *principles* don't move year to year; **never re-research them** (it wastes effort and invites drift). A few areas **are** time-sensitive and are tagged **`[verify-current · last verified YYYY-MM]`** at their heading: **§X3 — Discoverability (SEO/AEO/GEO)** (fastest-moving), **§X2.9 — app-store / ASO**, the **tech-stack tables** (§Y.6 + `PROJECT.tech`), the **AI-builder market** (§Y), and **standards versions** (WCAG level, browser-support claims in §N/§C). **Rule:** *if you have web access and today is materially past a tagged section's `last verified` date (≳6 months), run a quick search to confirm its specifics still hold and flag any drift before relying on them.* No web access → treat the tagged specifics as "confirm before shipping," not gospel.
+> **Last full review: 2026-10-21.**
+>
+> **Freshness protocol.** Most of this research is **durable** — color, typography, spacing, layout, motion, states, components, and accessibility *principles* don't move year to year; **never re-research them** (it wastes effort and invites drift). Time-sensitive material is tagged, and the tag is a rule, not decoration:
+>
+> 1. **Every claim about browser support, versions, metrics or market numbers carries a `last verified YYYY-MM` tag** (inline after the claim, or `[verify-current · last verified YYYY-MM]` at a section heading, which covers the whole section). A claim that could not be confirmed carries `[verify-current]` with no date and is treated as unconfirmed.
+> 2. **Claims older than 6 months are re-verified before a template default relies on them.** With web access, run a quick search and update the tag (or correct the claim) in the same change; without it, treat the claim as "confirm before shipping", never as gospel, and say so in the hand-off.
+> 3. **Templates cite research by §** (for example `research.md §I.14`). **An agent changing a template default reads the cited section first**, checks its tags under rule 2, and updates this file if the default's basis has moved. A default whose cited § is stale is not changed on memory alone.
+>
+> Fastest-moving areas: **§X3 — Discoverability (SEO/AEO/GEO)**, **§X2.9 — app-store / ASO**, the **tech-stack tables** (§Y.6 + `PROJECT.tech`), the **AI-builder market** (§Y), **standards versions** (WCAG level, browser-support claims in §C/§F.5/§I/§N), and the **iOS Safari behaviour and frame-rate findings** in §F.5 and §I.14.
 
 ---
 
@@ -56,7 +64,7 @@ The current consensus pattern for a design-system document optimized for both hu
 - **YAML frontmatter** holds machine-readable design tokens (colors, type, spacing, radius, components). Parseable by any tokens tool.
 - **Markdown body** holds the human-readable rules, rationale, and how-to-apply guidance.
 
-This is the structure used by Google's published `DESIGN.md` spec (google-labs-code/design.md). It maps cleanly onto the **DTCG (Design Tokens Community Group) W3C format**, which reached stable status in October 2025 and is supported by Adobe, Figma, Material, Microsoft, Salesforce, Shopify, Tokens Studio, Style Dictionary, Penpot, Framer, Sketch, Knapsack, Supernova, and others. Adopting this container makes the template portable into any of those tools.
+This is the structure used by Google's published `DESIGN.md` spec (google-labs-code/design.md). It maps cleanly onto the **DTCG (Design Tokens Community Group) W3C format**, which reached stable status in October 2025 (format version 2025.10, last verified 2026-10) and is supported by Adobe, Figma, Material, Microsoft, Salesforce, Shopify, Tokens Studio, Style Dictionary, Penpot, Framer, Sketch, Knapsack, Supernova, and others. Adopting this container makes the template portable into any of those tools.
 
 ### A.2 Why Markdown, not HTML, JSON, or PDF
 
@@ -683,21 +691,23 @@ Never mix margin and padding to achieve spacing — use `gap` on the parent and 
 
 ## §F — Layout & Grid
 
-### F.1 Breakpoints — five steps, mobile-first
+### F.1 Breakpoints — seven width bands, mobile-first
 
-**Rule:** Use these five breakpoints, authored mobile-first (default styles target mobile; `min-width` queries layer larger styles on top).
+**Rule:** Use these seven breakpoints, authored mobile-first (default styles target mobile; `min-width` queries layer larger styles on top).
 
-| Token | Min width | Targets |
+| Token | Min width | Width band (what usually lands here, not a device class) |
 | --- | --- | --- |
-| `xs` | 0 px | Mobile portrait (default — no query needed) |
-| `sm` | 640 px | Mobile landscape, small tablets portrait |
-| `md` | 768 px | Tablets portrait |
-| `lg` | 1024 px | Tablets landscape, small laptops |
-| `xl` | 1280 px | Desktop |
+| `xs` | 0 px | Narrow: phones in portrait (default, no query needed) |
+| `sm` | 640 px | Small-medium: some phones in landscape, small tablets and split views |
+| `md` | 768 px | Medium: tablets in portrait **and most phones in landscape (667-932 px wide)** |
+| `lg` | 1024 px | Large: iPad portrait at 1024, iPad landscape, short laptops |
+| `xl` | 1280 px | Extra large: laptops, desktops, **and iPad Pro 13" landscape (1366)** |
 | `2xl` | 1536 px | Large desktop |
-| `3xl` | 2560 px | Ultra-wide / 4K — content **caps + centers**, never stretches |
+| `3xl` | 2560 px | Ultra-wide / 4K, content **caps + centers**, never stretches |
 
-(Tailwind-equivalent values — broad cross-tool compatibility.)
+(Tailwind-equivalent values, broad cross-tool compatibility.)
+
+**Breakpoints are width bands, not device classes** (last verified 2026-10). A phone turned sideways is `md`, an iPad in portrait can be `lg`, and an iPad Pro in landscape is `xl`, yet each of those is a touch device with no hover and a short or dynamic viewport. Layout may branch on width; anything that depends on input, height, safe areas or browser behaviour branches on the device class, tested against the viewport matrix in **§F.5**.
 
 The 2026 device range runs from a 4″ phone to a 34″ ultrawide. Two zones premium teams now handle explicitly: **ultra-wide / 4K (≥ 2560 px)** — keep a `max-width` on the page container and line length ≤ ~75ch; spend the extra space on margin or an intentional 2-up/side-rail treatment, never full-bleed body text. **Foldables / mini-tablets (~600–720 px, e.g. a Galaxy Z Fold unfolded)** — sit between `sm` and `md`; container queries (§F.3) absorb most of this since components respond to their container, not the viewport.
 
@@ -733,7 +743,56 @@ Reason: a component dropped into a sidebar should respond to the sidebar's width
 | `lg`+ | 12 | `space.6` (24 px) |
 | `xl`+ | 12 | `space.8` (32 px) |
 
-### F.5 Composition grammar — the canonical page
+### F.5 Viewport matrix, device classes and iOS Safari behaviour
+
+`[verify-current · last verified 2026-10]`: the matrix rationale is durable; the iOS Safari and WebKit specifics below were learned in production in 2025-2026 and move with each Safari release. Re-check them against WebKit release notes before a template default relies on them (Freshness protocol, rule 2). **QA_TEMPLATE owns the canonical `viewport_matrix` and every numeric threshold**; this section is the reasoning it cites.
+
+**Rule:** Every design change is built and checked for every device class in the matrix alongside desktop, in the same change. A width breakpoint (§F.1) decides layout; a **device class** decides input, height, safe-area and browser behaviour. Treating one as the other is the most common responsive bug.
+
+**Why width breakpoints are not device classes.** Width alone misfiles the devices that break most often:
+
+| Device and orientation | CSS width | Lands in | What width hides |
+| --- | --- | --- | --- |
+| Phone landscape (iPhone SE to Pro Max) | 667-932 px | `md` | 320-430 px of height, touch only, notch or Dynamic Island on one side, Safari toolbars |
+| iPad portrait (11" and 13") | 820-1024 px | `md` / `lg` | touch first, no hover unless a trackpad is attached |
+| iPad Pro 13" landscape | 1366 px | `xl` | still touch, still iOS Safari, still a dynamic viewport |
+| Short laptop (1366×768, 1280×720) | 1280-1366 px | `xl` | only ~600-650 px of usable height under browser chrome, so a 100vh hero hides its CTA |
+
+**The canonical matrix and why each class is in it** (QA `gates.viewport_matrix` owns the exact sizes; each class names the SPEC `responsive:` key that governs it):
+
+| QA class (SPEC key) | Range covered | Why it is its own class |
+| --- | --- | --- |
+| `phone_portrait` (`phone`) | 320-430 px wide, portrait | Smallest real layouts; 320 is the reflow floor (WCAG 1.4.10) and still occurs (SE, zoomed text) |
+| `phone_landscape` (`phone_landscape`) | 667-932 × 375-430 | Lands in `md` by width while having the least height of any class |
+| `tablet_portrait` (`tablet_portrait`) | 768-1024 wide | Touch device in desktop-ish widths; split view can drop it to phone widths |
+| `tablet_landscape` (`tablet_landscape`) | 1024-1366 wide | Touch device in `lg`/`xl`; hover-dependent UI fails here first |
+| `laptop_short` (`laptop_short`) | 1280×720, 1366×768, 1440×900 | The usual "desktop" bug source: fold-sized heroes and sticky stacks that eat the screen |
+| `desktop` (`desktop_wide`) | ~1512 to 2560 wide | The reference layout most work is designed at, held from laptop defaults to wide screens: containers cap and center (§F.2), no stretched text, no gaps at the edges |
+
+**In-between sweep.** Exact sizes miss the widths between them. A check also sweeps width continuously (QA sets the step) from the smallest phone to the widest desktop and fails on any horizontal overflow, clipped text, overlapping elements or a layout jump that is not at a declared breakpoint. Most real bugs sit at 390-430, 600-760 and 1024-1180 px.
+
+**Dynamic viewport units.** On mobile the visible height changes as browser toolbars show and hide (supported in all evergreen engines, last verified 2026-10):
+- `svh` = smallest visible height (toolbars shown). Use for anything that must fit on first paint, such as a hero with its CTA.
+- `lvh` = largest height (toolbars hidden). Use for backgrounds that must never show a gap.
+- `dvh` = the current height. It changes while scrolling, so layout that depends on it reflows mid-scroll; avoid it for large layout boxes.
+- Plain `vh` equals `lvh` on iOS Safari, so a `100vh` hero is taller than the visible screen on first load.
+
+**Safe areas.** With `viewport-fit=cover`, pad full-bleed edges with `env(safe-area-inset-*)`: top and bottom in portrait, **left and right in landscape** (the notch or Dynamic Island side changes with rotation). Fixed bars add the bottom inset so the home indicator never overlaps controls. §F.8 holds the platform list.
+
+**Input modality is a separate axis.** Branch hover-only UI on `@media (hover: hover) and (pointer: fine)`, never on width. A 1366 px iPad has no hover; a narrow desktop window does. Touch targets follow §M.2 at every width a touch device can reach.
+
+**What a resized desktop window cannot test.** Dragging a desktop browser narrow does not emulate a phone: Chrome and Safari stop at roughly 500 px wide, and the window still has a mouse, hover, DPR 1 or 2, desktop scrollbars, no toolbars that collapse, no safe areas and a desktop engine. Use device emulation (Playwright `isMobile: true`, `hasTouch: true`, `deviceScaleFactor` set, a real mobile user agent) for automated checks, **plus a real iPhone** in Safari for anything touching scrolling, fixed or sticky elements, the toolbars or frame rate. Emulation runs Chromium or desktop WebKit, not iOS Safari, so it cannot reproduce the behaviours below.
+
+**iOS Safari behaviours learned in practice** (each tag last verified 2026-10):
+- **`overflow: hidden` does not stop touch scrolling.** Setting it on `html` or `body` stops wheel scrolling on desktop but iOS still scrolls the page under a modal, menu or loader. A scroll lock blocks `touchmove` (non-passive listener with `preventDefault`), `wheel`, and the scrolling keys (space, arrows, Page Up/Down, Home, End) while it is up, and lets scrollable children inside the locked layer keep working.
+- **Safari 26 paints solid bars over the top and bottom edges from fixed or sticky boxes.** Since Safari 26 (iOS 26, macOS 26), Safari samples what sits about 4 px inside the top and bottom edges of the viewport; if a `position: fixed` or `position: sticky` element is there, it paints a solid bar in that element's colour over the edge (under the toolbar and status area). A viewport-sized fixed element keeps the first colour Safari saw, so a fixed overlay that changes colour later shows a stale bar; an element with a negative `z-index` is skipped. Source: WebKit `LocalFrameView::fixedContainerEdges`; WebKit bugs 300965 and 301756. Design for it: keep fixed boxes off the edges unless their colour is the intended edge colour, or place a deliberate fixed edge strip.
+- **`theme-color` is ignored by iOS 26 Safari** for the toolbar and status area; the edge colour comes from the page (the rule above) instead. Do not rely on `<meta name="theme-color">` for iOS.
+- **ProMotion frame rate.** On 120 Hz iPhones and iPads, Safari scrolls at 120 Hz but caps page-driven rendering (rAF, CSS and JS animations, canvas, WebGL) at 60 fps by default through the feature flag "Prefer Page Rendering Updates near 60fps" (WebKit bug 294338). Low Power Mode lowers it further. Budget iOS effects at 60 fps (16.7 ms per frame, §I.14), and never conclude from a 120 Hz desktop measurement that an effect is smooth on an iPhone.
+- **Lazy images start late on a fast flick.** Native `loading="lazy"` images begin loading only near the viewport; on a fast flick the request queue and the image decode both trail the scroll, so pictures show blank for a moment. For a gallery that will be flicked through, warm up the next images ahead of the scroll (a small concurrent prefetch queue, `decoding="async"` and `img.decode()` on arrival) rather than relying on the browser's lazy threshold.
+
+**Template translation:** SPEC gives every section a `responsive:` block covering each non-desktop class; DESIGN states the rules (`## Viewport units & safe areas`, `## Input modality`); QA Gate E runs the matrix, the in-between sweep, emulation and the real-device pass. A section with no responsive block is unfilled.
+
+### F.6 Composition grammar — the canonical page
 
 **Rule:** Marketing / product landing pages follow this section order unless explicitly justified:
 
@@ -750,7 +809,7 @@ Reason: a component dropped into a sidebar should respond to the sidebar's width
 
 Deviation is permitted; the order is the default.
 
-### F.6 Asymmetric layouts within sections
+### F.7 Asymmetric layouts within sections
 
 **Rule:** Within a section, prefer asymmetric content distribution over perfect 50/50 splits. Common ratios:
 
@@ -760,15 +819,15 @@ Deviation is permitted; the order is the default.
 
 50/50 is the weakest composition because both sides compete for dominance. Premium products consistently use asymmetric splits to create visual hierarchy.
 
-### F.7 Mobile safe areas
+### F.8 Mobile safe areas
 
 **Rule:** All full-bleed elements respect platform safe areas:
 - iOS: `env(safe-area-inset-top/bottom/left/right)` for status bar, home indicator, dynamic island, notch.
 - Android: System bars (status bar top, nav bar bottom). Use insets API.
 
-Web mobile: respect `env(safe-area-inset-*)` for PWAs and add `viewport-fit=cover` in the viewport meta when full-bleed.
+Web mobile: respect `env(safe-area-inset-*)` for PWAs and add `viewport-fit=cover` in the viewport meta when full-bleed. Landscape insets, dynamic viewport units and the iOS Safari edge behaviour are in §F.5.
 
-### F.8 Whitespace ratio rule
+### F.9 Whitespace ratio rule
 
 **Rule:** Whitespace surrounding a content block should be **at least 30–40% of the block's height** for premium feel. Marketing heroes commonly exceed 50%. Compact in-app surfaces drop to ~20% but never below.
 
@@ -776,19 +835,21 @@ Web mobile: respect `env(safe-area-inset-*)` for PWAs and add `viewport-fit=cove
 
 ## §G — Shapes (Radius)
 
-### G.1 Radius scale — six steps
+### G.1 Radius scale — seven tokens (five rounded steps plus `none` and `full`)
 
-**Rule:** Use exactly these six radius tokens. Pick one and apply consistently per component class — never mix radii within a single composition.
+**Rule:** Use exactly these seven radius tokens (the same set as `radius.scale` in DESIGN_TEMPLATE_WEB). Pick one and apply consistently per component class — never mix radii within a single composition.
 
 | Token | Value | Use |
 | --- | --- | --- |
 | `radius.none` | 0 px | Hard-edge elements, data tables, photo crops |
-| `radius.sm` | 4 px | Inputs, small chips, code blocks |
-| `radius.md` | 8 px | Buttons, badges, small cards |
-| `radius.lg` | 12 px | Cards, panels |
+| `radius.sm` | 4 px | Badges, inline code |
+| `radius.md` | 8 px | Buttons, inputs, tooltips, small cards |
+| `radius.lg` | 12 px | Cards, panels, code blocks |
 | `radius.xl` | 16 px | Large cards, modals (default) |
 | `radius.2xl` | 24 px | Hero cards, large modals |
-| `radius.full` | 9999 px | Avatars, pill buttons, circular icon containers |
+| `radius.full` | 9999 px | Avatars, chips, pill buttons, circular icon containers |
+
+(Use column aligned 2026-10 to DESIGN_TEMPLATE_WEB `radius.components` at the `default` profile, which is the owner; the sharp, soft and pill profiles reassign some components, as listed there.)
 
 Recent premium products (Linear, Mercury, Vercel) lean to `radius.lg`–`radius.xl` on cards (12–16 px). Hard-edge / `radius.sm` is the "engineered" aesthetic (Stripe, Carbon).
 
@@ -808,11 +869,11 @@ This formula keeps concentric curvature visually parallel. Violating it makes ne
 
 **Rule:** On iOS and in any hero-scale rounded surface, prefer **continuous (squircle) corners** over circular-arc corners.
 
-Apple's app icon corner radius is approximately 22.37% of the icon width using a superellipse (n=2). The difference between a circular-arc rounded rectangle and a squircle is subtle but perceptible at large sizes — the squircle eliminates the visible "kink" where the straight edge meets the curve.
+Apple's app icon corner radius is approximately 22.37% of the icon width, drawn as a **continuous-curvature corner that approximates a superellipse with an exponent of about n≈5** (last verified 2026-10). Note that n=2 is an ordinary ellipse (a circular-arc corner), not a squircle; n=4 is the classic squircle. CSS counts differently: in `corner-shape: superellipse(K)` the argument is a log2 exponent, so `superellipse(1)` is round, and the `squircle` keyword equals `superellipse(2)` (n=4). The difference between a circular-arc rounded rectangle and a squircle is subtle but perceptible at large sizes — the squircle eliminates the visible "kink" where the straight edge meets the curve.
 
 Implementation:
 - iOS native: use `RoundedRectangle(cornerRadius:, style: .continuous)` in SwiftUI.
-- Web: CSS `corner-shape: squircle` is shipping (2026); fallback to `border-radius` with a slightly larger value (~15% larger) to approximate.
+- Web: CSS `corner-shape: squircle` (or `superellipse()`) ships in **Chromium only** (Chrome and Edge 139+, August 2025); Safari and Firefox do not support it (last verified 2026-10, `[verify-current]` for Safari and Firefox status). Wrap it in `@supports (corner-shape: squircle)` and keep a plain `border-radius` (about 15% larger to approximate) as the fallback; `corner-shape` needs a non-zero `border-radius` to have any effect.
 - Below ~12 px radius, the difference is invisible — circular-arc is fine.
 
 ### G.4 Mixing radii — forbidden
@@ -929,7 +990,7 @@ Define three spring presets:
 | `spring.snappy` | 300 | 30 | Toggles, switches, quick reveals |
 | `spring.bouncy` | 400 | 22 | Playful flourishes (use sparingly) |
 
-(Values shown match Framer Motion / iOS spring conventions; equivalent translations exist for React Native Reanimated, SwiftUI `interactiveSpring`, Compose `Spring.StiffnessHigh`, etc.)
+(Values shown match Motion (formerly Framer Motion) / iOS spring conventions; equivalent translations exist for React Native Reanimated, SwiftUI `interactiveSpring`, Compose `Spring.StiffnessHigh`, etc.)
 
 ### I.4 Reduced motion — required first-class behavior
 
@@ -955,7 +1016,7 @@ Choreography rules:
 
 Constraints:
 - Trigger once per element (do not re-animate on scroll-back).
-- Use Intersection Observer or CSS `animation-timeline: view()` (supported in Chromium 2026; fall back to JS).
+- Prefer CSS scroll-driven animation (`animation-timeline: view()` / `scroll()`), which runs off the main thread: Chrome and Edge 115+, Safari 26+; Firefox has it behind the `layout.css.scroll-driven-animations.enabled` flag, not on by default in stable (last verified 2026-10, `[verify-current]` for Firefox). Gate it with `@supports (animation-timeline: view())` and add an Intersection Observer fallback **only** for engines without support; never run both. Scroll listeners trail the scroll (§I.14).
 - Duration: `duration.slow` or `duration.deliberate`.
 - Easing: `ease.decelerate`.
 - Threshold: trigger when ~25% of element is in viewport.
@@ -999,15 +1060,15 @@ Total stagger duration should not exceed `duration.deliberate × 1.5` (~750 ms) 
 - **I**nvert: apply a `transform` to make it visually appear at the starting position
 - **P**lay: animate the `transform` to zero, releasing the element to its real final position
 
-This avoids animating expensive properties (`width`, `height`, `top`, `left`) and lets the GPU handle the motion via `transform`. Performance jump: layout-thrash animations gain ~85% smoother frame rates with FLIP.
+This avoids animating expensive properties (`width`, `height`, `top`, `left`) and lets the compositor handle the motion via `transform` (when it runs as a CSS or WAAPI animation, §I.13). Reported gains for layout-thrash animations moved to FLIP are large (one 2026 write-up cites ~85% smoother frame rates; `[verify-current]`, treat as indicative and measure your own case, §I.14).
 
-**Libraries that implement FLIP automatically:** Framer Motion's `layout` prop, GSAP's Flip plugin, Motion One's auto-animate.
+**Libraries that implement FLIP automatically:** Motion's `layout` prop (Motion is the renamed Framer Motion, `motion` on npm, imported from `motion/react`; it also absorbed Motion One), GSAP's Flip plugin (last verified 2026-10).
 
 ### I.11 Shared-element transitions
 
 **Rule:** When the same conceptual element appears in two views (a card in a list → an expanded detail view), animate it as a **shared element** rather than dismounting and remounting.
 
-- React/Framer Motion: `layoutId` on both source and destination elements
+- React / Motion (formerly Framer Motion): `layoutId` on both source and destination elements
 - Native CSS: `View Transitions API` (`document.startViewTransition()`) with `view-transition-name` matching pairs
 - iOS: `matchedGeometryEffect`
 - Android Compose: shared element transitions via `SharedTransitionLayout`
@@ -1018,7 +1079,7 @@ The element "morphs" between views, preserving the user's spatial model. Especia
 
 **Rule:** For full-page navigation or significant layout changes on the web, prefer the native **View Transitions API** over JS-driven animation libraries.
 
-- Browser support: Chrome 111+, Edge 111+, Safari 18+ (with prefix earlier), Firefox in progress as of 2026
+- Browser support, same-document (`document.startViewTransition`): Chrome and Edge 111+, Safari 18+, Firefox 144+ (October 2025), so it is Baseline. There has never been a vendor prefix. Cross-document (`@view-transition { navigation: auto; }`): Chrome and Edge 126+, Safari 18.2+; Firefox not yet (last verified 2026-10, `[verify-current]` for Firefox cross-document).
 - Syntax: `document.startViewTransition(() => updateDOM())`
 - Pair with `view-transition-name` CSS to identify shared elements across the transition
 - Falls back gracefully when unsupported (no transition, just instant update)
@@ -1027,21 +1088,60 @@ Use for: route changes in SPAs, modal opens, sheet expansions, layout reshuffles
 
 ### I.13 Property animation budget — what to animate
 
-**Rule:** Animate **only `transform` and `opacity`** on the main render path. These are GPU-composited and do not trigger layout or paint.
+**Rule:** Animate **only `transform` and `opacity`** by default. They skip layout and paint, but they are **compositor-cheap only when animated by CSS transitions/animations or WAAPI on an element that has its own compositor layer** (promoted by the animation itself or by `will-change` set just before it runs). Set every frame from JavaScript (a rAF loop or scroll listener writing `style.transform`) they still need the main thread each frame, so they stall during hydration or long tasks (§I.14). The ladder from cheapest to most expensive effect, and the frame budgets, are in §I.14 (last verified 2026-10).
 
 | Property | Cost | Use? |
 | --- | --- | --- |
-| `transform` | GPU-only | ✓ Always |
-| `opacity` | GPU-only | ✓ Always |
+| `transform` | Composite only (when CSS/WAAPI-driven on a promoted layer) | ✓ Always |
+| `opacity` | Composite only (same condition) | ✓ Always |
 | `filter` (blur, brightness) | Paint | Sparingly — performance impact at large sizes |
 | `background-color` | Paint | Acceptable for color-state transitions |
 | `width` / `height` | Layout + paint | Avoid — use `transform: scale` |
 | `top` / `left` / `right` / `bottom` | Layout + paint | Avoid — use `transform: translate` |
 | `margin` / `padding` | Layout + paint | Avoid — use FLIP if necessary |
 
-When animating `width` or `height` is unavoidable (e.g., accordion expansion), use `max-height` with a generous ceiling, or use FLIP, or scope the animation to small regions where the layout cost is acceptable.
+When animating `width` or `height` is unavoidable (e.g., accordion expansion), prefer, in order: a `transform` (FLIP, or a `scaleY` reveal of a clipped wrapper); a grid track animation (`grid-template-rows: 0fr` → `1fr` on a wrapper with an `overflow: hidden` child), which animates to the real content height with no magic ceiling; or `interpolate-size: allow-keywords` to animate to `height: auto` where supported (Chromium only, `[verify-current]`). All but the transform are **layout animations**: they run on the main thread and re-lay out every frame, so keep them to small regions. **Avoid `max-height` with a generous ceiling**: it is still a layout animation, and the ceiling makes the easing wrong (the visible part finishes early or starts late).
 
-### I.14 Choreographing reduced-motion variants
+### I.14 Runtime performance: effect cost ladder, frame budgets, adaptive quality
+
+`[verify-current · last verified 2026-10]`: the principles are durable; the browser limits and the measured cases are from production work in 2025-2026. **QA_TEMPLATE owns every numeric budget** (frame-time p95, long-task limits, the devices measured); this section is the reasoning DESIGN `# Effects & performance` and `effects.registry` cite.
+
+**Rule:** Every effect is designed performance-ready from the first commit, at the highest quality the target devices can hold, and picks the **cheapest rung of the ladder that achieves the look**. Each effect is registered in DESIGN `effects.registry` with its tier, `why_not_cheaper`, a `fallback`, a `reduced_motion` variant, its measured p95 frame time and the devices it was measured on. An effect with no measurement is unverified, not done.
+
+**The effect cost ladder** (choose the lowest tier that delivers the design; climbing a tier needs a written `why_not_cheaper`):
+
+| Tier | Technique | Where the cost lands | Typical use |
+| --- | --- | --- | --- |
+| 0 | CSS `transform` / `opacity`, animated by CSS or WAAPI | Compositor only, on a promoted layer | Reveals, slides, fades, scroll-linked motion via timelines |
+| 1 | CSS `filter`, `clip-path`, `mask-position`, SVG (incl. SVG filters) | Paint, sometimes raster per frame; cost grows with area | Wipes, masks, blurs on small elements, icon morphs |
+| 2 | `backdrop-filter` (glass, frosted panels) | Re-samples and blurs everything behind it every frame anything under it moves | One or two glass surfaces, never a stack |
+| 3 | Canvas 2D | Main thread draws each frame | Particles, generative art, small simulations |
+| 4 | WebGL / WebGPU | GPU, plus main-thread setup, upload and context limits | Shaders, refraction, water, 3D, many layers merged into one pass |
+
+**Compositor-cheap is conditional.** `transform` and `opacity` are only off the main thread when they run as CSS transitions/animations, CSS scroll or view timelines, or WAAPI, on an element with its own layer. The same properties written from JavaScript every frame are main-thread work (§I.13). Too many promoted layers cost memory and compositing time, so promote for the duration of the animation, not permanently.
+
+**Frame budgets.** At 120 Hz a frame has **8.3 ms**; at 60 Hz, **16.7 ms**, and the browser needs part of that for itself. iOS Safari renders page content at 60 fps by default even on ProMotion screens (§F.5), so iOS effects are budgeted at 60 Hz and desktop ProMotion or 120 Hz displays at 120 Hz. The pass mark is a **p95 frame time** under QA's threshold, measured while the effect runs, not an average and not a single good run.
+
+**Stacked `backdrop-filter` is the most common hidden cost.** Each layer re-reads and blurs what is behind it. In one measured case six glass layers over a moving scene ran at a **p95 of 17 ms against a 9 ms baseline at 120 Hz**, missing every frame budget; moving the six blurs into a single WebGL shader pass brought it back inside budget. Rule: at most one or two live `backdrop-filter` surfaces at a time, never stacked; more glass than that becomes one shader pass or a pre-blurred static image.
+
+**WebGL rules.**
+- **Browsers cap live WebGL contexts per page at about 16** and silently drop the oldest when a new one is created (`webglcontextlost`). Cap the number of canvases, share one context (one renderer drawing several regions, or scissored viewports) and release contexts for off-screen effects.
+- **Mipmaps on moving, detailed images:** `generateMipmap` uses a box filter, which shimmers and crawls on fine detail (text, foliage, fabric) while the image moves or scales. Build the smaller levels with a wider downsample (a few taps of a Gaussian or Lanczos-like kernel) or sample with a manual wider filter.
+- **A canvas stays hidden until it has drawn its first frame.** Show the plain image or element under it until then, so an effect that is still loading never covers loaded content with black or transparent pixels.
+
+**Main-thread animations freeze during hydration and long tasks.** Animations of main-thread properties (`mask-size`, `width`, anything set from JS each frame) stop while the framework hydrates: in one measured case a `mask-size` reveal froze for **224 ms** during hydration, while a compositor `transform` running at the same moment did not. Entry animations that play during load are tier 0, or start after hydration.
+
+**Scroll-linked effects use timelines, not listeners.** A `scroll` event listener runs after the scroll has already moved, so anything it positions trails the page by a frame or more and judders on fast flicks. Use CSS `animation-timeline: scroll()` / `view()` (support in §I.6) so the effect runs on the compositor in lockstep with scrolling; keep a listener only as the fallback where timelines are unsupported.
+
+**Adaptive quality governor.** Effects ship at full quality and step down only on **measured, sustained** misses: a rolling window of frame times over QA's threshold for a set duration, never a single slow frame, a user-agent or device-name guess, or a core-count or memory probe. Steps are declared in advance, cheapest visual loss first (DESIGN `effects.adaptive_quality.step_down_order`: cap render resolution, merge stacked blurs, then the registered fallback), move one level at a time, and never visibly stutter at the moment they switch. Stepping back up invites oscillation, so the template default is never within the same page view (`step_up`); a project that allows it needs sustained headroom and hysteresis.
+
+**Measure before and after, one change at a time.** Record a baseline, change one thing, measure again under the same conditions, **scrolling in both directions** (down and up exercise different code paths: lazy loading, entry versus exit animations, cached layers). Revert any change that does not measurably improve the number. Measure on the target devices in QA's list, including a real iPhone; a headless or desktop control that agrees with a headless capture proves nothing about the phone.
+
+**Video rules.** Background and decorative video is `muted`, `playsinline`, `loop`, has a `poster` (the LCP candidate, not the video), is encoded at the displayed size (AV1 or HEVC with an H.264 fallback), pauses when off-screen (Intersection Observer) and when the tab is hidden, and is replaced by the poster under `prefers-reduced-motion: reduce` and Save-Data. Never stack a video under a live `backdrop-filter`; that is tier 2 cost on every video frame.
+
+**Template translation:** DESIGN `effects.registry` lists every effect with `name`, `tier`, `why_not_cheaper`, `fallback`, `reduced_motion`, `measured_p95_ms` and `devices`; SPEC media items reference it by `effect_ref`; QA owns the budgets and the measurement protocol and fails any registered effect without a measurement.
+
+### I.15 Choreographing reduced-motion variants
 
 **Rule:** Each choreographed sequence must have a reduced-motion equivalent:
 
@@ -1419,7 +1519,7 @@ Form inputs on mobile web must use ≥ 16 px font-size or iOS Safari auto-zooms 
 | Media query | Trigger | Behavior |
 | --- | --- | --- |
 | `prefers-color-scheme: dark` | User OS dark mode | Switch to dark palette |
-| `prefers-reduced-motion: reduce` | Motion sensitivity / vestibular | Strip transform animations; keep opacity. See §I.14 |
+| `prefers-reduced-motion: reduce` | Motion sensitivity / vestibular | Strip transform animations; keep opacity. See §I.15 |
 | `prefers-reduced-transparency: reduce` | Translucency causing legibility issues | Replace `backdrop-filter: blur()` and translucent surfaces with solid backgrounds; replace `opacity < 1` overlays with solid color equivalents |
 | `prefers-contrast: more` | User needs higher contrast | Increase border weights to 2 px; switch text from step 11 to step 12; deepen disabled state colors |
 | `prefers-contrast: less` | User finds default too harsh | Soften shadows; reduce text contrast slightly |
@@ -3462,8 +3562,9 @@ Crawlability/indexation failures are the most common *and* most damaging SEO iss
 
 ### X3.4 Structured data (JSON-LD) — the machine-readable layer
 Structured data is how engines and LLMs *understand and trust* a page's entities. **JSON-LD is Google's preferred format** — emit `<script type="application/ld+json">` in `<head>` with `@context: https://schema.org` and the right `@type`.
-- **Core type map:** `Organization` + `WebSite` (every page, from INFORMATION), `Article`/`BlogPosting` (posts: author, datePublished, dateModified), `Product`/`Offer` (pricing), `BreadcrumbList`, `HowTo`, `LocalBusiness` (only with a real location), `Person` (founders/authors → E-E-A-T).
+- **Core type map:** `Organization` + `WebSite` (every page, from INFORMATION), `Article`/`BlogPosting` (posts: author, datePublished, dateModified), `Product`/`Offer` (pricing), `BreadcrumbList`, `HowTo` (see the caveat below), `LocalBusiness` (only with a real location), `Person` (founders/authors → E-E-A-T).
 - **FAQPage caveat (important + current):** Google **restricted FAQ *rich results* to government + authoritative-health sites in late 2023** — general business sites no longer get the FAQ rich snippet. **But** `FAQPage` markup still helps **LLM/AEO answer extraction**, so keep it where genuine Q&A exists — for the AEO/GEO benefit, not the rich result.
+- **HowTo caveat (last verified 2026-10):** Google **removed HowTo rich results in 2023** (mobile in August, desktop in September). `HowTo` markup earns no rich result in Google any more; emit it only where a page is a genuine step-by-step procedure, as an extraction aid for answer engines, and never promise a HowTo snippet. Google kept retiring rarely used structured-data features in 2025, so re-check eligibility in the Search Gallery before a template default depends on any rich result.
 - **Never fabricate schema** (fake ratings, prices, reviews) — it's a manual-action risk and an AI-trust killer. Mark up only what's truly on the page. Validate every page in the **Rich Results Test** (0 errors) before "done" (QA Gate C).
 
 ### X3.5 E-E-A-T & trust — the credibility layer
@@ -3479,15 +3580,15 @@ Optimizing for the answer-retrieval layer (featured snippets, AI Overviews):
 - **Genuine Q&A + scannable structure** — question `H2`s, short answers, lists, tables, comparison blocks. (This is the same craft as §X2.10 — copy that converts *and* gets extracted.)
 
 ### X3.7 GEO — be cited by generative engines
-Getting quoted by ChatGPT / Claude / Perplexity / Gemini. Measured citation lifts vs. uncited pages: **expert quotes +41%, statistics +30%, inline citations +30%**; pages with **named authors are cited ~2.3×** more.
+Getting quoted by ChatGPT / Claude / Perplexity / Gemini. **Reported in one study** (Aggarwal et al., "GEO: Generative Engine Optimization", KDD 2024, measured on simulated generative engines over their GEO-bench queries): adding quotations, statistics and cited sources raised a page's visibility in generated answers by roughly 30-40% each, with quotations highest (about +41%). `[verify-current]`: one benchmark, not a production guarantee, and engines have changed since. A widely repeated claim that pages with **named authors are cited ~2.3×** more has no primary source we could find; treat it as anecdote `[verify-current]`. The direction (specific, attributed, sourced claims get cited) is consistent across sources; the exact multipliers are not.
 - Include **real stats, attributed expert quotes, and inline citations** to authoritative sources; make claims clear and specific.
 - **Comprehensive, definitive pages** on your core topics earn citations; thin pages don't.
 - **Entity consistency** (X3.5) is a GEO prerequisite.
 - **Platform tilt (FYI, not gospel):** Perplexity rewards freshness/authority; Claude favors long-form depth; Gemini weighs multimodal; ChatGPT leans on well-structured, citable sources.
-- **`llms.txt`** (a markdown index of key pages at `/llms.txt`): low-cost forward-proofing — **no major provider officially consumes it yet**, so it's insurance, not a 2026 lever.
+- **`llms.txt`** (a markdown index of key pages at `/llms.txt`): low-cost forward-proofing. As of the last check no major AI search provider has publicly committed to using it for ranking or citation, though some developer tools and documentation platforms read or generate it `[verify-current]`. Ship it as insurance, not as a lever.
 
 ### X3.8 Freshness & maintenance
-Content **decays**. Pages not refreshed within a quarter lose AI citations at roughly **3×** the normal rate, and stale info erodes rankings. Stamp a `last_reviewed` date, surface "updated" dates honestly, and **review core pages quarterly** (alongside the technical audit). Freshness is a ranking *and* a citation signal.
+Content **decays**. Industry write-ups report that pages not refreshed within a quarter lose AI citations markedly faster (one figure in circulation is roughly **3×**, unsourced, `[verify-current]`), and stale info erodes rankings. Stamp a `last_reviewed` date, surface "updated" dates honestly, and **review core pages quarterly** (alongside the technical audit). Freshness is a ranking *and* a citation signal.
 
 ### X3.9 Measurement — the metric is shifting from clicks to citations
 - **Classic:** rankings, impressions, CTR (Search Console), organic sessions, indexed-page count, CWV field data (CrUX).
@@ -3732,18 +3833,19 @@ Six case studies inspected (Cluely, Huly, Vantage, Gitness, AgentQL, Slash). Rec
 
 ### Y.6 Common premium tech stack — context for the AI agent
 
-`[verify-current · last verified 2026-05]` — framework versions and the AI-builder market (v0 / Lovable / Bolt) move fast; re-confirm the stack + tooling currency if dated, and keep `PROJECT.tech` aligned.
+`[verify-current · last verified 2026-10]` — framework versions and the AI-builder market (v0 / Lovable / Bolt) move fast; re-confirm the stack + tooling currency if dated, and keep `PROJECT.tech` aligned. Versions below were current at the 2026-10 review; `[verify-current]` before pinning them in a new project.
 
 The published / observed implementation stack across Pixel Point, Vercel, Linear, Stripe, Mercury, Anthropic:
 
 | Concern | Stack |
 | --- | --- |
-| Framework | Next.js (App Router) or Astro |
+| Framework | Next.js 16 (App Router) or Astro |
+| Runtime | Node.js 24 LTS |
 | Hosting | Vercel |
 | Styling | Tailwind CSS v4 (with CSS variables driven from token files) |
 | UI primitives | shadcn/ui (built on Radix Primitives) |
-| Animation | Framer Motion (React) or Rive / Lottie (illustrative) |
-| CMS | Sanity, Contentlayer, or MDX-in-repo |
+| Animation | CSS and WAAPI first (§I.14 tier 0); Motion (formerly Framer Motion, `motion` on npm) for React layout and gesture work; GSAP for timelines; Rive / Lottie (illustrative) |
+| CMS | Sanity, or MDX-in-repo (Velite, Content Collections, or the framework's own content layer). Contentlayer is unmaintained since 2024; do not start new projects on it |
 | Type | Custom or Inter / Geist / Söhne / GT America |
 | Icons | Lucide |
 | Forms | React Hook Form + Zod |
@@ -3800,7 +3902,7 @@ Inspection across stripe.com, stripe.press, stripe.com/sessions, and stripe.com/
 - **Hero-first architecture** with massive value-prop headline above fold
 - **Bento grid** for the "Flexible solutions" section — Stripe popularized this pattern in 2022; it is now industry standard
 - **Asymmetric balance** — right-aligned imagery + left-aligned copy with deliberate negative space
-- **Concrete trust numbers** stated specifically and verifiably: "135+ currencies," "$1.9T in payments volume," "50% of Fortune 100 use Stripe" — this is Stripe's defining content move
+- **Concrete trust numbers** stated specifically and verifiably: "135+ currencies," "$1.9T in payments volume," "50% of Fortune 100 use Stripe" — this is Stripe's defining content move. (Figures as observed on stripe.com at the time of mining; Stripe updates them yearly, so they illustrate the pattern and are not facts to reuse, `[verify-current]`.)
 - **Customer logos as social proof** with named brands (Hertz, URBN, Instacart)
 
 **Pricing page specifically:**
@@ -3839,7 +3941,7 @@ Across Pixel Point, Cluely, Vantage, Slash, Vercel, Stripe, Linear, Mercury, and
 | **Real photography of real people, not stock** | Cluely's actual participant faces, Slash's customer testimonials | §L.5 — photography style |
 | **Code samples rendered as native UI** | Vercel, Linear, Stripe API docs | §V — code surfaces |
 | **Cool desaturated palette for fintech / credibility** | Slash (navy + soft gray), Mercury (teal-on-near-white), Stripe (purple anchor on neutral) | §C — palette structure |
-| **Asymmetric offset compositions** | Pixel Point's own site, Linear, Stripe, Vercel | §F.6 — asymmetric layouts |
+| **Asymmetric offset compositions** | Pixel Point's own site, Linear, Stripe, Vercel | §F.7 — asymmetric layouts |
 | **Numbered process / methodology disclosure** | Pixel Point's own site, Linear's "Method" page | §Q — new pattern: methodology page |
 | **Argued narrative ("Here's what's wrong; here's what we built")** | Pixel Point's own site, Slash ("higher standard"), Linear's "lost art of true quality" framing | §X — voice |
 | **Compliance / legal footnotes de-emphasized typographically** | Slash, Stripe, Mercury (visible but `body-sm` neutral.10) | §X — copy hierarchy |
@@ -3892,23 +3994,23 @@ vs. the SaaS template structure that signals genericness:
 
 ## §Z — Open Questions
 
-These are decisions deferred to the `DESIGN_TEMPLATE.md` authoring step or to a per-project `DESIGN.md` instance. They are not gaps in research; they are intentional fill-in slots.
+These were decisions deferred to the template-authoring step or to a per-project `DESIGN.md` instance. They are not gaps in research; they are intentional fill-in slots. **Reviewed 2026-10-21:** items the templates have since settled are marked **Resolved** with where the answer now lives, so nobody re-opens them; only the items marked **Open** are still undecided.
 
-1. **Token naming convention** — should tokens use Tailwind-style numeric scales (`50–950`) or Radix semantic scales (`1–12`)? The template should support both, but pick one canonical naming for component references. **Tentative default: Radix 12-step semantics; Tailwind numeric aliasing optional via token generator output.**
-2. **Spacing token naming** — should tokens be named by multiplier (`space.4` = 16 px) or by T-shirt size (`space.md` = 16 px)? Multiplier is more explicit; T-shirt is more semantic. **Tentative default: multiplier (Tailwind convention).**
-3. **Primary mode** — should the template require declaration of light-or-dark as the canonical mode, or default to light? **Tentative default: light-mode canonical; dark required if the project supports it.**
-4. **Component depth** — the template includes pixel-perfect specs for ~25 components. Some teams will want more (charts, calendars, kanban). Out-of-scope-for-template; extensible per project.
-5. **Brand voice / copywriting tokens** — pure visual systems do not cover voice. Optional sub-section under Overview? **Tentative: include lightweight voice notes in Overview only; full voice guide is separate.**
-6. **Asset pipeline** — does the template specify how SVGs are exported, image compression budgets, font-loading strategy? Out-of-scope-for-template-v1; document as separate engineering spec.
-7. **Internationalization** — RTL support, character width variability (CJK), font subset loading per locale. Should the template note minimums? **Tentative: include an RTL flip rule in §F and a CJK font-loading note in §D; deeper treatment is a future iteration.**
-8. **Versioning of the template itself** — semver? date-based? **Tentative: semver on the template (`v1.0.0`); per-project `DESIGN.md` references template version it was authored against.**
-9. **OKLCH token format** — store color tokens as full `oklch(L C H)` strings (one value per token, browser interprets) or as discrete L/C/H component values (allows runtime computation but more complex)? **Tentative: full `oklch()` strings for emitted tokens, but the generation script in the template should expose component values for new-palette generation.**
-10. **Syntax highlighting theme** — should the template prescribe a specific theme (e.g., Vercel Geist's dark theme as default), or leave the choice to each project? **Tentative: name the canonical light + dark themes the project will use in the `Overview` section; do not prescribe at template level.**
-11. **Charting library** — Recharts, Visx, Tremor, ECharts, custom? Template-level rec or project decision? **Tentative: name in the `Overview` per project; the chart-spec rules in `§T` apply regardless of library.**
-12. **Voice — title vs sentence case** — premium products split roughly 50/50. Brand-level decision. **Tentative: declare in `Overview`; apply consistently through every UI surface.**
-13. **Mono font licensing tier** — premium paid fonts (Berkeley Mono, etc.) cost money. Should the template default to a free recommendation? **Tentative: yes — Geist Mono / JetBrains Mono / IBM Plex Mono are the free defaults; paid fonts are an upgrade path noted in the brand profile.**
-14. **Notification infrastructure** — the template specifies notification *display* but not delivery. Real-time updates, push delivery, queueing are engineering concerns. **Tentative: out of scope; the template defines the visual + interaction layer only.**
-15. **Per-tenant theming** — for multi-tenant SaaS products, how do tenant-customized themes layer on top of the system? **Tentative: define a `theme-overrides` token group per project that the template merges over base tokens; specifics belong in `DESIGN.md` of the relevant project.**
+1. **Token naming convention** — **Resolved:** Radix 12-step semantics (`colors.<palette>.1`–`12`), generated by `tools/brand-kit`. See DESIGN_TEMPLATE_WEB `colors`.
+2. **Spacing token naming** — **Resolved:** multiplier names (`spacing.scale.4` = 16 px). See DESIGN_TEMPLATE_WEB `spacing`.
+3. **Primary mode** — **Resolved:** declared per project in DESIGN `mode.primary` (`light | dark | system`); dark values are required whenever dark is supported (§C.10).
+4. **Component depth** — **Open by design:** the templates spec the core components; charts, calendars, kanban and similar are extended per project.
+5. **Brand voice / copywriting tokens** — **Resolved:** `INFORMATION.md` owns brand voice (INFORMATION_TEMPLATE `# BRAND`); DESIGN and SPEC reference it. Craft rules in §X and §X2.
+6. **Asset pipeline** — **Partly resolved:** image formats, quality and naming live in DESIGN `images`, font loading and metric overrides in DESIGN `typography`, effect cost in DESIGN `# Effects & performance` (§I.14). **Open:** SVG export and optimisation conventions.
+7. **Internationalization** — **Resolved:** DESIGN `mode.rtl_support` switches on the `# Internationalization & RTL` rules; research in §U.
+8. **Versioning of the template itself** — **Resolved:** semver, recorded as `template_version` in every template's frontmatter.
+9. **OKLCH token format** — **Resolved:** full `oklch(L C H)` strings in emitted tokens; the generator works on component values internally (§C.15, `tools/brand-kit`).
+10. **Syntax highlighting theme** — **Resolved:** named per project in DESIGN (`syntax_theme_light` / `syntax_theme_dark`), not prescribed by the template.
+11. **Charting library** — **Resolved:** DESIGN `options.chart_library` per project; §T rules apply regardless of library.
+12. **Voice — title vs sentence case** — **Resolved:** a DESIGN intake question (capitalization), default sentence case, applied everywhere (§X.2).
+13. **Mono font licensing tier** — **Resolved:** free defaults Geist Mono / JetBrains Mono in DESIGN `typography.families.mono`; paid faces are an upgrade the project chooses.
+14. **Notification infrastructure** — **Open, out of scope:** the templates define display and interaction only; delivery, queueing and push are engineering concerns.
+15. **Per-tenant theming** — **Open:** no `theme-overrides` token group exists yet; if a multi-tenant project needs one, define it in that project's `DESIGN.md` and propose it upstream.
 
 ---
 

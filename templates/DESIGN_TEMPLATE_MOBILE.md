@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.21.0
+# Version: 1.22.0
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -24,7 +24,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -458,6 +458,14 @@ elevation:
       thick: "thickMaterial"
       ultra_thin: "ultraThinMaterial"
     shadow_strategy: "minimal"
+    # iOS 26 Liquid Glass: standard bars, tab bars, toolbars, sheets and controls adopt it automatically
+    # when built with the iOS 26 SDK. Custom floating controls use the system API (SwiftUI .glassEffect(),
+    # GlassEffectContainer; UIKit UIGlassEffect), never a hand-built blur stack. Glass is for the
+    # navigation / control layer floating above content, not for content itself.   # verify-current · last verified 2026-10
+    liquid_glass:
+      use_system_materials: true              # system glass or system materials only; no custom blur + tint recipes
+      layer: "controls and navigation over content, never content cards or lists"
+      legibility_check: "test text and icons on glass over the app's real content: light, dark, busy photos, scrolled states, and with Reduce Transparency / Increase Contrast on"
   # Android Material 3 elevation levels (dp)
   android:
     "0": 0
@@ -538,6 +546,29 @@ motion:
     opacity_animations: "preserve"
     cross_fade_transitions: "use when isReduceMotionEnabled (iOS prefersCrossFadeTransitions)"
     spring_to_decelerate: true
+
+# ═══════════════════════════════════════════════════════════════
+# EFFECTS & PERFORMANCE (native cost ladder; budgets per QA.md `gates.performance`)
+# ═══════════════════════════════════════════════════════════════
+# Same idea as DESIGN_TEMPLATE_WEB.md effects: pick the cheapest tier that reaches the look at full
+# quality, register every effect, decide its fallback and reduced-motion path before building it,
+# and measure it (QA.md Gate B2). Frame-time budgets are per QA.md `gates.performance`, never restated here.
+
+effects:
+  ladder:
+    "0": "system materials and system components (SwiftUI materials / Liquid Glass, M3 components)"
+    "1": "Core Animation / SwiftUI animations; Compose animate*AsState, graphicsLayer transforms"
+    "2": "Metal / RenderEffect / AGSL shaders (iOS: SwiftUI shader modifiers or Metal; Android 13+: RuntimeShader)"
+  limits:
+    budgets: "per QA.md gates.performance and gates.performance.runtime"     # frame-time p95 at the display's refresh rate (120 Hz on ProMotion and high-refresh Android)
+    continuous_loops_per_screen_max: 1
+    pause_offscreen: true                # stop shader / TimelineView / infinite transitions when the view leaves the screen
+    pause_in_background: true            # scenePhase / Lifecycle: stop everything when the app is not active
+  adaptive_quality:
+    governor: "measured"                 # steps down only on measured sustained frame misses, never a device-model guess
+    respects: ["Reduce Motion / ANIMATOR_DURATION_SCALE", "Reduce Transparency", "Low Power Mode / power saver"]
+  registry: []                           # same entry fields as the web template: name, tier, why_not_cheaper,
+                                         #   fallback, reduced_motion, measured_p95_ms, devices
 
 # ═══════════════════════════════════════════════════════════════
 # HAPTICS
@@ -1181,7 +1212,7 @@ components:
       triggers_when_pulled_distance: 80   # pt from top, then release
       haptic_on_trigger: "ios.medium"
     android:
-      component: "Material SwipeRefreshLayout / Compose pullRefresh modifier"
+      component: "Compose: Material 3 PullToRefreshBox (androidx.compose.material3); Views: SwipeRefreshLayout"   # verify-current · last verified 2026-10. The older Material 2 pullRefresh modifier is superseded
       indicator: "M3 circular progress in pill"
       triggers_when_pulled_distance: 56
       haptic_on_trigger: "android.confirm"
@@ -1529,6 +1560,14 @@ Sheet corners are rounded **top-only** (`top_corners: radius.xl, bottom_corners:
 
 **Android Material 3:** the 6-level dp elevation scale (0, 1, 3, 6, 8, 12) plus tonal differentiation. M3 Expressive guidance reduces shadow intensity vs prior Material versions; tonal differentiation is increasingly the primary depth cue.
 
+## Liquid Glass (iOS 26) `# verify-current · last verified 2026-10`
+
+On iOS 26 and later, system bars, tab bars, toolbars, sheets and many controls render in Liquid Glass automatically when the app is built with the iOS 26 SDK. Rules:
+
+- **Use the system materials.** Standard components get glass for free; a custom floating control uses the system API (SwiftUI `.glassEffect()` inside a `GlassEffectContainer`, UIKit `UIGlassEffect`). Never rebuild glass from a blur plus tint plus highlight stack: it costs more, drifts from the system look and misses its accessibility adaptations.
+- **Glass is the control layer, not the content.** Navigation and controls float on glass above content; content cards and list rows stay on solid or tonal surfaces. Do not stack glass on glass.
+- **Test legibility over real content.** Check text and icons on glass over the app's actual screens: light and dark, busy photography, scrolled states, and with Reduce Transparency and Increase Contrast turned on. Glass that reads on an empty mock can fail over a photo.
+
 ## Separation strategy
 
 Mobile UI is materially flatter than web UI. Use elevation sparingly — reserve for FAB, sheets, dialogs, raised cards in scrollable lists.
@@ -1574,7 +1613,18 @@ Honor `isReduceMotionEnabled` (iOS) and `ANIMATOR_DURATION_SCALE` (Android). Spe
 
 - Long-duration animations on micro-interactions
 - Custom easings outside the four named curves
-- Animating layout properties at 60 fps with main-thread work (use platform-native APIs)
+- Animating layout properties with main-thread work at the display's refresh rate (120 Hz on ProMotion and high-refresh Android); use platform-native APIs
+- An effect with no `effects.registry` entry, no fallback or no reduced-motion path
+
+## Effects & performance (native)
+
+Pick the cheapest `effects.ladder` tier that reaches the look at full quality, and spend what is left of the budget on quality, not on a costlier technique:
+
+- **Tier 0, system materials and components** (SwiftUI materials and Liquid Glass, M3 components): cheapest, and they inherit accessibility settings.
+- **Tier 1, Core Animation / Compose animation**: SwiftUI and UIKit animations backed by Core Animation; Compose `animate*AsState`, `updateTransition`, and `graphicsLayer` for transform, alpha and clip (it skips recomposition and relayout).
+- **Tier 2, Metal / shaders**: SwiftUI shader modifiers (`colorEffect`, `distortionEffect`, `layerEffect`) or Metal on iOS; `RenderEffect` / AGSL `RuntimeShader` on Android 13+. Needs a written `why_not_cheaper` and a registered fallback.
+
+Every number (frame-time p95 at the display's refresh rate, startup, jank) is per QA.md `gates.performance`. Every effect gets an `effects.registry` entry, pauses offscreen and in the background, honors Reduce Motion / Reduce Transparency, and records a measured result on real devices (QA.md Gate B2).
 
 ---
 
@@ -1806,7 +1856,7 @@ Every full-bleed surface respects safe areas. Common safe-area-aware layouts:
 | Pull to refresh | Native PTR (see `components.pull_to_refresh.ios`) | Native PTR (see `components.pull_to_refresh.android`) |
 | Reveal swipe actions | Swipe left/right on row | Swipe left/right on row |
 | Long-press | Context menu / preview | Selection / context menu |
-| Predictive back (Android 14+) | n/a | System-driven preview during back-swipe; opt-in via `android:enableOnBackInvokedCallback="true"` |
+| Predictive back | n/a | System-driven preview during back-swipe. **On by default for apps targeting API 36 (Android 16)**; `onBackPressed()` is no longer called, so handle back with `OnBackPressedCallback` / Compose `PredictiveBackHandler`. On API 33 to 35 it is opt-in via `android:enableOnBackInvokedCallback="true"`. `# verify-current · last verified 2026-10` |
 | Scroll bounce (rubber-band) | Preserve on iOS — premium signal; never disable `bounces` on `UIScrollView` | Material overscroll glow (default; don't override) |
 
 Avoid: left-edge swipe gestures that compete with system back. Any custom gesture must not conflict with system gestures.
@@ -1948,7 +1998,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.21.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.22.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

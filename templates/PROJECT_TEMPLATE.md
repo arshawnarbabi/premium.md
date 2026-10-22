@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.21.0
+# Version: 1.22.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -22,7 +22,7 @@
 # Rule: the AI NEVER writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, yours. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -84,14 +84,20 @@ source_files:
     priority_for: ["structured data / JSON-LD", "AEO answer-first", "GEO citability", "social cards", "llms.txt"]
   qa_md:
     file: "QA.md"
-    purpose: "Premium acceptance gate — the AI runs it against its own build before declaring done."
+    purpose: "Premium acceptance gate — the AI runs it against its own build before declaring done. Also the SINGLE OWNER of every numeric budget (Core Web Vitals, JS weight, runtime frame / long-task / effect limits) and of the viewport matrix; other files point here instead of restating numbers."
     exists: "<true | false>"
-    priority_for: ["accessibility", "performance (Core Web Vitals)", "token fidelity", "responsive", "launch QA"]
+    priority_for: ["accessibility", "performance budgets (CWV + runtime)", "viewport matrix", "token fidelity", "responsive + touch / iOS Safari", "launch QA"]
   decisions_md:
     file: "DECISIONS.md"
     purpose: "Append-only log of locked decisions + rationale. Read before proposing changes so settled choices aren't relitigated."
     exists: "<true | false>"
     priority_for: ["locked decisions", "rationale history", "what we're deliberately NOT doing"]
+  research_md:
+    file: "research.md"
+    purpose: "The evidence behind every template default (ships with the templates; brand-agnostic). Cited as `research §X.Y` throughout the templates. Consult the cited section whenever you CHOOSE or CHANGE a default, so the change is grounded, not guessed. Reference material, not a project decision: it never overrides a filled value in the files above."
+    exists: true
+    priority_for: ["why a default is what it is", "viewport matrix + iOS Safari behaviour (§F.5)", "effect cost ladder + frame budgets (§I.14)", "OKLCH palette algorithm (§C.15)", "build modes (§X4)"]
+    freshness: "Before relying on a cited claim that is time-sensitive (tagged `[verify-current · last verified YYYY-MM]`) and older than ~6 months, run research.md's Freshness protocol (top of the file): re-check it against current sources and flag any drift."
 
 priority_order:
   # When multiple files speak to the same decision, this is the precedence.
@@ -105,6 +111,7 @@ priority_order:
   - PROJECT.md                      # project-wide constraints (this file)
   - QA.md                           # validation gate — references the above; never an authority on a decision
   - DECISIONS.md                    # rationale/history of locked choices — read before reopening any of them; not an override
+  - research.md                     # evidence for the defaults — consult when choosing/changing one; never an override
 
 # ═══════════════════════════════════════════════════════════════
 # TECH STACK
@@ -118,17 +125,17 @@ tech:
     #   both      = a marketing site AND a web app (apply each surface's patterns to its own pages)
     surfaces: "<marketing | product | both>"   # see DESIGN.md §Web surface scope
     framework: "Next.js"                 # App Router by default
-    framework_version: "<15.x | latest>"
+    framework_version: "<16.x | latest>"   # verify-current · last verified 2026-10 (16.3) — confirm before scaffolding (research.md Freshness protocol)
     language: "TypeScript"
     styling: "Tailwind CSS"
     styling_version: "<v4>"
     ui_primitives: "<shadcn/ui (dashboards) | none (marketing sites) | custom>"
     component_library_note: "shadcn/ui is for product / dashboard contexts only; marketing sites use custom components built against DESIGN.md tokens"
-    animation: "Framer Motion"
+    animation: "Motion (motion.dev, formerly Framer Motion)"   # default — for layout/gesture/enter-exit choreography; prefer CSS / WAAPI (transform + opacity) for continuous and scroll-linked motion, which runs on the compositor (research §I.14)
     forms: "React Hook Form + Zod"
     icons: "<Lucide | Phosphor | Heroicons | Tabler | HugeIcons (free Stroke-Rounded + Pro) | custom — declare per project; keep in sync with DESIGN.md icons.library>"
-    cms: "<Sanity | Contentlayer | MDX-in-repo | n/a>"
-    auth: "<NextAuth / Auth.js | Clerk | Supabase Auth | custom | n/a>"
+    cms: "<Sanity | MDX via the framework (@next/mdx) | Velite | n/a>"   # verify-current — Contentlayer is unmaintained; do not pick it for new projects
+    auth: "<Auth.js / Better Auth | Clerk | Supabase Auth | custom | n/a>"   # verify-current — Auth.js maintenance moved under Better Auth; confirm the current recommendation
     db: "<Postgres on Neon | Supabase | PlanetScale | n/a>"
     file_storage: "<Cloudflare R2 | Vercel Blob | S3 | n/a>"
     email: "<Resend | Postmark | SendGrid>"
@@ -136,15 +143,15 @@ tech:
     monitoring: "<Sentry | Datadog | n/a>"
     deployment: "Vercel"
     package_manager: "<pnpm | npm | yarn | bun>"
-    node_version: "<22.x | latest LTS>"
+    node_version: "<24.x (LTS)>"   # verify-current
 
   mobile:
     # Fill only if mobile is in scope
     in_scope: "<true | false>"
     approach: "<native-swift-ios | native-compose-android | react-native-expo | flutter | n/a>"
-    ios_target_min: "<iOS 16.0>"
+    ios_target_min: "<iOS 17.0>"   # iOS 17 is the floor if state_management uses SwiftUI @Observable (Observation framework); iOS 16 only with ObservableObject
     android_target_min: "<API 26 (Android 8.0)>"
-    state_management: "<SwiftUI Observable | Compose ViewModel | Redux/Zustand for RN>"
+    state_management: "<SwiftUI @Observable (needs iOS 17+) | SwiftUI ObservableObject (iOS 16) | Compose ViewModel | Redux/Zustand for RN>"
     networking: "<URLSession | Retrofit | fetch (RN) | TanStack Query>"
     analytics: "<PostHog | Mixpanel | Amplitude | Firebase | n/a>"
     crash_reporting: "<Sentry | Crashlytics | n/a>"
@@ -197,9 +204,12 @@ agent_constraints:
     - "Honor INFORMATION.md compliance requirements (GDPR / CCPA / HIPAA / etc.)."
     - "Treat SPEC.md copy as final — don't rephrase declared copy to 'improve' it."
     - "When a needed value isn't in the source files, ask — don't fabricate."
+    - "When choosing or changing a template default (a budget, a breakpoint, an effect technique, a token profile), read the research.md section the template cites for it first; if that claim is time-sensitive and its `last verified` stamp is older than ~6 months, run research.md's Freshness protocol before relying on it."
     - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components."
     - "Build process (research §X4): (a) recognize the build MODE — docs-first→build, explore-build→design-off-it→document→rebuild, or hybrid — and state which one you're in; in the explore mode, capture the resulting decisions back into the docs (DESIGN/DECISIONS/SPEC) before the production build. (b) When the human supplies REFERENCE images/sketches/sites, translate their STRUCTURE into THIS project's tokens + voice — never copy a brand's colors/fonts/copy; log reference-driven choices in DECISIONS.md. (c) VIEW THE RUNNING APP: when your tool can drive a browser (e.g. Claude in Chrome — `claude --chrome` / open `localhost:3000`), open the dev server and iterate visually — compare the real render to the design/reference and fix until it looks right; code compiling is NOT 'looks right.' The browser loop is how you satisfy QA.md's responsive/themes/fidelity checks."
     - "If QA.md exists, the build is NOT done until every gate in it is ✅. Run it against your own output; fix failures and re-check before declaring complete."
+    - "Every change ships at every viewport (research §F.5). Any change to layout, type, spacing, motion or imagery is built AND checked across the full QA.md `gates.viewport_matrix` (phones portrait + landscape, tablets portrait + landscape, short laptops, desktop, wide) in the SAME turn, not only at the author's screen. Use each section's SPEC `responsive:` block; where it is silent, derive from DESIGN tokens and surface the derivation. Report the matrix result (QA Gate E, plus E2 on touch) before calling the change done. A design approved at one width is a design for ALL widths: never wait for the human to ask about another size after the fact. If behaviour at a size is genuinely unclear, ASK rather than skip it. Sizes are excluded only via QA `gates.viewport_matrix.out_of_scope` with a DECISIONS 'Viewport scope' entry."
+    - "Effects ship performance-ready (research §I.14). Before building ANY effect (blur, glass, WebGL/canvas, video, parallax, scroll-driven or continuous animation, large shadows/filters), record its plan in DESIGN `effects.registry`: `tier` = the CHEAPEST technique on DESIGN `effects.ladder` that reaches the intended quality (compositor-first: transform/opacity via CSS/WAAPI before JS-driven, before filters/backdrop-filter, before canvas/WebGL); `why_not_cheaper`; the cheaper `fallback` path and the `reduced_motion` path decided UP FRONT. It ships only with `measured_p95_ms` recorded against QA.md `gates.performance.runtime` budgets on a 120 Hz iPhone/iPad (Safari) and a mid-tier Android phone (Chrome), both scroll directions (QA Gate B2). Never plan to 'step it down later'. If the budget fails, pick the next-lower tier NOW and log the trade in DECISIONS ('Performance trade'). Quality stays as high as the budget allows: the goal is the best-looking version that meets the budget, not the cheapest one."
     - "If DECISIONS.md exists, read it before proposing OR making any change it covers. A request that touches a LOCKED decision is NOT itself authorization to reopen it — even phrased as a direct instruction ('switch to borders', 'make it green'). Before modifying any file you MUST surface the locked entry, quote its rationale, and get explicit human confirmation to supersede it; only then implement and append a new superseding entry. Never implement a locked-decision change in the same turn as the request. When a new non-trivial decision is locked this session, append an entry."
     - "Reusable content (testimonials, stats, FAQs, features, team, pricing) lives in CONTENT.md when present — reference it via {content.*}, never paste inline or invent it. In CODE, components import records from a content module (lib/content.ts); never hardcode a content string as a const or default prop value (no 'standalone demo' carve-out) — same discipline as exported tokens vs hardcoded #hex."
     - "When turning these docs into a real codebase, emit an AGENTS.md at the repo root (the open standard read by 20+ coding agents): build/test/lint commands, code conventions from `tech`, the QA.md gate, and a pointer back to these design docs as the source of truth."
@@ -215,7 +225,8 @@ agent_constraints:
   default_assumptions:
     accessibility: "WCAG 2.2 AA minimum; APCA preferred (per DESIGN.md)"
     i18n: "default locale is {information.seo.default_locale}; RTL support per DESIGN.md mode declaration"
-    performance: "LCP ≤ 2.5s; INP ≤ 200ms (per DESIGN.md performance budgets)"
+    performance: "every budget (Core Web Vitals, JS weight, runtime frame/long-task/effect limits) lives ONLY in QA.md frontmatter `gates.performance` (+ `.runtime`) — the single owner; never restate the numbers here or in DESIGN"
+    viewports: "the full QA.md `gates.viewport_matrix` (single owner) — every change is built and checked at all of it, not only at the author's screen"
     privacy: "honor `prefers-color-scheme`, `prefers-reduced-motion`, and other preference media queries"
 
 # ═══════════════════════════════════════════════════════════════
@@ -229,6 +240,8 @@ workflow:
   lint: "<npm run lint | eslint .>"
   format: "<npm run format | prettier --write .>"
   build: "<npm run build | pnpm build>"
+  viewport_sweep: "<npm run qa:viewports>"   # default — Playwright sweep of QA.md gates.viewport_matrix (QA Gate E): overflow asserts + screenshots per entry into a named folder
+  perf_trace: "<npm run qa:perf | DevTools Performance trace on a real device via remote debugging>"   # default — runtime frame-time / long-task check for every effect (QA Gate B2), both scroll directions
 
   ai_collaboration_pattern:
     # How the human + AI typically work together on this project
@@ -236,18 +249,29 @@ workflow:
       - "Fill INFORMATION.md + DESIGN.md (brand identity + visual tokens)"
       - "Generate the color palette with the bundled generator: tools/brand-kit → `npm run gen -- --base \"oklch(L C H)\"` (do NOT hand-roll the OKLCH math)"
       - "FINAL STEP: review in the brand-kit viewer — `tools/brand-kit` → `npm run dev` — and iterate before building product code"
+      - "Once product code exists, a token change (type scale, spacing, radius, section_padding) is a change at every viewport: viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green, in the same turn"
     new_page_workflow:
-      - "Add page entry to SPEC.md (sitemap + page block with sections)"
+      - "Add page entry to SPEC.md (sitemap + page block with sections, each with its required `responsive:` block)"
       - "Hand SPEC.md + DESIGN.md + INFORMATION.md to AI"
+      - "Any effect on the page: plan it in DESIGN `effects.registry` (tier, fallback, reduced_motion) BEFORE building it"
       - "AI generates Next.js page component using DESIGN tokens + SPEC content"
+      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
       - "Human reviews + commits"
     new_component_workflow:
-      - "Define component spec in DESIGN.md if it's a new type"
+      - "Define component spec in DESIGN.md if it's a new type (incl. touch/:active state and its narrow-container behaviour)"
       - "AI generates component using existing DESIGN tokens"
+      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
       - "Human reviews + commits"
+    design_change_workflow:
+      # The common case: the human changes something while looking at ONE screen (usually a laptop).
+      - "Apply the change, then derive what it means at every QA.md gates.viewport_matrix entry from the SPEC `responsive:` block + DESIGN tokens; ask only where behaviour is genuinely unclear"
+      - "New or changed effect: update its DESIGN `effects.registry` entry first (tier, fallback, reduced_motion)"
+      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
+      - "Report the Gate E matrix result (+ B2 numbers for effects) with the change, then human reviews + commits"
     copy_change_workflow:
       - "Update copy in SPEC.md (the source of truth)"
       - "AI propagates change to component if needed"
+      - "Viewport sweep (QA Gate E, + E2 on touch; copy reflows, so check the longest title at 320 px) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
 
 # ═══════════════════════════════════════════════════════════════
 # CROSS-REFERENCES (explicit file relationships)
@@ -308,6 +332,7 @@ When working on this project, an AI agent **must** follow these rules:
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
 9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. **Also surface AI-drafted values (any slot carrying a `# DRAFT` / `confirm/refine` marker) as PART 0 "Drafts awaiting your approval" — so "what do I have to fill out or approve" returns both the empty slots AND the unapproved drafts; never treat a `# DRAFT` value as approved.** The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise. **Honor the §Status protocol:** mark AI-inferred values `# draft` and accepted out-of-box defaults `# default` at fill time, emit the state ledger on every audit, and never let an unmarked value imply an approval it didn't get.
+10. **Every change ships at every viewport, and every effect ships performance-ready.** These are the two enforced rules in `agent_constraints.must`: a change is checked across the whole QA.md `gates.viewport_matrix` (Gate E/E2) in the same turn it is made, and an effect is planned in DESIGN `effects.registry` and measured against QA.md `gates.performance.runtime` (Gate B2) before it ships. Neither is a follow-up task the human has to request.
 
 ---
 
@@ -691,19 +716,19 @@ Show the user a compact summary of what you filled per file after each batch.
 For values that can be computed from user inputs, derive without asking. **Order matters** — later derivations depend on earlier ones.
 
 1. **Resolve all profile selections first** (saturation, warmth, radius, type-scale, etc.). User-provided overrides win; defaults apply otherwise.
-2. **Generate 12-step color palettes** via the OKLCH algorithm in DESIGN §C.15:
+2. **Generate 12-step color palettes** via the OKLCH algorithm in research.md §C.15 (run by the bundled generator, `tools/brand-kit` → `npm run gen`):
    - Apply the saturation profile's chroma multiplier (muted ×0.7, default ×1.0, vivid ×1.3)
    - Apply warmth profile to neutral hue (cool ≈ 240, neutral ≈ 60, warm ≈ 40)
    - Generate primary, neutral, success, warning, danger palettes
    - **APCA verification step:** for each palette, check step 11 vs step 2 clears Lc 60; step 12 vs step 2 clears Lc 90. If either fails, lower the step's L by 0.02 increments until it passes. Surface to user only if a palette fails after 5 retries.
-3. **Generate dark-mode counterparts** for all 5 palettes per §C.10 perceptual mapping rules (not inversion):
+3. **Generate dark-mode counterparts** for all 5 palettes per research.md §C.10 perceptual mapping rules (not inversion):
    - Lower lightness floor and raise ceiling
    - Reduce chroma 20-40% for accents
    - Verify APCA targets against dark step 2
 4. **Set derived neutral-dependent tokens**:
    - Shadow tint = `neutral.12`
-   - Surface roles map to neutral steps per §C.6
-   - Border roles map per §C.7
+   - Surface roles map to neutral steps per research.md §C.6
+   - Border roles map per research.md §C.7
 5. **Propagate brand identity to all templates** (per Cross-template consistency table below).
 6. **Apply HTML mapping defaults** in DESIGN typography appropriate to the project type.
 7. **Generate voice samples (with approval gate)**:
@@ -731,12 +756,26 @@ After all edits, perform five checks and report results. **The grep patterns are
 
 Run each pattern across all scoped template files. The union of hits is the unfilled set.
 
-| Sub-check | Pattern / method | Catches |
+**Scope the greps to frontmatter VALUES, not the whole file.** Each template's own guidance prose (this protocol, the "How to fill" sections, comment lines, inline `# draft` / `# default` / `# verify-current` notes) legitimately contains `<slot>`, `TBD`, `Acme` and `example.com` as *examples*, so a whole-file grep can never reach zero on a correctly filled project. The values that must be filled live in the YAML frontmatter (between the first two `---` lines), so extract only that, drop full-line comments, and strip trailing ` # …` comments before matching:
+
+```sh
+# fm FILE… → "file:line: value-text" for frontmatter lines only, comments removed
+fm() { awk 'FNR==1{f=0} FNR==1 && /^---/{f=1; next} f && /^---/{f=2} f==1 && !/^[[:space:]]*#/ {
+  sub(/[[:space:]]+#[[:space:]].*$/, ""); print FILENAME ":" FNR ": " $0 }' "$@"; }
+fm *.md | grep -E  '<[^>]*>'                                  # A.1
+fm *.md | grep -iwE 'TBD|TODO|FIXME'                          # A.2
+fm *.md | grep -E  ':[[:space:]]*(""|\?|null)[[:space:]]*$'    # A.3
+fm *.md | grep -iE 'Acme|example\.com|John Doe|Jane Smith|Lorem ipsum|Your Brand|Your Company|Product Name'   # A.4
+```
+
+A ` # ` comment marker must be preceded by whitespace and followed by a space, so `#hex` values and `{group.path}` refs are untouched. Body sections that hold real project content (e.g. a filled SPEC page's prose, a DECISIONS entry) are checked by A.5's semantic read, not by grep. A filled project returns **zero** A.1–A.4 hits except deliberate `<TBD: …>` / `<SKIPPED>` markers, which are reported as 📝 below, not failures.
+
+| Sub-check | Pattern / method (run on `fm` output) | Catches |
 |---|---|---|
-| A.1 | `grep -n "<[^>]*>" *.md` | Unfilled `<placeholder>` syntax |
-| A.2 | `grep -niE "\bTBD\b\|\bTODO\b\|\bFIXME\b" *.md` | Plain-text deferrals (case-insensitive) |
-| A.3 | `grep -nE ': *""\s*$\|: *\?\s*$\|: *null\s*$' *.md` | Empty / null / `?` YAML values |
-| A.4 | Stub scan: `grep -niE "Acme\|example\.com\|John Doe\|Jane Smith\|Lorem ipsum\|Your Brand\|Your Company\|Product Name" *.md` | Common surviving template stubs |
+| A.1 | `grep -E '<[^>]*>'` | Unfilled `<placeholder>` syntax |
+| A.2 | `grep -iwE 'TBD\|TODO\|FIXME'` | Plain-text deferrals (case-insensitive) |
+| A.3 | `grep -E ':[[:space:]]*(""\|\?\|null)[[:space:]]*$'` | Empty / null / `?` YAML values |
+| A.4 | Stub scan: `grep -iE 'Acme\|example\.com\|John Doe\|Jane Smith\|Lorem ipsum\|Your Brand\|Your Company\|Product Name'` | Common surviving template stubs |
 | A.5 | Cardinality + semantic scan: walk each list slot with a declared minimum count and verify; for descriptive slots, apply the semantic reasoning checks from §"What counts as 'filled' vs 'unfilled'" | Lists below threshold; suspected stubs that don't trip A.1–A.4 |
 
 Report combined results:
@@ -884,7 +923,7 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 
 # Versioning
 
-`template_version: 1.21.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.22.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

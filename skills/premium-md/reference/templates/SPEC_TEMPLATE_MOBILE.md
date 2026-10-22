@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.21.0
+# Version: 1.22.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -40,7 +40,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -146,7 +146,7 @@ onboarding:
       content:
         headline: "<Welcome to {{brand_name}}>"
         body: "<1-sentence value prop tailored to primary persona>"
-        media: "<illustration | video | n/a>"
+        media: "<illustration | video | n/a>"   # if animated: add effect_ref + fallback + reduced_motion (screen_schema.media)
         cta_primary: { label: "<Get started>", action: "advance" }
         cta_secondary: { label: "<I already have an account>", action: "navigate:/auth/sign-in" }
 
@@ -246,8 +246,9 @@ auth:
 # ═══════════════════════════════════════════════════════════════
 # PERMISSION PRE-PROMPTS (mandatory before system dialog)
 # ═══════════════════════════════════════════════════════════════
-# Per DESIGN_MOBILE.md §W.10: never trigger system permission dialog
-# without showing a custom in-app explanation first.
+# Per research.md §W.11 (permission requests) and §R.11 (request in context):
+# never trigger the system permission dialog without showing a custom in-app
+# explanation first.
 
 permissions:
 
@@ -467,12 +468,67 @@ settings:
 # Guidance inside slots describes what KIND of copy to write. Replace it
 # with the actual final sentence the user will read on the screen.
 
+# ─── SCREEN SCHEMA — the shape every screen under `screens.*` follows ───
+# Every screen carries a `responsive:` block, and every media item or section
+# that animates carries `effect_ref` + `fallback` + `reduced_motion`. Both are
+# REQUIRED: a screen without `responsive:`, a size class left out of it, or an
+# animated item without those three keys is UNFILLED (AI Agent Contract rule 14).
+# The base spec (`layout:`) is iPhone portrait / Android compact portrait;
+# `responsive:` states what changes in every other size class, written in the
+# same change as the base layout, never later. Classes follow the native size
+# classes in DESIGN_MOBILE `ios_size_classes` + `android_window_size_classes`;
+# a screen the app locks to portrait says so per class and records it in
+# DECISIONS.md ('Viewport scope'). Effects follow DESIGN_MOBILE
+# `# Effects & performance` and are measured per QA.md Gate B2.
+# "same as base" is a valid answer only after it was actually checked there.
+screen_schema:
+  responsive:
+    compact_landscape:  # iOS compact height (iPhone landscape; Plus / Pro Max are regular width); Android compact height
+      layout: "<short-height layout — e.g., 'two columns, top bar inline, sheet becomes side panel'>"
+      order: "<content order if it differs from base — or 'same as base'>"
+      hidden: "<elements dropped at this class, each with a reason — or 'none'>"
+      motion: "<what the motion becomes — or 'same as base'>"
+    regular_portrait:   # iPad full screen portrait (regular width + height); Android medium / expanded portrait
+      layout: "<…  — e.g., 'list-detail split, tab bar stays, content capped at readable width'>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    regular_landscape:  # iPad full screen landscape; Android expanded (≥ 840 dp)
+      layout: "<…  — e.g., 'sidebar + detail, navigation rail or sidebar replaces tab bar'>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    split_view:         # iPad Split View / Slide Over / Stage Manager windows and Android multi-window; width can be compact on an iPad
+      layout: "<…  — e.g., 'falls back to the compact layout below 600 pt, no fixed iPad-only columns'>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    foldable:           # Android medium (600–840 dp) unfolded, plus the fold / hinge posture if supported
+      layout: "<…  — or 'n/a, iOS only' with a DECISIONS.md entry>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+  media:
+    type: "<illustration | video | animation | lottie | rive | shader | none>"
+    asset: "<path or n/a>"
+    accessibility_label: "<VoiceOver / TalkBack label, or 'decorative'>"
+    motion: "<static | loop | interactive | …>"
+    effect_ref: "<DESIGN_MOBILE `effects.registry[].name` of the entry that renders this motion — required unless motion is static>"
+    fallback: "<what shows when the effect cannot run (older OS, Low Power Mode, governor stepped down, before first frame) — required unless motion is static>"
+    reduced_motion: "<what shows under Reduce Motion / ANIMATOR_DURATION_SCALE 0 — required unless motion is static>"
+
 screens:
 
   home:
     route: "/home"
     purpose: "<one-sentence purpose>"
     primary_persona: "{information.audience.primary_persona.name}"
+    responsive:   # required — shape and rules in `screen_schema.responsive` above
+      compact_landscape: { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+      regular_portrait:  { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+      regular_landscape: { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+      split_view:        { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+      foldable:          { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
 
     layout:
       top_bar:
@@ -516,6 +572,7 @@ screens:
   item_detail:
     route: "/home/item/[id]"
     purpose: "<show detail of a single item>"
+    responsive: "<required — the five size classes per screen_schema.responsive>"
 
     layout:
       top_bar:
@@ -526,6 +583,7 @@ screens:
       sections:
         - type: "hero-media"
           aspect: "{design_mobile.images.aspect_ratios.video}"
+          motion: "<static | …>"   # if not static: effect_ref + fallback + reduced_motion (screen_schema.media)
         - type: "title-block"
         - type: "metadata-row"
         - type: "long-form-content"
@@ -545,6 +603,7 @@ screens:
   search:
     route: "/search"
     purpose: "<help users find things>"
+    responsive: "<required — the five size classes per screen_schema.responsive>"
     layout:
       top_bar:
         type: "search-field-only"
@@ -567,6 +626,7 @@ screens:
   profile:
     route: "/profile"
     purpose: "<personal home — settings, activity, identity>"
+    responsive: "<required — the five size classes per screen_schema.responsive>"
     layout:
       top_bar:
         title: "<Profile>"
@@ -586,6 +646,7 @@ screens:
   "404":
     route: "/error/not-found"
     purpose: "<dead-end recovery>"
+    responsive: "<required — the five size classes per screen_schema.responsive>"
     layout:
       sections:
         - type: "centered-message"
@@ -597,6 +658,7 @@ screens:
   offline:
     route: "/error/offline"
     purpose: "<offline recovery>"
+    responsive: "<required — the five size classes per screen_schema.responsive>"
     layout:
       sections:
         - type: "centered-message"
@@ -745,7 +807,7 @@ analytics:
   privacy:
     ios:
       app_tracking_transparency: "<required if cross-app tracking; show ATT prompt>"
-      privacy_manifest_required: "<true — iOS 17+>"
+      privacy_manifest_required: "<true — a PrivacyInfo.xcprivacy manifest (app and each third-party SDK) is required for App Store submission since 2024-05 whenever required-reason APIs or tracking domains are used, whatever the deployment target; [verify-current] against Apple's current submission rules>"
     android:
       data_safety_form: "<keep updated in Play Console>"
 
@@ -912,6 +974,7 @@ When generating any screen, copy, or interaction from this document, an AI agent
 11. **Honor accessibility settings declared per-screen.** Dynamic Type, VoiceOver labels, color-independence are non-negotiable.
 12. **Use native components first (per DESIGN_MOBILE.md).** Custom UI only when native doesn't satisfy.
 13. **System gestures stay system gestures.** Don't override back-swipe, pull-to-refresh, sheet-dismiss-swipe.
+14. **Every size class is specified with the base layout, in the same change.** Every screen carries a `responsive:` block covering `compact_landscape`, `regular_portrait`, `regular_landscape`, `split_view` and `foldable` (shape in `screen_schema`), each stating `layout` / `order` / `hidden` / `motion`; the base `layout:` is iPhone portrait / Android compact. Every animated media item or section names its `effect_ref` (a DESIGN_MOBILE `effects.registry[].name`), its `fallback` and its `reduced_motion` path. **A screen without a `responsive:` block, a class left out of it, or an animated item without `effect_ref` / `fallback` / `reduced_motion` is UNFILLED** and is reported as such, never built from guesses. A class the app does not support (portrait lock, iPhone only, no foldables) says so and has a DECISIONS.md 'Viewport scope' entry. Test on real devices or simulators at each class, including an iPad in Split View.
 
 ---
 
@@ -991,6 +1054,8 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 - **Don't request all permissions on launch.** Request in context, when the feature needs it.
 - **Don't write 5-step swipeable intro onboarding.** Universal anti-pattern. Use empty-state-driven or progressive instead.
 - **Don't omit empty / loading / error states.** Every screen has all four.
+- **Don't design a screen for iPhone portrait only.** A screen without a complete `responsive:` block is unfilled (AI Agent Contract rule 14); iPad Split View can hand an iPad app a compact-width window at any time.
+- **Don't name an effect without its registry entry.** Animated items point at DESIGN_MOBILE `effects.registry` via `effect_ref` and declare `fallback` + `reduced_motion`.
 - **Don't use generic SaaS-app copy.** Anchor to voice_samples.
 - **Don't invent feature names.** Use the declared product capabilities from INFORMATION.md.
 - **Don't write the app store listing in technical-spec voice.** It's a marketing surface.
@@ -1000,7 +1065,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.21.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.22.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

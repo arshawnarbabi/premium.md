@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.21.0
+# Version: 1.22.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -27,7 +27,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -60,7 +60,9 @@ options:
   tabs_style: "underline"            # underline | filled
   icon_fill: "outline"               # outline | filled
   avatar_shape: "circle"             # circle | squircle | rounded-square
-  modal_backdrop: "blur"             # scrim | blur
+  modal_backdrop: "blur"             # scrim | blur. blur is an effects.ladder tier-2 (backdrop-filter) cost: it counts toward QA.md
+                                     #   backdrop_filter_layers_max and falls back to a translucent scrim when over budget, when
+                                     #   the effects.adaptive_quality governor steps down, and under prefers-reduced-transparency
   code_surface: "always-dark"        # match-page | always-dark
   onboarding_pattern: "empty-state-driven"  # empty-state-driven | progressive | coach-marks | step-by-step-modal | milestone-checklist
   save_model: "auto-save"            # auto-save | explicit-save
@@ -280,7 +282,7 @@ colors:
   css_color_scheme: "{mode.primary}"            # set `color-scheme: light|dark` on <html> for native scrollbar contrast
 
 # ═══════════════════════════════════════════════════════════════
-# TYPOGRAPHY
+# TYPOGRAPHY (research §D)
 # ═══════════════════════════════════════════════════════════════
 
 typography:
@@ -422,7 +424,7 @@ typography:
     optical_alignment_tolerance_px: 1  # adjust ±1 px when perception beats geometry
 
 # ═══════════════════════════════════════════════════════════════
-# SPACING — 4 px base, 18-step scale. Hardcoded.
+# SPACING — 4 px base, 18-step scale. Hardcoded. (research §E)
 # ═══════════════════════════════════════════════════════════════
 
 spacing:
@@ -466,7 +468,7 @@ spacing:
     container_padding_desktop: "{spacing.scale.6}"
 
 # ═══════════════════════════════════════════════════════════════
-# SHAPES (RADIUS)
+# SHAPES (RADIUS) (research §G)
 # ═══════════════════════════════════════════════════════════════
 
 radius:
@@ -493,7 +495,7 @@ radius:
     code_block: "{radius.scale.lg}"
 
 # ═══════════════════════════════════════════════════════════════
-# ELEVATION & DEPTH
+# ELEVATION & DEPTH (research §H)
 # ═══════════════════════════════════════════════════════════════
 
 elevation:
@@ -527,6 +529,7 @@ surface_separation:
   shadow_size: "default"      # tight (×0.85 blur+offset) | default (×1.0) | airy (×1.2) — multiplies shadow blur + offset
   border_width: 1             # 1 | 1.5 | 2 (px) — stroke thickness when the strategy uses a border (system ceiling = 2px)
   hover: "lift"               # lift (raise one elevation level) | border (darken to border.strong) | none
+                              #   applied only under @media (hover: hover) and (pointer: fine); touch gets :active (§Input modality)
 
 # ─── Z-INDEX ───
 
@@ -541,7 +544,7 @@ z_index:
   tooltip: 1600
 
 # ═══════════════════════════════════════════════════════════════
-# MOTION
+# MOTION (research §I)
 # ═══════════════════════════════════════════════════════════════
 
 motion:
@@ -616,8 +619,60 @@ states:
   # Performance budgets (as design constraints — anything slower needs explicit loading state)
   perf:
     mutation_request_max_ms: 500   # POST/PATCH/DELETE — beyond this, design a loading state
-    lcp_target_ms: 2500            # Largest Contentful Paint
-    inp_target_ms: 200             # Interaction to Next Paint
+    # Core Web Vitals (LCP, INP, CLS), frame-time p95 and long-task limits are NOT restated here.
+    # QA.md owns every numeric performance budget; read them there, never copy them into this file.
+    budgets: "per QA.md gates.performance and gates.performance.runtime"
+
+# ═══════════════════════════════════════════════════════════════
+# EFFECTS & PERFORMANCE (research §I.14 runtime performance; research §F.5 viewport matrix, iOS Safari)
+# ═══════════════════════════════════════════════════════════════
+# Every visual effect (blur, glass, shader, canvas, parallax, scroll-linked motion) is picked from
+# the cost ladder, registered below, and measured before it ships (QA.md Gate B2). The numbers live
+# in QA.md; this block holds the rules and the per-project registry. See body §Effects & performance.
+
+effects:
+  # Cost ladder, cheapest first. Use the cheapest tier that reaches the look at full quality; going
+  # up a tier needs a written `why_not_cheaper` in the registry.
+  ladder:
+    "0": "CSS transform + opacity (compositor only: CSS transitions/animations, WAAPI, scroll/view timelines)"
+    "1": "CSS filter, clip-path, mask-position, SVG (paint or raster cost on the frames it changes)"
+    "2": "backdrop-filter (re-samples everything behind the layer on every frame anything under it moves)"
+    "3": "canvas 2D (main-thread draw loop)"
+    "4": "WebGL / shaders / 3D (GPU context, texture upload, shader compile)"
+
+  limits:
+    budgets: "per QA.md gates.performance and gates.performance.runtime"           # QA.md gates.performance.runtime: frame_p95_ms_max_120hz / _60hz,
+                                               #   long_task_ms_max, webgl_contexts_max, backdrop_filter_layers_max
+    webgl_contexts_per_effect_max: 1           # one context per effect at most; share one context across effects or cap the page total at QA.md webgl_contexts_max
+    continuous_loops_per_viewport_max: 1       # at most one continuously running animation or render loop in view at once
+    pause_offscreen: true                      # IntersectionObserver stops rAF, canvas, shader and video loops out of view
+    pause_when_hidden: true                    # visibilitychange stops every loop while the tab is hidden
+
+  adaptive_quality:
+    default_quality: "high"         # high | medium | low. The quality set up front and measured on the QA.md gates.viewport_matrix
+                                    #   devices; the page ships at this quality, never pre-degraded "just in case"
+    governor: "measured"            # measured | off. Steps down ONLY on measured, sustained frame misses (frame-time p95
+                                    #   over the QA.md budget across a sustained window), never on a user-agent,
+                                    #   device-name, core-count or memory guess
+    step_down_order:                # cheapest visual loss first
+      - "cap the effect's render resolution / device-pixel ratio"
+      - "merge or remove stacked blur layers"
+      - "swap the tier 3-4 effect for its registered fallback"
+    step_up: "never within the same page view"   # prevents oscillating quality
+    respects: ["prefers-reduced-motion", "prefers-reduced-transparency", "save-data"]
+
+  # One entry per effect in the build. SPEC.md sections reference these entries by `name`.
+  # An effect without an entry, a fallback, a reduced-motion path and a measured result does not ship.
+  registry: []
+  # Example entry (copy into the list above; values are illustrative):
+  # registry:
+  #   - name: "hero-water-ripple"                 # SPEC.md references the effect by this name
+  #     tier: 4                                   # effects.ladder step
+  #     why_not_cheaper: "refraction of the photo under the pointer cannot be faked with transform or filter"
+  #     fallback: "static photo with a CSS radial highlight (tier 0-1)"
+  #     reduced_motion: "static photo, no ripple; the pointer does nothing"
+  #     measured_p95_ms: 6.1                      # frame-time p95 measured per QA.md Gate B2 on the devices below
+  #     devices: ["120 Hz iPhone or iPad, Safari (ProMotion)"]   # each QA.md gates.performance.runtime.devices entry measured
 
 # ═══════════════════════════════════════════════════════════════
 # ICONOGRAPHY
@@ -642,7 +697,7 @@ icons:
   optical_alignment_offset_px: -1   # icons sit 1 px above cap-height baseline by default
 
 # ═══════════════════════════════════════════════════════════════
-# IMAGERY
+# IMAGERY (research §L)
 # ═══════════════════════════════════════════════════════════════
 
 images:
@@ -664,6 +719,26 @@ images:
     above_fold_eager_count: 5
     lazy_default: true
     fetchpriority_high_per_page: 1   # exactly one image gets fetchpriority="high"
+    decode_before_reveal: true       # await img.decode() (or the load event) before fading an image in, so a
+                                     #   reveal never shows a half-decoded or blank frame
+    prefetch_queue:                  # offscreen gallery / carousel / next-section images, on EVERY device class
+      enabled: true
+      warm_ahead: 6                  # warm the next few images ahead of the viewport, a few at a time
+      decode_on_arrival: true        # decode each one as it lands, not when it scrolls into view
+      skip_on_save_data: true        # navigator.connection.saveData or prefers-reduced-data: no warm-up
+      never_blocks_lcp: true         # the queue starts after the LCP image has loaded
+
+  video:
+    preload: "metadata"              # never "auto" for anything below the fold
+    poster_required: true            # a poster frame, encoded like any image, so nothing flashes black
+    autoplay: "muted playsinline, only while in view"   # IntersectionObserver plays and pauses it
+    pause_offscreen: true
+    reduced_motion: "show the poster, no autoplay; offer a play control"
+
+  cache:
+    file_names: "content-hashed or versioned"   # e.g. hero.3f9a2c.avif or hero-v2.avif
+    replace_in_place: false          # never replace an asset under the same file name; a changed image gets a
+                                     #   new name so every cache (browser, CDN, image optimizer) misses cleanly
 
   placeholders:
     above_fold: "skeleton"
@@ -674,7 +749,7 @@ images:
   photography_style: "<descriptor — e.g., 'natural light, real people, no stock-photo headsets'>"
 
 # ═══════════════════════════════════════════════════════════════
-# DENSITY & RESPONSIVE
+# DENSITY & RESPONSIVE (research §F layout, breakpoints, safe areas; §M density, responsive)
 # ═══════════════════════════════════════════════════════════════
 
 density:
@@ -698,6 +773,10 @@ breakpoints:
   xl: 1280
   "2xl": 1536
   "3xl": 2560   # ultra-wide / 4K — content CAPS + centers here (see §Breakpoints), never stretches
+  # Width breakpoints are NOT device classes. A phone in landscape (667-932 px wide) lands in md; an
+  # iPad in landscape lands in xl. Layouts that must behave per device use orientation, pointer, hover
+  # and height queries on top of width, and every layout is defined for every QA.md gates.viewport_matrix class
+  # (see body §Breakpoints and research §F.5).
 
 containers:
   prose: "65ch"
@@ -719,24 +798,27 @@ grid:
     columns: 4
     gutter: "{spacing.scale.4}"   # 16 px
 
-# Section vertical padding profile resolution (px desktop / mobile)
+# Section vertical padding profile resolution, px, defined for every device class. Mapping to
+# QA.md gates.viewport_matrix: mobile = phone_portrait + phone_landscape · tablet = tablet_portrait +
+# tablet_landscape · desktop = laptop_short + desktop below 2xl (1536) · wide = desktop at 2xl and up
+# (content still caps and centers; only the padding grows). Every value is a spacing.scale step.
 section_padding:
   hero:
-    compact:  { desktop: 96,  mobile: 64 }
-    default:  { desktop: 128, mobile: 80 }
-    generous: { desktop: 160, mobile: 96 }
+    compact:  { desktop: 96,  mobile: 64, tablet: 80,  wide: 128 }
+    default:  { desktop: 128, mobile: 80, tablet: 96,  wide: 160 }
+    generous: { desktop: 160, mobile: 96, tablet: 128, wide: 192 }
   major:
-    compact:  { desktop: 80,  mobile: 48 }
-    default:  { desktop: 96,  mobile: 64 }
-    generous: { desktop: 128, mobile: 80 }
+    compact:  { desktop: 80,  mobile: 48, tablet: 64,  wide: 96 }
+    default:  { desktop: 96,  mobile: 64, tablet: 80,  wide: 128 }
+    generous: { desktop: 128, mobile: 80, tablet: 96,  wide: 160 }
   cta:
-    compact:  { desktop: 96,  mobile: 64 }
-    default:  { desktop: 128, mobile: 80 }
-    generous: { desktop: 160, mobile: 96 }
+    compact:  { desktop: 96,  mobile: 64, tablet: 80,  wide: 128 }
+    default:  { desktop: 128, mobile: 80, tablet: 96,  wide: 160 }
+    generous: { desktop: 160, mobile: 96, tablet: 128, wide: 192 }
   footer_top:
-    compact:  { desktop: 64,  mobile: 48 }
-    default:  { desktop: 96,  mobile: 64 }
-    generous: { desktop: 128, mobile: 80 }
+    compact:  { desktop: 64,  mobile: 48, tablet: 48,  wide: 80 }
+    default:  { desktop: 96,  mobile: 64, tablet: 80,  wide: 128 }
+    generous: { desktop: 128, mobile: 80, tablet: 96,  wide: 160 }
 
 # ═══════════════════════════════════════════════════════════════
 # ACCESSIBILITY
@@ -1012,7 +1094,10 @@ components:
   modal:
     backdrop: "{options.modal_backdrop}"   # scrim | blur
     backdrop_scrim: "oklch(from {colors.neutral.12} l c h / 0.50)"
-    backdrop_blur: "backdrop-filter: blur(8px)"
+    backdrop_blur: "backdrop-filter: blur(8px)"   # effects.ladder tier 2; counts toward QA.md backdrop_filter_layers_max.
+                                                 #   Falls back to backdrop_scrim when over budget, when the governor
+                                                 #   steps down, and under prefers-reduced-transparency. Under an open
+                                                 #   modal, pause loops behind it so the blur re-samples a still page.
     container:
       background: "{colors.surface.overlay}"
       radius: "{radius.components.modal}"
@@ -1071,7 +1156,7 @@ components:
       border: "1px solid {colors.border.subtle}"
       padding: 4
       min_width: 160
-      max_height: "60vh"
+      max_height: "60svh"            # svh, never bare vh (body §Viewport units & safe areas)
     item:
       height_compact: 32
       height_default: 36
@@ -1107,7 +1192,9 @@ components:
     underline_color: "{colors.primary.9}"
     filled_selected_background: "{colors.surface.raised}"
     filled_unselected_background: "{colors.surface.subtle}"
-    indicator_motion: { properties: ["transform", "width"], duration: "{motion.duration.base}", easing: "{motion.easing.standard}" }
+    # One indicator element of fixed base width, moved with translateX and sized with scaleX
+    # (transform-origin: left; inline-start in RTL). Never animate its width or left.
+    indicator_motion: { properties: ["transform"], method: "translateX + scaleX", duration: "{motion.duration.base}", easing: "{motion.easing.standard}" }
     focus_visible: "{states.focus_ring}"
 
   accordion:
@@ -1123,14 +1210,23 @@ components:
     content:
       padding_bottom: 16
       type: "body-md"
-    motion: { properties: ["height", "opacity"], duration: "{motion.duration.base}", easing: "{motion.easing.standard}" }
+    # Never animate height. Wrap the content in a grid and animate grid-template-rows 0fr -> 1fr (one
+    # layout pass per frame on a contained subtree, acceptable for a single accordion item), or for long
+    # or many items reveal with clip-path / a translateY of the content inside an overflow-clipped wrapper.
+    motion: { properties: ["grid-template-rows", "opacity"], method: "grid 0fr->1fr (or clip-path reveal)", duration: "{motion.duration.base}", easing: "{motion.easing.standard}" }
 
   top_nav:
     height_desktop: 64
     height_mobile: 56
     background: "{colors.surface.canvas}"
     sticky_scroll_background: "oklch(from {colors.surface.canvas} l c h / 0.80)"
-    sticky_scroll_backdrop: "backdrop-filter: blur(12px)"
+    sticky_scroll_backdrop: "backdrop-filter: blur(12px)"   # effects.ladder tier 2; counts toward QA.md backdrop_filter_layers_max
+    sticky_scroll_backdrop_fallback: "oklch(from {colors.surface.canvas} l c h / 0.94)"   # near-solid surface, no blur: used when
+                                                            #   over budget, when the adaptive-quality governor steps down, and
+                                                            #   under prefers-reduced-transparency
+    # iOS Safari: a full-width fixed/sticky bar touching the top or bottom screen edge can tint or
+    # resize Safari's own toolbar and sits under it during toolbar collapse. Pad with
+    # env(safe-area-inset-*) and test on a real touch device (research §F.5).
     padding_x_desktop: "{spacing.scale.6}"
     padding_x_mobile: "{spacing.scale.4}"
     logo_align: "start"
@@ -1164,7 +1260,10 @@ components:
       active_indicator: "leading-3px-bar"
       icon_size: "{icons.sizes.md}"
       icon_gap: "{spacing.scale.3}"
-    collapse_motion: { property: "width", duration: "{motion.duration.base}", easing: "{motion.easing.standard}" }
+    # Never animate width. The sidebar is laid out at width_default; collapsing slides it with
+    # translateX (the 64 px rail stays visible) while the content column switches its inline-start
+    # offset once, without animating it. Labels fade with opacity.
+    collapse_motion: { properties: ["transform", "opacity"], method: "translateX of the panel + label fade", duration: "{motion.duration.base}", easing: "{motion.easing.standard}" }
 
   table:
     header:
@@ -1569,7 +1668,7 @@ When generating any UI, code, or design artifact from this document, an AI agent
 4. **One primary CTA per screen.** Use `button.variants.primary` exactly once per visible viewport.
 5. **Apply states from the token table, not from opacity.** Disabled state references `states.disabled_tokens`, not `opacity: 0.5`.
 6. **Honor preference media queries.** `prefers-reduced-motion`, `prefers-color-scheme`, `prefers-contrast`, `prefers-reduced-transparency`, and `forced-colors` are mandatory branches.
-7. **Animate only `transform` and `opacity` on the main render path.** Layout properties (`width`, `height`, `top`, `left`, `margin`) cause reflow; use `transform` or FLIP instead.
+7. **Animate only `transform` and `opacity` on the main render path.** Layout properties (`width`, `height`, `top`, `left`, `margin`) cause reflow; use `transform` or FLIP instead. Anything costlier is an effect and follows `§Effects & performance`.
 8. **Never `transition: all`.** Always list the specific properties.
 9. **Touch targets ≥ 44 px on touch contexts, ≥ 24 px on pointer contexts.** Never below.
 10. **Body text inputs ≥ 16 px on mobile** to prevent iOS auto-zoom on focus.
@@ -1584,11 +1683,14 @@ When generating any UI, code, or design artifact from this document, an AI agent
 19. **Spinner / skeleton show-delay 150–300 ms, minimum visible 300–500 ms.** Prevents flicker on fast operations.
 20. **Enter submits forms** when a text input is the sole / last control. **⌘/Ctrl+Enter submits textareas**; bare Enter creates a newline in textareas.
 21. **Optical alignment trumps strict geometry.** Adjust ±1 px when perception beats the math (icons that sit lower than they look; text that needs a 1-px raise to align with adjacent labels). Document the adjustment on the component.
-22. **Performance is design.** Operations slower than 500 ms (POST/PATCH/DELETE) require a designed loading state. LCP target ≤ 2.5 s; INP target ≤ 200 ms.
+22. **Performance is design.** Operations slower than 500 ms (POST/PATCH/DELETE) require a designed loading state. Core Web Vitals, frame-time and long-task budgets are per QA.md `gates.performance`; never restate or loosen them here.
 23. **Details are the product.** Every micro-interaction, every edge-case copy, every focus ring, every loading state must be authored with the same care as the primary flow. Premium is felt in the corners, not the headlines.
 24. **Always resolve `{typography.families.*}` together with its fallback stack.** When emitting CSS `font-family`, the value is `<families.X>, <fallbacks[fallback_assignments.X]>` — never the custom family alone. Apply `font-display: swap` and metric overrides (`ascent-override`, `descent-override`, `line-gap-override`, `size-adjust`) on `@font-face` so the fallback renders at the custom font's metrics and the swap causes zero CLS.
 25. **Dark mode is a required deliverable, authored not inverted.** Emit both light and dark values from the `colors.*.dark.*` ramps; never ship a component that only resolves in light mode. In dark mode, raised surfaces get *lighter* (not darker), accent chroma drops 20–40%, and the page background is near-black (`L ≈ 0.18`), never `#000`. Switch via `prefers-color-scheme` or `[data-theme]`, and verify every component and state in both modes. See `§Dark mode`.
 26. **Keep shared values in sync across documents.** Colors (the full palette), type families, icons, brand identity, dataviz, and profiles are shared with `DESIGN_MOBILE.md` (and `icons` is also declared in `PROJECT.md tech.web.icons`). Whenever you change one of these here — at first fill **or on any later edit** — propagate it to every sibling document in the same pass, per `PROJECT.md → §Cross-template consistency rules`. Re-run derivations the change implies (e.g. a new brand color ⇒ regenerate the whole palette, then copy the `colors:` block to DESIGN_MOBILE.md). Never leave a sibling document stale; state which ones you updated.
+27. **No layout ships without its behaviour defined and checked at every QA.md `gates.viewport_matrix` class.** A design change is built for every class in the same change as the desktop version, never "desktop now, mobile later". If a class needs a different arrangement, specify it; if it does not, say so.
+28. **Width breakpoints are not device classes.** A phone in landscape lands in `md` and an iPad in landscape in `xl`. Choose interaction by `(hover)` / `(pointer)` queries and layout by width plus orientation and height where needed (see `§Breakpoints`, `§Input modality`).
+29. **Every effect has a registry entry, a fallback and a reduced-motion path before it is built.** Pick the cheapest `effects.ladder` tier that reaches the look at full quality, add it to `effects.registry`, decide its fallback and reduced-motion behaviour first, then build it and record the measured result (QA.md Gate B2). Scroll-linked visuals use CSS scroll/view timelines with a JS fallback, never a bare `scroll` listener.
 
 ---
 
@@ -1713,6 +1815,8 @@ Hover, pressed, focus, disabled are explicit token slots — never derived at ru
 
 # Typography
 
+*Research: `research.md §D` (Typography).*
+
 **Rule:** Use at most two type families. The system enforces 8 semantic type roles. The role decides size + weight + line-height + letter-spacing as a bundle; you pick the role, not the values.
 
 ## Families
@@ -1804,6 +1908,8 @@ Mandatory for any numeric column, price display, comparison, or table. Apply `fo
 
 # Spacing & Layout
 
+*Research: `research.md §E` (Spacing), `§F` (Layout & Grid).*
+
 **Rule:** 4 px base. Every spacing value is a multiple of 4. The 18-step scale in `spacing.scale` is the complete vocabulary — never invent in-between values.
 
 ## The scale
@@ -1824,7 +1930,7 @@ Never mix margin and padding to achieve spacing. Use `gap` on the parent and res
 
 ## Section padding
 
-Resolved by `profiles.section_padding`. Default profile: 128 px desktop hero, 80 px mobile hero; 96 px desktop major sections, 64 px mobile.
+Resolved by `profiles.section_padding`, with a value for every device class (`mobile`, `tablet`, `desktop`, `wide`). Default profile hero: 80 mobile / 96 tablet / 128 desktop / 160 wide; major sections 64 / 80 / 96 / 128.
 
 ## Container queries first
 
@@ -1846,7 +1952,11 @@ Whitespace surrounding a content block should be ≥ 30–40% of the block's hei
 
 # Shapes (Radius)
 
-**Rule:** Six radius tokens. Pick one radius family per project (via `profiles.radius`); never mix sharp + soft within a single composition.
+*Research: `research.md §G` (Shapes).*
+
+**Rule:** The radius scale is `none`, `sm`, `md`, `lg`, `xl`, `2xl` plus `full` (six stepped values and the pill). Pick one radius family per project (via `profiles.radius`); never mix sharp + soft within a single composition.
+
+**Drift note (template vs research §G.1).** The per-component defaults here are normative and differ from the "use" column of research §G.1 in three places: inputs are `md` here (§G.1: `sm`), badges `sm` (§G.1: `md`), code blocks `lg` (§G.1: `sm`). Cards (`lg`) and modals (`xl`) agree. When the two disagree, this file wins for the build; log a deliberate change in DECISIONS.md.
 
 ## Nested radius math
 
@@ -1873,6 +1983,8 @@ On hero-scale rounded elements (and on iOS surfaces in the mobile template), pre
 ---
 
 # Elevation & Depth
+
+*Research: `research.md §H` (Elevation & Depth).*
 
 **Rule:** Six elevation levels (0–5). Every non-zero level combines at least two shadows (key + ambient). Shadow color is the darkest neutral of the palette tinted with low alpha — never pure black.
 
@@ -1909,6 +2021,8 @@ Use the `z_index` token scale. Never invent custom values.
 ---
 
 # Motion
+
+*Research: `research.md §I` (Motion); runtime cost in `§I.14`.*
 
 **Rule:** Five duration tokens, four easing curves, three spring presets. Every animation uses one of these — no inline durations or custom beziers.
 
@@ -1947,6 +2061,65 @@ For layout changes (rearranging lists, expanding cards), use the FLIP technique 
 - Decorative scroll-triggered animation (it must serve explanation)
 - Long durations (> 500 ms) on micro-interactions
 - More than one continuous looping animation per viewport
+
+---
+
+# Effects & performance
+
+*Research: `research.md §I.14` (runtime performance: effect cost ladder, frame budgets, adaptive quality) and `§F.5` (viewport matrix, iOS Safari behaviour). Every number is per QA.md `gates.performance`; this section holds the method.*
+
+**Rule:** Effects are designed in from the start, performance-ready and at the highest quality the budget allows. Choose the **cheapest `effects.ladder` tier that reaches the look**, then spend the remaining budget on quality (resolution, sample count, smoothness), never on a costlier technique that looks the same. Every effect is registered, has its fallback and reduced-motion path decided before it is built, and ships with a measured result.
+
+## Compositor first
+
+Tier 0 (CSS transitions, CSS animations or WAAPI on `transform` and `opacity`) runs on the compositor and keeps the display's full refresh rate even while the main thread is busy. This matters most on iOS: Safari caps page-driven `requestAnimationFrame` and scroll-driven script updates at 60 fps by default, while scrolling itself runs at 120 Hz on ProMotion screens, so a JS-driven effect visibly trails a 120 Hz scroll. Prefer a declarative animation the browser can hand to the compositor over a script loop every time.
+
+## Scroll-linked motion
+
+Scroll-linked visuals (parallax, progress, reveal-on-scroll scrubbing) use CSS scroll-driven animations (`animation-timeline: scroll()` / `view()`), with a JS fallback (IntersectionObserver for triggers, a single rAF-throttled reader for scrubbing) only where timelines are unsupported. **Never drive a visual from a bare `scroll` event listener**: it fires after the scroll has already painted, so the effect always trails the content by a frame or more.
+
+## What never to animate
+
+Never animate `width`, `height`, `top`, `left`, `margin`, `mask-size` or `background-size`. Use `transform: scale()` on the element, or a clip (`clip-path`, `inset()`) on a promoted layer (`will-change: transform` set only while it animates). The component specs show the method: the tabs indicator uses `translateX + scaleX`, the accordion uses `grid-template-rows: 0fr → 1fr` or a clip reveal, the sidebar collapses with `translateX`.
+
+## Blur and glass
+
+`backdrop-filter` (tier 2) re-samples everything behind it on every frame that anything under it moves. Keep simultaneous blur layers at or below QA.md `backdrop_filter_layers_max`; **merge stacked blur layers into one pass** (one blurred backdrop behind a group, not one per child) or move the look into a single shader. Every blur surface declares a solid or translucent fallback, used when over budget, when the governor steps down, and under `prefers-reduced-transparency`.
+
+## Canvas and WebGL
+
+- **Textures use real mip chains.** Pre-downsample each level (or build them with a wide, high-quality downsample) instead of calling `generateMipmap` on detailed photos: its box filter aliases fine detail, which shimmers as soon as the image moves or scales.
+- **A canvas stays hidden until its first frame has drawn.** Show the underlying `<img>` until then, so a canvas never covers a loaded image with black or transparent pixels.
+- **One WebGL context per effect at most**; share a context across effects or cap the page total at QA.md `webgl_contexts_max`. Browsers drop the oldest context past their own limit.
+- Cap the render resolution (device-pixel ratio) as the first quality lever, not the last.
+
+## Loops: pause when unseen
+
+At most one continuously running loop (animation, canvas or shader) per viewport. Every loop pauses when offscreen (IntersectionObserver) and when the tab is hidden (`visibilitychange`), and resumes without a jump.
+
+## Adaptive quality
+
+Ship at `effects.adaptive_quality.default_quality`, set up front and measured on the QA.md `gates.viewport_matrix` devices. A governor may step quality down **only on measured, sustained frame misses** against the QA.md frame-time budget, in `step_down_order`, and never steps back up in the same page view. Never degrade on a user-agent, device-name, core-count or memory guess: a guess degrades fast devices and misses slow ones.
+
+## Fallbacks and reduced motion, decided first
+
+Before building an effect, write its registry entry: `tier`, `why_not_cheaper` (for tier 1 and up), `fallback` and `reduced_motion`. `prefers-reduced-motion: reduce` gets a still or opacity-only version that keeps the content and meaning; `prefers-reduced-transparency` gets the solid fallback. An effect whose fallback is "nothing renders" is not finished.
+
+## Measured, not assumed
+
+Every registry entry records `measured_p95_ms` and the `devices` it was measured on, per QA.md Gate B2: real devices where the matrix names them, both scroll directions, the effect running at its default quality. A change made for performance keeps only if the measurement shows it helped.
+
+## Forbidden
+
+- An effect with no `effects.registry` entry, no fallback or no reduced-motion path
+- A higher ladder tier than the look needs, without a written `why_not_cheaper`
+- Scroll-linked visuals driven by a `scroll` event listener
+- Animating `width` / `height` / `top` / `left` / `mask-size` instead of `transform` or a clip
+- More stacked `backdrop-filter` layers than QA.md `backdrop_filter_layers_max`
+- Box-filtered `generateMipmap` on detailed photographic textures
+- A canvas shown before its first frame has drawn
+- Loops that keep running offscreen or in a hidden tab
+- Quality chosen from a user-agent or device guess instead of a measurement
 
 ---
 
@@ -2035,6 +2208,8 @@ Functional icons (sole label for a button) require `aria-label`. Decorative icon
 
 # Imagery
 
+*Research: `research.md §L` (Imagery), `§L.7` (loading).*
+
 **Rule:** Six aspect ratios. Three image formats with explicit fallback. Every image has a placeholder. Custom illustration > stock photography.
 
 ## Format stack
@@ -2049,6 +2224,22 @@ Exactly **one image per page** uses `fetchpriority="high"` — the LCP (typicall
 
 Every image declares explicit `width` and `height` OR uses `aspect-ratio` CSS. Layout shift is a premium-tier failure.
 
+## Decode before reveal
+
+An image that fades or slides in waits for `img.decode()` (or its `load` event) before the reveal starts, so the animation never shows a half-decoded or blank frame.
+
+## Prefetch queue for offscreen images
+
+Galleries, carousels and the next section's images warm up ahead of the viewport on **every device class**, not only phones: a small queue fetches the next few (`images.loading.prefetch_queue.warm_ahead`), a few at a time, and decodes each on arrival. It starts after the LCP image has loaded and is skipped under Save-Data (`navigator.connection.saveData`, `prefers-reduced-data`).
+
+## Video
+
+`preload="metadata"`, never `auto` below the fold. A poster is required (encoded like any image) so nothing flashes black. Autoplay only as `muted playsinline`, and only while in view: an IntersectionObserver plays it on entry and pauses it offscreen. Under `prefers-reduced-motion` show the poster with a play control.
+
+## Cache-safe file names
+
+Asset file names are content-hashed or versioned (`hero.3f9a2c.avif`, `hero-v2.avif`). **Never replace an asset under the same file name**: browsers, CDNs and image optimizers keep serving the old bytes. A changed image gets a new name.
+
 ## Dark mode image swap
 
 When an image looks wrong in both modes (e.g., a product screenshot with light UI), provide a separate dark-mode variant via `<picture>` with `prefers-color-scheme`. Never use `filter: invert()` on raster images.
@@ -2059,12 +2250,17 @@ When an image looks wrong in both modes (e.g., a product screenshot with light U
 - Lazy-loading the LCP image
 - Missing `width`/`height` on raster images
 - More than one `fetchpriority="high"` per page
+- Revealing an image before it has decoded
+- Replacing an asset under the same file name
+- Video without a poster, or autoplaying offscreen
 
 ---
 
 # Density & Responsive
 
-**Rule:** Three density modes. Touch-target minimums by device. Container queries over media queries for components.
+*Research: `research.md §M` (Density & Responsive), `§F` (Layout & Grid), `§F.5` (viewport matrix, device classes, iOS Safari).*
+
+**Rule:** Three density modes. Touch-target minimums by device. Container queries over media queries for components. **Every layout and every design change is built and checked at every QA.md `gates.viewport_matrix` class alongside the desktop version, in the same change.** No view mode is deferred.
 
 ## Touch targets
 
@@ -2082,9 +2278,26 @@ Mobile-first. Default styles target mobile; `min-width` media queries layer larg
 - **Ultra-wide / 4K (`3xl` ≥ 2560px):** content **caps and centers** — never stretches. Keep `max-width` on the page container, line length ≤ ~75ch (per §Measure). Use the extra space as wider margin/gutter, or an intentional treatment (a 2-up layout, a side rail) — never full-bleed body text or buttons spanning the whole monitor.
 - **Foldables / mini-tablets (~600–720px):** sit between `sm` and `md`; verify layouts reflow sanely here (e.g. a Galaxy Z Fold unfolds from a narrow phone into this zone). Container queries (above) handle most of this automatically since components respond to their container, not the viewport.
 
+**Width breakpoints are not device classes.** A phone in landscape (667 to 932 px wide, often under 430 px tall) lands in `md`; an iPad in landscape lands in `xl`, with touch and no hover. So: choose **interaction** by `(hover)` / `(pointer)` (`§Input modality`), and add `orientation` and `height` queries where a layout depends on them (a hero that fills a portrait phone must not overflow a 390 px tall landscape one). Every layout is defined for every QA.md `gates.viewport_matrix` class (research §F.5), and `section_padding` carries a value for each class (`mobile`, `tablet`, `desktop`, `wide`).
+
 ## Fluid scaling
 
 Type sizes, section padding, container widths use `clamp(min, fluid, max)`. Component sizing, internal padding, radii, border widths use discrete token values.
+
+## Viewport units & safe areas
+
+- **Full-height sections use `svh`** (`min-height: 100svh`, the hero's `88svh`), never bare `vh`: on mobile browsers `vh` is the *largest* viewport, so the bottom of a `100vh` section sits under the browser toolbar. Use `dvh` only for an element that must track the toolbar as it moves (a full-screen overlay) and accept that it resizes during scroll.
+- **Safe areas:** the viewport meta includes `viewport-fit=cover`, and every fixed or sticky element and every full-bleed edge pads with `env(safe-area-inset-top/right/bottom/left)` (the notch side insets matter in landscape). See research §F.5 for iOS Safari's toolbar behaviour around edge-touching bars.
+- **Horizontal overflow:** set `overflow-x: clip` on the page wrapper (or `html`), not `overflow: hidden` on `body`. `hidden` creates a scroll container, which breaks `position: sticky`, and does not reliably stop sideways panning on iOS.
+- **Scroll locks** (modal, menu, loader) block `wheel`, `touchmove` (non-passive listener) and the scroll keys (Space, Page Up/Down, arrows, Home/End) in addition to `overflow: hidden`, because iOS Safari ignores `overflow: hidden` on `body` for touch scrolling. Restore the scroll position on release.
+- **Display headings never overflow a 320 px screen.** Apply `text-wrap: balance` and `overflow-wrap: break-word` to display and heading roles (`text-wrap: pretty` on body). Clamp display sizes to the container (`clamp()` with `cqi` or `vw` in the fluid term) so the **longest single word** of the real copy fits at the minimum; check it at 320 px with the real words, not placeholder text. `overflow-wrap` is the safety net, not the design.
+
+## Input modality
+
+- **Interaction is chosen by input, not width.** Use `@media (hover: hover) and (pointer: fine)` for hover effects and `(pointer: coarse)` for touch sizing; use `any-hover` / `any-pointer` to catch hybrids (an iPad with a trackpad, a touch-screen laptop). A 1024 px iPad is touch; a narrow desktop window has a mouse.
+- **Gate every hover effect** (card `lift`, nav link hover color, image zoom, reveal-on-hover) under `(hover: hover) and (pointer: fine)`. Ungated, iOS applies `:hover` on tap and leaves it stuck.
+- **Touch gets `:active`.** Every tappable element has a visible pressed state at `motion.duration.instant`; remove the default tap highlight (`-webkit-tap-highlight-color: transparent`) only when that custom `:active` state exists.
+- **Nothing is hover-only.** Anything revealed on hover is also reachable by tap and by keyboard focus (`:focus-visible`).
 
 ---
 
@@ -2164,11 +2377,11 @@ Anatomy: `[label] + container[(leading-addon?) + (leading-icon?) + input-element
 
 ## Card
 
-Anatomy: `container[(media?) + (header[title + subtitle?]) + body + (footer[actions?])]`. Choose one separation strategy per project (border OR elevation, not both). Media at the top extends to card edges (negate the padding via `margin: -padding`). Title is `heading-sm`. Footer actions right-aligned.
+Anatomy: `container[(media?) + (header[title + subtitle?]) + body + (footer[actions?])]`. Choose one separation strategy per project (border OR elevation, not both). The `surface_separation.hover` effect (`lift` by default) applies only under `@media (hover: hover) and (pointer: fine)`; touch gets an `:active` pressed state instead (`§Input modality`). Media at the top extends to card edges (negate the padding via `margin: -padding`). Title is `heading-sm`. Footer actions right-aligned.
 
 ## Modal / Dialog
 
-Standard sizes: sm 560 / md 720 / lg 960. Backdrop per `options.modal_backdrop`. Focus trap required. Restore focus on close. Escape closes; backdrop click closes (unless declared as required modal).
+Standard sizes: sm 560 / md 720 / lg 960. Backdrop per `options.modal_backdrop`; `blur` is a tier-2 effect that counts toward QA.md `backdrop_filter_layers_max` and falls back to a translucent scrim when over budget, when the governor steps down, and under `prefers-reduced-transparency` (`§Effects & performance`). Scroll lock per `§Viewport units & safe areas`. Focus trap required. Restore focus on close. Escape closes; backdrop click closes (unless declared as required modal).
 
 ## Toast
 
@@ -2176,23 +2389,23 @@ Auto-dismiss timing per severity. Errors require manual dismiss. Pause on hover.
 
 ## Dropdown / Menu / Popover
 
-Use Radix Popper or Floating UI positioning. Default position below trigger; flip to above when no space. Outside-click closes. Max height 60 vh with scroll.
+Use Radix Popper or Floating UI positioning. Default position below trigger; flip to above when no space. Outside-click closes. Max height 60 svh with scroll.
 
 ## Tabs
 
-`options.tabs_style` selects underline (default premium) or filled. Indicator animates position + width on selection change.
+`options.tabs_style` selects underline (default premium) or filled. The indicator is one element of fixed base width that moves with `translateX` and sizes with `scaleX` (`transform-origin` at the inline start) on selection change; never animate its `width` or `left`.
 
 ## Accordion
 
-Single-open or multi-open per instance. Chevron rotates 180° on open. Content expands height + opacity.
+Single-open or multi-open per instance. Chevron rotates 180° on open. Content expands with `grid-template-rows: 0fr → 1fr` plus opacity (the content sits in a single grid row with `min-height: 0`), never by animating `height`. That is one contained layout per frame, acceptable for a single item; for long content or many items opening together, reveal with `clip-path` or a `translateY` of the content inside an overflow-clipped wrapper instead.
 
 ## Top nav
 
-64 px desktop / 56 px mobile. Sticky on scroll with `backdrop-filter: blur(12px)` and 80% opacity surface. Mobile collapses to hamburger trigger opening a sheet or full-screen menu.
+64 px desktop / 56 px mobile. Sticky on scroll with `backdrop-filter: blur(12px)` and 80% opacity surface. The blur is a tier-2 effect: it counts toward QA.md `backdrop_filter_layers_max`, and falls back to the near-solid `sticky_scroll_backdrop_fallback` surface when over budget, when the governor steps down, and under `prefers-reduced-transparency`. On touch screens, a full-width fixed or sticky bar touching the top or bottom screen edge interacts with iOS Safari's toolbar (tinting, resizing, sitting under it while it collapses): pad it with `env(safe-area-inset-*)` and check it on a real device (research §F.5). Mobile collapses to hamburger trigger opening a sheet or full-screen menu.
 
 ## Sidebar
 
-240 px default / 64 px collapsed / 280 px expanded. Items use the `radius.md` pill highlight. Active item gets primary tint + 3-px leading bar (or `options.product_nav_style` variant).
+240 px default / 64 px collapsed / 280 px expanded. Collapse slides the panel with `translateX` (the 64 px rail stays in view) and fades labels with opacity; the content column changes its offset once, unanimated. Never animate the sidebar's `width`. Items use the `radius.md` pill highlight. Active item gets primary tint + 3-px leading bar (or `options.product_nav_style` variant).
 
 ## Table
 
@@ -2219,7 +2432,7 @@ If `options.command_palette: enabled`, the product surfaces a global ⌘K / Ctrl
 ## Canonical landing composition
 
 1. Top navigation (sticky, transparent-to-blurred on scroll)
-2. Hero (1 viewport tall desktop, `min-height: 88vh`)
+2. Hero (1 viewport tall desktop, `min-height: 88svh`; never bare `vh`, per `§Viewport units & safe areas`)
 3. Social proof (monochrome logo wall)
 4. Narrative section 1 (alternating left-text / right-image)
 5. Narrative section 2 (alternates direction)
@@ -2242,7 +2455,7 @@ Headline ≤ 44 characters. Subhead `body-lg` `secondary` color, max-width 480�
 
 ## Section padding
 
-Per `profiles.section_padding`. Default profile: hero 128 desktop / 80 mobile; major sections 96 / 64; CTA band 128 / 80.
+Per `profiles.section_padding` (mobile / tablet / desktop / wide). Default profile: hero 80 / 96 / 128 / 160; major sections 64 / 80 / 96 / 128; CTA band 80 / 96 / 128 / 160.
 
 ## Bento grids
 
@@ -2259,7 +2472,7 @@ Permitted only when it serves explanation. Patterns:
 - Stagger reveal (fade + rise 8 px)
 - Sticky highlight (element pins next to descriptive text)
 
-Trigger once per element. Threshold: ~25% in viewport.
+Trigger once per element. Threshold: ~25% in viewport. Build scrubbed and pinned motion on CSS scroll/view timelines (`animation-timeline`) with a JS fallback, triggers on IntersectionObserver, never on a bare `scroll` listener; each one is an `effects.registry` entry (`§Effects & performance`).
 
 ## Forbidden in marketing
 
@@ -2536,6 +2749,11 @@ A consolidated list of the most important Do / Don't rules. The full anti-patter
 - Cap body line length at `65ch`
 - Use sentence case (or title case — pick one, stay consistent)
 - Use the role to choose typography, not the size
+- Build every design change for every QA.md `gates.viewport_matrix` class alongside the desktop version
+- Pick the cheapest `effects.ladder` tier that reaches the look, and register every effect
+- Gate hover effects to fine pointers: `(hover: hover) and (pointer: fine)`
+- Replace a changed asset under a new file name
+- Use `svh` for full-height sections and `env(safe-area-inset-*)` on fixed elements
 
 ## Don't
 - Inline raw hex / px / font names in component code
@@ -2558,6 +2776,11 @@ A consolidated list of the most important Do / Don't rules. The full anti-patter
 - Use pie charts when bar charts work
 - Hardcode date / number / currency formats
 - Skip preference media queries
+- Stack more `backdrop-filter` layers than QA.md `backdrop_filter_layers_max`
+- Drive scroll-linked visuals from a `scroll` event listener
+- Animate `width`, `height` or `mask-size`
+- Use bare `vh` for full-height sections
+- Decide hover or touch behaviour from viewport width
 
 ---
 
@@ -2574,7 +2797,7 @@ npm run dev                              # review;  npm run build → static exp
 npm run export -- --root <your project> # docs→code: emit tokens.css + Tailwind v4 theme.css + DTCG tokens.json
 ```
 
-**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). See `tools/brand-kit/README.md → Token export`.
+**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). Exported names are dot-safe: a scale key with a dot is written with an underscore (`spacing.scale.0.5` → `--space-0_5`, Tailwind `--spacing-0_5`, DTCG `spacing.0_5`), because a dot is invalid in a CSS custom-property name; reference it in code by that name. The export scripts need Node ≥ 22.18 and no `npm install` (only the viewer does). See `tools/brand-kit/README.md → Token export`.
 
 The kit has two sections:
 
@@ -2605,8 +2828,8 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.21.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.22.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
-This template is generated from the brand-agnostic research in `research.md` (3,800+ lines covering 23 design dimensions plus measured production-site analysis). The companion mobile template `DESIGN_TEMPLATE_MOBILE.md` shares brand-identity values and applies the same rules to iOS HIG + Material 3 conventions. The optional `tools/brand-kit` package provides the palette generator + the brand-kit viewer.
+This template is generated from the brand-agnostic research in `research.md` (the design dimensions in its `§A` onward, plus measured production-site analysis); section anchors next to each default point at the research behind it. The companion mobile template `DESIGN_TEMPLATE_MOBILE.md` shares brand-identity values and applies the same rules to iOS HIG + Material 3 conventions. The optional `tools/brand-kit` package provides the palette generator + the brand-kit viewer.

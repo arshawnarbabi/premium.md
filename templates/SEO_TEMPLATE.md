@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SEO_TEMPLATE.md — Discoverability: SEO + AEO + GEO
-# Version: 1.21.0
+# Version: 1.22.0
 # Scope: web. How the site gets FOUND (search) and CITED (AI answer engines).
 # Companions: INFORMATION.md (the entity — brand/people/social), SPEC.md (the pages),
 #            QA.md (validates the output). Basic per-page meta lives in INFORMATION.seo
@@ -28,7 +28,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 file_role: "seo"   # information | design | spec | project | content | seo | qa | decisions
 
 # ── Structured data (JSON-LD) — the machine-readable layer AI engines read to CITE you ──
@@ -51,12 +51,13 @@ structured_data:
     product:     ["Product", "BreadcrumbList"]                 # + Offer (price, availability) if pricing shown
     pricing:     ["Product | Offer"]
     faq:         ["FAQPage"]                                   # see note below
-    how_to:      ["HowTo"]                                     # step-by-step → AI-Overview citations
+    how_to:      ["HowTo"]                                     # genuine step-by-step only; NO Google rich result since 2023 (see note); kept as an answer-engine extraction aid
     local:       ["LocalBusiness"]                             # only if there's a physical location
     about:       ["Organization", "Person (founders)"]        # founders → E-E-A-T entity signals
   notes:
     - "JSON-LD is the format Google, Bing, Perplexity, and ChatGPT all rely on. A page with valid schema is far likelier to be indexed + cited than one without."
     - "FAQPage: Google restricted FAQ *rich results* to government + authoritative-health sites (late 2023) — general sites no longer get the rich snippet, but FAQPage markup still aids LLM/AEO answer extraction, so keep it where genuine Q&A exists. See research §X3.4."
+    - "HowTo: Google removed HowTo rich results in 2023 (mobile in August, desktop in September), so HowTo markup earns no rich snippet in Google. Emit it only on genuine step-by-step pages, as an extraction aid for answer engines, and never promise a HowTo result. See research §X3.4 (last verified 2026-10)."
     - "Don't fabricate schema fields (fake ratings/prices). Only mark up what's truly on the page."
 
 # ── Social cards (extends INFORMATION.seo.default_og_image; per-page override in SPEC) ──
@@ -132,9 +133,9 @@ If `crawl.llms_txt.enabled`, emit a `/llms.txt`: a markdown index of the site's 
 5. **Don't invent** stats, quotes, ratings, or citations — pull from CONTENT.md / INFORMATION.md or ask.
 
 # Versioning
-`template_version: 1.21.0`. Per-project `SEO.md` instances should preserve this field.
+`template_version: 1.22.0`. Per-project `SEO.md` instances should preserve this field.
 
 # Source
-The brand-agnostic *why* behind this template is **`research.md §X3 — Discoverability (SEO + AEO + GEO)`** (technical foundation, structured data/JSON-LD, E-E-A-T, answer-first/AEO, citability/GEO, freshness). Originating findings: `docs/SYSTEM_RESEARCH.md` (F2, F5, F14). Entity data lives in `INFORMATION.md`; page copy in `SPEC.md` (answer-first per `research §X2.10 + §X3.6`); this file is the operational discoverability layer over both.
+The brand-agnostic *why* behind this template is **`research.md §X3 — Discoverability (SEO + AEO + GEO)`** (technical foundation, structured data/JSON-LD, E-E-A-T, answer-first/AEO, citability/GEO, freshness). Originating findings: F2, F5 and F14 (see `docs/SYSTEM_RESEARCH.md`, in the premium.md repo, the release zip and the skill bundle). Entity data lives in `INFORMATION.md`; page copy in `SPEC.md` (answer-first per `research §X2.10 + §X3.6`); this file is the operational discoverability layer over both.
 
 > **Freshness:** discoverability is the **fastest-moving** part of the system. §X3 is tagged `[verify-current]` — if you have web access and this is being used well after the section's `last verified` date, do a quick search to confirm engine/structured-data/ASO specifics still hold (per `research.md` → Freshness protocol) before relying on them.

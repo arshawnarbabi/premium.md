@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # CONTENT_TEMPLATE.md — Reusable content model (single source of content truth)
-# Version: 1.21.0
+# Version: 1.22.0
 # Scope: web + mobile. Typed, reusable content RECORDS the AI maintains ONCE and
 #        pages REFERENCE — so a testimonial, stat, or FAQ lives in exactly one place.
 # Companions: SPEC.md / SPEC_MOBILE.md (pages reference these records), INFORMATION.md
@@ -28,7 +28,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 file_role: "content"   # information | design | spec | project | content | seo | qa | decisions
 
 # Each record is a list item with a stable `id` (kebab or snake). Pages reference fields:
@@ -162,7 +162,7 @@ A content fact lives in **exactly one** record. SPEC pages **reference** it; the
 5. **Stamp `as_of`/freshness** on stats so SEO.md freshness + quarterly review can act on them.
 
 # Versioning
-`template_version: 1.21.0`. Per-project `CONTENT.md` instances should preserve this field.
+`template_version: 1.22.0`. Per-project `CONTENT.md` instances should preserve this field.
 
 # Source
-Content-modeling practice (typed, reusable content types referenced by pages — the headless-CMS pattern, applied as a markdown layer). Generalizes the existing `SPEC.proof_points` record pattern. See `docs/SYSTEM_RESEARCH.md` (F7). Voice lives in `INFORMATION.md`; pages that reference these records live in `SPEC.md` / `SPEC_MOBILE.md`; discoverability use in `SEO.md`.
+Content-modeling practice (typed, reusable content types referenced by pages — the headless-CMS pattern, applied as a markdown layer). Generalizes the existing `SPEC.proof_points` record pattern. Background (finding F7) is in `docs/SYSTEM_RESEARCH.md` (in the premium.md repo, the release zip and the skill bundle). Voice lives in `INFORMATION.md`; pages that reference these records live in `SPEC.md` / `SPEC_MOBILE.md`; discoverability use in `SEO.md`.

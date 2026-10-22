@@ -9,7 +9,9 @@ Optional tooling for `premium.md`. Two pieces that share one OKLCH/APCA library:
   project's `DESIGN.md` + `INFORMATION.md` and renders the whole kit: a **specimen** (every raw token)
   and a **composition** (the tokens assembled into components + sample layouts). Flip light/dark.
 
-The six markdown templates stay dependency-free — this `tools/` package is an optional accelerator.
+The ten markdown templates stay dependency-free; this `tools/` package is an optional accelerator.
+
+**Requirements:** Node ≥ 22.18 (it runs the `.ts` scripts directly with built-in type stripping; `engines` in `package.json` says the same). The three scripts in `scripts/` need **no `npm install`**: their only third-party code, the `yaml` parser, is vendored as one file at `scripts/vendor/yaml.mjs` (ISC licence, regeneration steps in its header), and the OKLCH/APCA library is `src/lib/oklch.ts`. Run them as `node scripts/<name>.ts` or through the `npm run` aliases below. Only the viewer (`npm run dev` / `build`) needs `npm install`.
 
 ## Quick start
 
@@ -64,7 +66,9 @@ Writes three files from the same source of truth:
 - **`theme.css`** — a **Tailwind v4 `@theme`** block (imports `tokens.css`), mapping the tokens to utilities (`bg-primary-9`, `text-neutral-12`, `font-display`, `rounded-lg`, …).
 - **`tokens.json`** — **W3C DTCG (2025.10)** tokens (`$type`/`$value`) — the standard interchange (Style Dictionary, Tokens Studio, Figma). Uses string `$value` for portability.
 
-Dependency-free (`node`, no install). Covers colors (5 palettes × light+dark + role tokens), font families, spacing, radius, elevation, and `border-width`.
+Runs on plain `node` ≥ 22.18 with no install. Covers colors (5 palettes × light+dark + role tokens), font families, spacing, radius, elevation, and `border-width`.
+
+**Token names are dot-safe.** A dot is not allowed in a CSS custom-property name (and DTCG token names may not contain one), so a scale step whose key contains a dot is written with an underscore: `spacing.scale.0.5` becomes `--space-0_5` in `tokens.css`, `--spacing-0_5` in `theme.css` and `spacing.0_5` in `tokens.json`, and a `{spacing.scale.0.5}` reference resolves to `var(--space-0_5)`. Keys without a dot are unchanged (`--space-4`, `--radius-md`).
 
 ## Icons
 
@@ -75,7 +79,8 @@ The viewer renders the project's chosen icon family, read from `icons.library` i
 ## How it routes a DESIGN.md into the kit
 
 `scripts/load-tokens.ts` parses the YAML frontmatter, resolves every `{group.path}` reference, copies the
-brand logos, and writes `src/data/{tokens,brand}.json`. `src/applyTokens.ts` turns the color/radius/
+brand logos, and writes `src/data/{tokens,brand}.json` (or `<dir>/{tokens,brand}.json` plus `<dir>/assets/`
+with `--out <dir>`, which is how to run it from the Agent Skill bundle, where there is no viewer). `src/applyTokens.ts` turns the color/radius/
 elevation/font tokens into CSS variables (one set per theme); fonts load at runtime from
 `typography.families`. The token paths the viewer relies on are the **token contract** documented in
 `DESIGN_TEMPLATE_WEB.md`.

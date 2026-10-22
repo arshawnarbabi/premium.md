@@ -1,9 +1,12 @@
 {
   "name": "brand-kit",
   "private": true,
-  "version": "1.21.0",
+  "version": "1.22.0",
   "type": "module",
   "description": "Brand-kit viewer + OKLCH palette generator for premium.md. Renders a project's DESIGN.md + INFORMATION.md.",
+  "engines": {
+    "node": ">=22.18"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -21,8 +24,7 @@
     "@tabler/icons-react": "^3.44.0",
     "lucide-react": "^1.17.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "yaml": "^2.9.0"
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

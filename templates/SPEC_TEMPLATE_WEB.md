@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
-# Version: 1.21.0
+# Version: 1.22.0
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -37,7 +37,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.21.0"
+template_version: "1.22.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -165,7 +165,64 @@ global:
 # specifics, frame features as outcomes (feature → benefit → outcome), one
 # primary CTA per page, answer-first for informational sections, and never
 # fabricate proof or urgency. INFORMATION voice sets the TONE; §X2 sets the
-# conversion CRAFT; DESIGN §Q sets the section LAYOUT this copy fills.
+# conversion CRAFT; research.md §Q (DESIGN # Web Patterns) sets the section
+# LAYOUT this copy fills.
+
+# ─── SECTION SCHEMA — the shape every section under `pages.*.sections` follows ───
+# Every section carries a `responsive:` block, and every media item that moves
+# carries `effect_ref` + `fallback` + `reduced_motion`. Both are REQUIRED: a
+# section without `responsive:`, or an animated media item without those three
+# keys, is UNFILLED (AI Agent Contract rule 11). The desktop layout is the
+# section's base spec (its `variant` / `direction` / `content`); `responsive:`
+# states what changes in each other device class, written in the same change
+# as the desktop design, never later.
+# Keys are the `spec_key`s of QA_TEMPLATE's canonical `gates.viewport_matrix`
+# (QA owns the exact sizes; class `phone_portrait` maps to `phone`, class
+# `desktop` to `desktop_wide`); width breakpoints are not device classes
+# (research.md §F.5).
+# Values come from DESIGN rules (`## Viewport units & safe areas`,
+# `## Input modality`, `# Effects & performance`) and are verified by QA Gate E.
+# "same as desktop" is a valid answer only after it was actually checked there.
+section_schema:
+  responsive:
+    phone:              # QA class `phone_portrait`, 320-430 wide
+      layout: "<how the section stacks or collapses — e.g., 'single column, media below text, full-bleed media'>"
+      order: "<content order if it differs from desktop — e.g., 'headline, media, body, CTA' — or 'same as desktop'>"
+      hidden: "<elements dropped at this class, each with a reason — or 'none'>"
+      motion: "<what the motion becomes — e.g., 'fade only, no parallax' — or 'same as desktop'>"
+    phone_landscape:    # 667-932 wide but only 320-430 tall; lands in `md` by width
+      layout: "<short-height layout — e.g., 'two columns, hero fits in svh with CTA visible'>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    tablet_portrait:    # 768-1024 wide, touch, no hover
+      layout: "<…>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    tablet_landscape:   # 1024-1366 wide, touch, no hover
+      layout: "<…>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    laptop_short:       # 1280×720 / 1366×768 / 1440×900, little height under browser chrome
+      layout: "<…  — e.g., 'hero sized to svh, CTA above the fold'>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+    desktop_wide:       # QA class `desktop`, ~1512 to 2560+: how the base layout holds as width grows; container caps and centers (research.md §F.2)
+      layout: "<…  — e.g., 'container caps at container.xl, media does not stretch'>"
+      order: "<…>"
+      hidden: "<…>"
+      motion: "<…>"
+  media:
+    type: "<illustration | screenshot | product-ui | video | animation | none>"
+    asset: "<path/url or n/a>"
+    alt: "<descriptive alt text>"
+    motion: "<static | scroll-pinned | autoplay-loop | rive-interactive | …>"
+    effect_ref: "<DESIGN `effects.registry[].name` of the entry that renders this motion — required unless motion is static>"
+    fallback: "<what shows when the effect cannot run (no WebGL, unsupported CSS, adaptive quality stepped down, before first frame) — required unless motion is static>"
+    reduced_motion: "<what shows under prefers-reduced-motion: reduce — required unless motion is static>"
 
 pages:
 
@@ -203,8 +260,19 @@ pages:
           asset: "<path/url or n/a>"
           alt: "<descriptive alt text for accessibility>"
           motion: "<static | scroll-pinned | autoplay-loop | rive-interactive>"
+          effect_ref: "<DESIGN effects.registry[].name — required unless motion is static>"
+          fallback: "<what shows when the effect cannot run — e.g., the poster image>"
+          reduced_motion: "<what shows under reduced motion — e.g., static poster, no loop>"
+        responsive:   # required — shape and rules in `section_schema.responsive` above
+          phone:            { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+          phone_landscape:  { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+          tablet_portrait:  { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+          tablet_landscape: { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+          laptop_short:     { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
+          desktop_wide:     { layout: "<…>", order: "<…>", hidden: "<…>", motion: "<…>" }
 
       - type: "social-proof-logo-wall"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           intro_line: "<optional — 'Trusted by teams at'>"
           logos:
@@ -213,6 +281,7 @@ pages:
           motion: "<static | slow-marquee>"
 
       - type: "narrative-pair"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         direction: "left-text-right-media"
         content:
           eyebrow: "<optional>"
@@ -223,8 +292,10 @@ pages:
             type: "<screenshot | illustration | data-viz | video>"
             asset: "<path/url>"
             alt: "<alt text>"
+            motion: "<static | …>"   # if not static: effect_ref + fallback + reduced_motion (section_schema.media)
 
       - type: "narrative-pair"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         direction: "right-text-left-media"
         content:
           # same shape as above; alternates direction
@@ -235,6 +306,7 @@ pages:
             asset: "<…>"
 
       - type: "bento-grid"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         # Use when ≥4 co-equal features need showcasing
         content:
           eyebrow: "<optional>"
@@ -263,6 +335,7 @@ pages:
               media: "<…>"
 
       - type: "testimonial"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         variant: "single-quote"   # single-quote (premium) | carousel
         content:
           quote: "<one strong customer quote — 1-2 sentences>"
@@ -272,6 +345,7 @@ pages:
             photo: "<path/url — real person, not stock>"
 
       - type: "final-cta-band"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           eyebrow: "<optional>"
           headline: "<close-with-conviction headline, ≤8 words>"
@@ -303,6 +377,7 @@ pages:
     sections:
 
       - type: "hero"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         variant: "centered"
         content:
           headline: "<one-line value claim about pricing — e.g., 'Pricing that grows with you'>"
@@ -313,6 +388,7 @@ pages:
             yearly_discount_label: "<Save 20%>"
 
       - type: "pricing-table"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         variant: "card-row"          # card-row | comparison-matrix | feature-by-feature
         tiers:
           - name: "<Free>"
@@ -344,6 +420,7 @@ pages:
               - "<feature line>"
 
       - type: "feature-comparison-matrix"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         # Optional — only if buyers need detailed feature-by-feature comparison
         groups:
           - heading: "<Core features>"
@@ -352,6 +429,7 @@ pages:
               - { name: "<Feature B>", free: "—", pro: "✓", enterprise: "✓" }
 
       - type: "faq"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         items:
           - question: "<Can I change plans later?>"
             answer: "<answer in 2-3 sentences, brand voice>"
@@ -361,6 +439,7 @@ pages:
             answer: "<…>"
 
       - type: "final-cta-band"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           headline: "<close>"
           cta_primary: { label: "<Start free>", href: "/signup" }
@@ -380,13 +459,16 @@ pages:
     purpose: "<build trust through team + mission storytelling>"
     sections:
       - type: "hero"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         variant: "centered"
         content:
           headline: "<mission-driven headline>"
           subhead: "<the why behind the company>"
       - type: "long-form-prose"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content: "<2-4 paragraphs of origin story — uses {information.brand.story.origin} as raw material>"
       - type: "team-grid"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         members:
           # Pulled from {information.people.founders} and {information.people.team}
           - name: "{information.people.founders[0].name}"
@@ -394,11 +476,13 @@ pages:
             bio: "{information.people.founders[0].bio}"
             photo: "<path/url>"
       - type: "values-list"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         # Pulled from {information.brand.values}
         items:
           - heading: "{information.brand.values[0]}"
             body: "<1-2 sentence elaboration>"
       - type: "final-cta-band"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           headline: "<join us / try it / etc.>"
 
@@ -408,16 +492,19 @@ pages:
     purpose: "<route inquiries to the right channel>"
     sections:
       - type: "hero"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         variant: "centered"
         content:
           headline: "<Get in touch>"
           subhead: "<reassuring 1-sentence intro>"
       - type: "contact-options"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         options:
           - { channel: "<Email>", value: "{information.operations.email.from_address_default}", icon: "mail" }
           - { channel: "<Sales>", value: "<sales@…>", icon: "briefcase" }
           - { channel: "<Support>", value: "<support@…>", icon: "life-buoy" }
       - type: "contact-form"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         form_id: "general_contact"     # references forms.* below
 
   # ─── BLOG INDEX ───
@@ -426,11 +513,13 @@ pages:
     purpose: "<thought leadership / SEO / community>"
     sections:
       - type: "hero"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         variant: "centered"
         content:
           headline: "<Blog headline / category name>"
           subhead: "<1-sentence intro>"
       - type: "post-grid"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         layout: "3-column"
         per_post:
           - cover_image
@@ -440,6 +529,7 @@ pages:
           - author + date
           - read_time
       - type: "pagination"
+        responsive: "<required — the six device classes per section_schema.responsive>"
 
   blog_post:
     # Template for individual blog posts — generated dynamically per post
@@ -447,6 +537,7 @@ pages:
     purpose: "<single post detail>"
     sections:
       - type: "post-header"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           category_tag: "<…>"
           title: "<post title>"
@@ -456,12 +547,16 @@ pages:
           read_time_min: "<5>"
           cover_image: "<path/url>"
       - type: "long-form-prose"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content_source: "MDX content"
       - type: "related-posts"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         count: 3
       - type: "newsletter-signup"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         form_id: "newsletter"
       - type: "comments"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         enabled: "<true | false>"
 
   # ─── 404 PAGE ───
@@ -470,6 +565,7 @@ pages:
     purpose: "<help lost users get back on track>"
     sections:
       - type: "centered-message"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           eyebrow: "<404>"
           headline: "<We couldn't find that page.>"
@@ -484,6 +580,7 @@ pages:
     purpose: "<own the error, reassure, give recovery path>"
     sections:
       - type: "centered-message"
+        responsive: "<required — the six device classes per section_schema.responsive>"
         content:
           eyebrow: "<500>"
           headline: "<Something went wrong on our end.>"
@@ -1009,6 +1106,7 @@ When generating any page, copy, form, email, or content from this document, an A
 8. **Analytics events are part of the spec.** When generating component code, wire up the analytics events declared per-page. Naming follows the declared convention.
 9. **Legal pages need lawyer-reviewed text.** Generate the structural outline declared here, but never invent legal language. Use a placeholder ("[legal text TBD]") and flag for human review.
 10. **A11y notes are non-negotiable.** Apply both DESIGN.md's universal a11y floor and the per-page notes here.
+11. **Every device class is specified with the desktop design, in the same change.** Every section carries a `responsive:` block with all six non-desktop classes (`phone`, `phone_landscape`, `tablet_portrait`, `tablet_landscape`, `laptop_short`, `desktop_wide`), each stating `layout` / `order` / `hidden` / `motion` (shape in `section_schema`). Every media item whose `motion` is not `static` names its `effect_ref` (a DESIGN `effects.registry[].name`), its `fallback` and its `reduced_motion` variant. **A section without a `responsive:` block, a class left out of it, or an animated media item without `effect_ref` / `fallback` / `reduced_motion` is UNFILLED** and is reported as such, never built from guesses. Values follow DESIGN's rules (`## Viewport units & safe areas`, `## Input modality`, `# Effects & performance`); classes are QA's `viewport_matrix`, not width breakpoints (research.md §F.5); QA Gate E verifies them. When a desktop change lands, update every class's entry in the same change.
 
 ---
 
@@ -1029,6 +1127,8 @@ The `purpose` field is the most important single line. If you can't write a purp
 The `primary_persona` is a reference to `{information.audience.primary_persona.name}`. The AI uses it to anchor voice and pain-point framing.
 
 Sections use DESIGN.md vocabulary. If you need a section type not in DESIGN.md, add it there — don't define it ad hoc here.
+
+Every section also fills its `responsive:` block (see `section_schema`): for each device class, how the layout changes, whether the order changes, what is hidden and why, and what the motion becomes. Write it while writing the desktop version, check it at that class (QA Gate E), and answer "same as desktop" only after checking. Phone landscape and short laptops are where sections break most often (research.md §F.5).
 
 ## Voice samples
 
@@ -1078,7 +1178,8 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 - **Don't invent metrics, testimonials, or customer names.** Only use real, approved records from `CONTENT.md`.
 - **Don't write lorem ipsum.** Either write the real copy or mark `<TBD>` clearly. Lorem ipsum gets shipped accidentally.
 - **Don't skip the `purpose` field per page.** A page without a stated purpose is a page that won't convert.
-- **Don't ignore mobile layout.** Each page should consider how sections collapse / reorder on mobile (DESIGN.md provides the rules).
+- **Don't ship a section desktop-only.** A section without a complete `responsive:` block is unfilled (AI Agent Contract rule 11), not "mobile later". DESIGN.md provides the rules, QA Gate E checks them.
+- **Don't name an effect without its registry entry.** Animated media point at DESIGN `effects.registry` via `effect_ref` and declare `fallback` + `reduced_motion`; an effect described only in prose here is unfilled.
 - **Don't write generic SaaS copy.** Anchor every sentence in `voice_samples`. If you don't have samples, write them first before writing pages.
 - **Don't define new section types ad hoc.** If you need one, add it to DESIGN.md first.
 - **Don't omit legal pages.** Even simple sites need privacy + terms. Plan for them from day one.
@@ -1088,7 +1189,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.21.0`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.22.0`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 

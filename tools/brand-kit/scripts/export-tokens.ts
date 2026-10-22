@@ -15,7 +15,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parse as parseYaml } from "yaml";
+import { parse as parseYaml } from "./vendor/yaml.mjs"; // vendored `yaml` parse(): runs on plain node, no install
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -57,8 +57,8 @@ function pathToVar(p: string): string {
   if (p.startsWith("colors.")) return p.slice(7).replace(/\./g, "-");                 // neutral.1, surface.canvas
   if (p.startsWith("typography.families.")) return "font-" + p.slice(20);
   if (p.startsWith("typography.roles.")) return "text-" + p.slice(17);   // {typography.roles.body-md} → var(--text-body-md)
-  if (p.startsWith("spacing.scale.")) return "space-" + p.slice(14);
-  if (p.startsWith("radius.scale.")) return "radius-" + p.slice(13);
+  if (p.startsWith("spacing.scale.")) return "space-" + p.slice(14).replace(/\./g, "_");   // {spacing.scale.0.5} → var(--space-0_5)
+  if (p.startsWith("radius.scale.")) return "radius-" + p.slice(13).replace(/\./g, "_");
   if (p.startsWith("elevation.scale.")) return "elev-" + p.slice(16);
   return p.replace(/\./g, "-");
 }
@@ -84,8 +84,9 @@ for (const [k, r] of Object.entries(roles)) {                              // ty
     if ((r as any).tracking != null && (r as any).tracking !== "0") lightLines.push(`  --tracking-${k}: ${(r as any).tracking};`);
   }
 }
-for (const [k, v] of Object.entries(spacing)) lightLines.push(`  --space-${k}: ${typeof v === "number" ? `${v}${spaceUnit}` : v};`);
-for (const [k, v] of Object.entries(radii)) lightLines.push(`  --radius-${k}: ${dim(v)};`);
+const ck = (k: string | number) => String(k).replace(/\./g, "_"); // CSS-safe ident: a dot is illegal in a custom-property name (0.5 → 0_5)
+for (const [k, v] of Object.entries(spacing)) lightLines.push(`  --space-${ck(k)}: ${typeof v === "number" ? `${v}${spaceUnit}` : v};`);
+for (const [k, v] of Object.entries(radii)) lightLines.push(`  --radius-${ck(k)}: ${dim(v)};`);
 for (const [k, v] of Object.entries(elev)) lightLines.push(`  --elev-${k}: ${refToVar(v)};`);
 if (sep.border_width != null) lightLines.push(`  --border-width: ${dim(sep.border_width)};`);
 
@@ -101,8 +102,8 @@ for (const p of PALETTES) for (let i = 1; i <= 12; i++) if (colors[p][i] != null
 for (const g of ROLEGROUPS) for (const k of Object.keys(colors[g])) themeLines.push(`  --color-${g}-${k}: var(--${g}-${k});`);
 for (const k of Object.keys(fams)) themeLines.push(`  --font-${k}: var(--font-${k});`);
 for (const [k, r] of Object.entries(roles)) if (r && typeof r === "object" && (r as any).size != null) themeLines.push(`  --text-${k}: var(--text-${k});`);
-for (const k of Object.keys(radii)) themeLines.push(`  --radius-${k}: var(--radius-${k});`);
-for (const k of Object.keys(spacing)) themeLines.push(`  --spacing-${k}: var(--space-${k});`);
+for (const k of Object.keys(radii)) themeLines.push(`  --radius-${ck(k)}: var(--radius-${ck(k)});`);
+for (const k of Object.keys(spacing)) themeLines.push(`  --spacing-${ck(k)}: var(--space-${ck(k)});`);
 const themeCss =
   `/* Tailwind v4 theme — @import "./tokens.css" first so the vars resolve (and switch in dark). */\n` +
   `@import "tailwindcss";\n@import "./tokens.css";\n\n@theme inline {\n${themeLines.join("\n")}\n}\n`;
@@ -118,8 +119,8 @@ for (const p of PALETTES) {
 }
 for (const [k, v] of Object.entries(fams)) dt.fontFamily[k] = { $type: "fontFamily", $value: String(v).split(",").map((s) => s.trim().replace(/^["']|["']$/g, "")) };
 for (const [k, r] of Object.entries(roles)) if (r && typeof r === "object" && (r as any).size != null) dt.fontSize[k] = { $type: "dimension", $value: String((r as any).size) };
-for (const [k, v] of Object.entries(spacing)) dt.spacing[k] = { $type: "dimension", $value: typeof v === "number" ? `${v}${spaceUnit}` : v };
-for (const [k, v] of Object.entries(radii)) dt.radius[k] = { $type: "dimension", $value: dim(v) };
+for (const [k, v] of Object.entries(spacing)) dt.spacing[ck(k)] = { $type: "dimension", $value: typeof v === "number" ? `${v}${spaceUnit}` : v };
+for (const [k, v] of Object.entries(radii)) dt.radius[ck(k)] = { $type: "dimension", $value: dim(v) };
 writeFileSync(join(outDir, "tokens.json"), JSON.stringify(dt, null, 2));
 
 console.log(`✓ exported design tokens from ${designPath.split("/").pop()} → ${outDir}`);
