@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # INFORMATION_TEMPLATE.md — Project / brand / business context
-# Version: 1.22.0
+# Version: 1.23.0
 # Scope: shared between web and mobile (the business is the same)
 # Companions: DESIGN_TEMPLATE_*.md (visual system) + SPEC_TEMPLATE_*.md (content)
 #
@@ -21,7 +21,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 file_role: "information"   # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -623,7 +623,7 @@ Paths or URLs to the actual files. AI can generate `<img>` / `<Image>` reference
 
 # Versioning
 
-`template_version: 1.22.0`. Per-project `INFORMATION.md` instances should preserve this field so you can track which template version they were authored against.
+`template_version: 1.23.0`. Per-project `INFORMATION.md` instances should preserve this field so you can track which template version they were authored against.
 
 # Source
 

@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_MOBILE.md — App map + screen content + every word of COPY
-# Version: 1.22.0
+# Version: 1.23.0
 # Scope: mobile apps (iOS HIG + Android Material 3)
 # Companions: DESIGN_TEMPLATE_MOBILE.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -17,6 +17,11 @@
 # what kind of copy to write. REPLACE each one with the actual final
 # sentence. The guidance describes the slot; the value you put there IS
 # the copy.
+#
+# SHIPPED COPY LIVES HERE VERBATIM, under the copy keys (PROJECT.md `copy_keys:` when
+# set, else the defaults listed beside it there), so QA Gate H (check-drift.mjs) can find
+# every string in the code. A copy change made in code without the same change
+# here fails Gate H: the docs move with the code (PROJECT.md agent_constraints.must).
 #
 # HOW TO USE:
 # 1. Copy this file to your project as `SPEC_MOBILE.md`.
@@ -40,7 +45,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 file_role: "spec"
 platform: "mobile"
 
@@ -975,6 +980,7 @@ When generating any screen, copy, or interaction from this document, an AI agent
 12. **Use native components first (per DESIGN_MOBILE.md).** Custom UI only when native doesn't satisfy.
 13. **System gestures stay system gestures.** Don't override back-swipe, pull-to-refresh, sheet-dismiss-swipe.
 14. **Every size class is specified with the base layout, in the same change.** Every screen carries a `responsive:` block covering `compact_landscape`, `regular_portrait`, `regular_landscape`, `split_view` and `foldable` (shape in `screen_schema`), each stating `layout` / `order` / `hidden` / `motion`; the base `layout:` is iPhone portrait / Android compact. Every animated media item or section names its `effect_ref` (a DESIGN_MOBILE `effects.registry[].name`), its `fallback` and its `reduced_motion` path. **A screen without a `responsive:` block, a class left out of it, or an animated item without `effect_ref` / `fallback` / `reduced_motion` is UNFILLED** and is reported as such, never built from guesses. A class the app does not support (portrait lock, iPhone only, no foldables) says so and has a DECISIONS.md 'Viewport scope' entry. Test on real devices or simulators at each class, including an iPad in Split View.
+15. **Shipped copy and this file change together.** Every string that ships lives here verbatim under its copy key (PROJECT.md `copy_keys:` when set, else the defaults listed there: headline, heading, body, copy, cta, label, question and answer among them), so QA Gate H (`check-drift.mjs`) can find it in the code. When copy changes in code first, write the shipped line here in the same change, marked per PROJECT.md §Status protocol (`# draft` if you wrote it, unmarked if it is the human's own words). A copy change in code without the same change here fails Gate H.
 
 ---
 
@@ -1056,6 +1062,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 - **Don't omit empty / loading / error states.** Every screen has all four.
 - **Don't design a screen for iPhone portrait only.** A screen without a complete `responsive:` block is unfilled (AI Agent Contract rule 14); iPad Split View can hand an iPad app a compact-width window at any time.
 - **Don't name an effect without its registry entry.** Animated items point at DESIGN_MOBILE `effects.registry` via `effect_ref` and declare `fallback` + `reduced_motion`.
+- **Don't let the app and this file disagree.** Copy edited in a screen and not here fails QA Gate H.
 - **Don't use generic SaaS-app copy.** Anchor to voice_samples.
 - **Don't invent feature names.** Use the declared product capabilities from INFORMATION.md.
 - **Don't write the app store listing in technical-spec voice.** It's a marketing surface.
@@ -1065,7 +1072,7 @@ iOS apps must show ATT (App Tracking Transparency) prompt if doing cross-app tra
 
 # Versioning
 
-`template_version: 1.22.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
+`template_version: 1.23.0`. Per-project `SPEC_MOBILE.md` instances should preserve this field.
 
 # Source
 

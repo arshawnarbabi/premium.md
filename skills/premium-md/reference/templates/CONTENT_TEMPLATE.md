@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # CONTENT_TEMPLATE.md — Reusable content model (single source of content truth)
-# Version: 1.22.0
+# Version: 1.23.0
 # Scope: web + mobile. Typed, reusable content RECORDS the AI maintains ONCE and
 #        pages REFERENCE — so a testimonial, stat, or FAQ lives in exactly one place.
 # Companions: SPEC.md / SPEC_MOBILE.md (pages reference these records), INFORMATION.md
@@ -19,6 +19,12 @@
 # 1. Copy this file to your project as `CONTENT.md`.
 # 2. Fill only the record types you actually have (delete the rest). Real, approved data only.
 # 3. In SPEC pages, reference records by path — never paste a quote/stat/FAQ inline again.
+#
+# SHIPPED COPY LIVES HERE VERBATIM, under the copy keys (PROJECT.md `copy_keys:` when
+# set, else the defaults listed beside it there, which cover quote, summary, detail, bio, question,
+# answer, headline, label and cta), so QA
+# Gate H (check-drift.mjs) can find every string in the code. A record changed in code (or in
+# lib/content.ts) without the same change here fails Gate H.
 # ─────────────────────────────────────────────────────────────
 
 # ─── STATUS MARKERS — every value's state stays trackable (authoritative spec: PROJECT.md → §Status protocol) ───
@@ -28,7 +34,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 file_role: "content"   # information | design | spec | project | content | seo | qa | decisions
 
 # Each record is a list item with a stable `id` (kebab or snake). Pages reference fields:
@@ -160,9 +166,10 @@ A content fact lives in **exactly one** record. SPEC pages **reference** it; the
 3. **Never invent** quotes, names, numbers, logos, or press. Real + approved only; honor `permission`. Surface gaps, don't fill them.
 4. **Keep entity-consistent** with INFORMATION (names, `sameAs`) — GEO/E-E-A-T depend on it.
 5. **Stamp `as_of`/freshness** on stats so SEO.md freshness + quarterly review can act on them.
+6. **A record and its code change together.** When a record's text changes in code first (the content module, a component), write it here in the same change, marked per PROJECT.md §Status protocol. Shipped strings live here verbatim under the copy keys (PROJECT.md `copy_keys:`), so QA Gate H (`check-drift.mjs`) can verify them; a change in code alone fails Gate H.
 
 # Versioning
-`template_version: 1.22.0`. Per-project `CONTENT.md` instances should preserve this field.
+`template_version: 1.23.0`. Per-project `CONTENT.md` instances should preserve this field.
 
 # Source
 Content-modeling practice (typed, reusable content types referenced by pages — the headless-CMS pattern, applied as a markdown layer). Generalizes the existing `SPEC.proof_points` record pattern. Background (finding F7) is in `docs/SYSTEM_RESEARCH.md` (in the premium.md repo, the release zip and the skill bundle). Voice lives in `INFORMATION.md`; pages that reference these records live in `SPEC.md` / `SPEC_MOBILE.md`; discoverability use in `SEO.md`.

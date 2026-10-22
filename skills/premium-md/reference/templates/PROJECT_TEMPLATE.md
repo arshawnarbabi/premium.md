@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # PROJECT_TEMPLATE.md — Entry-point orchestration for AI agents
-# Version: 1.22.0
+# Version: 1.23.0
 #
 # This is the FIRST file any AI agent should consult when working on this
 # project. It declares which sibling files exist, in what priority they
@@ -22,7 +22,7 @@
 # Rule: the AI NEVER writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, yours. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 file_role: "project"          # information | design | spec | project
 
 # ═══════════════════════════════════════════════════════════════
@@ -96,7 +96,7 @@ source_files:
     file: "research.md"
     purpose: "The evidence behind every template default (ships with the templates; brand-agnostic). Cited as `research §X.Y` throughout the templates. Consult the cited section whenever you CHOOSE or CHANGE a default, so the change is grounded, not guessed. Reference material, not a project decision: it never overrides a filled value in the files above."
     exists: true
-    priority_for: ["why a default is what it is", "viewport matrix + iOS Safari behaviour (§F.5)", "effect cost ladder + frame budgets (§I.14)", "OKLCH palette algorithm (§C.15)", "build modes (§X4)"]
+    priority_for: ["why a default is what it is", "viewport matrix + iOS Safari behaviour (§F.5)", "effect cost ladder + frame budgets (§I.14)", "OKLCH palette algorithm (§C.15)", "build modes (§X4)", "docs-code sync (§X4.5)"]
     freshness: "Before relying on a cited claim that is time-sensitive (tagged `[verify-current · last verified YYYY-MM]`) and older than ~6 months, run research.md's Freshness protocol (top of the file): re-check it against current sources and flag any drift."
 
 priority_order:
@@ -180,6 +180,7 @@ repository:
     content: "<content/ | src/content | n/a>"
     public_assets: "public/"
     types: "<src/types | colocate>"
+    docs: "<. (repo root) | docs/>"   # where PROJECT.md and its sibling docs live. MUST be inside this git repo, so every doc change is tracked in the same commit as the code it describes (agent_constraints.must → "The docs move with the code")
 
   branching:
     default_branch: "main"
@@ -187,6 +188,26 @@ repository:
     naming_pattern: "<feature/<short-name> | fix/<short-name> | etc.>"
 
   commit_style: "<conventional commits | freeform>"
+
+# ═══════════════════════════════════════════════════════════════
+# DOC SYNC (QA Gate H: the docs match the build)
+# ═══════════════════════════════════════════════════════════════
+
+# copy_keys: OPTIONAL. The YAML keys in SPEC.md / SPEC_MOBILE.md / CONTENT.md whose string values are
+# shipped copy; `check-drift.mjs` (QA Gate H) looks for each such string verbatim in the code.
+# Leave it commented out to use the tool's defaults, which cover every copy key the SPEC and CONTENT
+# templates use (app-store listing fields and keys that also hold routes or ids, such as name, value,
+# offline and pattern, are left out):
+#   eyebrow, headline, subhead, heading, title, tagline, one_line, intro_line, trust_marker, body, copy,
+#   description, caption, detail, summary, bio, quote, cta, label, alt, accessibility_label,
+#   placeholder, helper, helper_text, legal_consent, sign_up_link, yearly_discount_label, question,
+#   answer, q, a, message, banner, empty_message, error_message, success_message,
+#   if_denied_settings_link, reason, required, min_length, copied, saved, sent, deleted, subscribed,
+#   syncing, generic, network, network_slow, not_found, permission_denied, rate_limited,
+#   quota_near_limit, unsaved_changes, subject, preview, body_template
+# Uncomment to override. The list REPLACES the defaults, so keep the ones you still use and add your
+# own, e.g. a project whose SPEC has `closing_line:` and `scope_line:` strings:
+# copy_keys: [headline, subhead, eyebrow, heading, body, copy, cta, label, title, description, question, answer, q, a, quote, closing_line, scope_line]
 
 # ═══════════════════════════════════════════════════════════════
 # AI AGENT GROUND RULES (project-level constraints)
@@ -205,11 +226,12 @@ agent_constraints:
     - "Treat SPEC.md copy as final — don't rephrase declared copy to 'improve' it."
     - "When a needed value isn't in the source files, ask — don't fabricate."
     - "When choosing or changing a template default (a budget, a breakpoint, an effect technique, a token profile), read the research.md section the template cites for it first; if that claim is time-sensitive and its `last verified` stamp is older than ~6 months, run research.md's Freshness protocol before relying on it."
-    - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components."
+    - "Build as a loop, not a single pass: read the docs → plan → generate against the EXPORTED tokens (tools/brand-kit `npm run export`) → self-QA against QA.md → fix → repeat. Use exported tokens / CSS variables, never hardcoded #hex or raw oklch() in components. Self-QA runs the SHIPPED QA harness (`workflow.qa_harness`: Gates E, E2, A motion, B lab, B2) and the doc-sync check (`workflow.doc_sync`: Gate H) instead of writing your own; hand-write a checker only for a check they lack, and name it in the QA results."
     - "Build process (research §X4): (a) recognize the build MODE — docs-first→build, explore-build→design-off-it→document→rebuild, or hybrid — and state which one you're in; in the explore mode, capture the resulting decisions back into the docs (DESIGN/DECISIONS/SPEC) before the production build. (b) When the human supplies REFERENCE images/sketches/sites, translate their STRUCTURE into THIS project's tokens + voice — never copy a brand's colors/fonts/copy; log reference-driven choices in DECISIONS.md. (c) VIEW THE RUNNING APP: when your tool can drive a browser (e.g. Claude in Chrome — `claude --chrome` / open `localhost:3000`), open the dev server and iterate visually — compare the real render to the design/reference and fix until it looks right; code compiling is NOT 'looks right.' The browser loop is how you satisfy QA.md's responsive/themes/fidelity checks."
     - "If QA.md exists, the build is NOT done until every gate in it is ✅. Run it against your own output; fix failures and re-check before declaring complete."
     - "Every change ships at every viewport (research §F.5). Any change to layout, type, spacing, motion or imagery is built AND checked across the full QA.md `gates.viewport_matrix` (phones portrait + landscape, tablets portrait + landscape, short laptops, desktop, wide) in the SAME turn, not only at the author's screen. Use each section's SPEC `responsive:` block; where it is silent, derive from DESIGN tokens and surface the derivation. Report the matrix result (QA Gate E, plus E2 on touch) before calling the change done. A design approved at one width is a design for ALL widths: never wait for the human to ask about another size after the fact. If behaviour at a size is genuinely unclear, ASK rather than skip it. Sizes are excluded only via QA `gates.viewport_matrix.out_of_scope` with a DECISIONS 'Viewport scope' entry."
     - "Effects ship performance-ready (research §I.14). Before building ANY effect (blur, glass, WebGL/canvas, video, parallax, scroll-driven or continuous animation, large shadows/filters), record its plan in DESIGN `effects.registry`: `tier` = the CHEAPEST technique on DESIGN `effects.ladder` that reaches the intended quality (compositor-first: transform/opacity via CSS/WAAPI before JS-driven, before filters/backdrop-filter, before canvas/WebGL); `why_not_cheaper`; the cheaper `fallback` path and the `reduced_motion` path decided UP FRONT. It ships only with `measured_p95_ms` recorded against QA.md `gates.performance.runtime` budgets on a 120 Hz iPhone/iPad (Safari) and a mid-tier Android phone (Chrome), both scroll directions (QA Gate B2). Never plan to 'step it down later'. If the budget fails, pick the next-lower tier NOW and log the trade in DECISIONS ('Performance trade'). Quality stays as high as the budget allows: the goal is the best-looking version that meets the budget, not the cheapest one."
+    - "The docs move with the code (research §X4.5). A change is done only when the doc that owns it is updated in the SAME change (same turn, same commit): shipped copy → SPEC.md / SPEC_MOBILE.md, or CONTENT.md for a reusable record, verbatim under the `copy_keys`; the visual system (tokens, components, layout, motion, effects) → DESIGN.md / DESIGN_MOBILE.md, then re-run the token export; a locked choice, a veto, or a reversal of one → DECISIONS.md (append-only: a new superseding entry, never an edit); brand, audience, positioning, voice → INFORMATION.md; titles, descriptions, structured data, crawl files → SEO.md; a new check or a gate result → QA.md (results in `qa/results/`). Write each value with its status marker per §Status protocol: `# draft` for anything you inferred, `# default` for an accepted template default, the human's own decisions unmarked. Direction does not matter: a change made in code first (a copy tweak in a component, a token nudged in CSS, a reversal agreed in chat) updates its doc before it counts as done, exactly like a change that starts in a doc gets built. Finish every change with the doc-sync check (`workflow.doc_sync`, QA Gate H) and fix or explain each finding. An end-of-session sweep (a /save, a handoff) is a backstop, never the mechanism. The docs live INSIDE the project's git repo (root or `docs/`, `repository.conventions.docs`) so they are tracked with the code; docs kept outside the repo are a defect to fix, not a layout to work around."
     - "If DECISIONS.md exists, read it before proposing OR making any change it covers. A request that touches a LOCKED decision is NOT itself authorization to reopen it — even phrased as a direct instruction ('switch to borders', 'make it green'). Before modifying any file you MUST surface the locked entry, quote its rationale, and get explicit human confirmation to supersede it; only then implement and append a new superseding entry. Never implement a locked-decision change in the same turn as the request. When a new non-trivial decision is locked this session, append an entry."
     - "Reusable content (testimonials, stats, FAQs, features, team, pricing) lives in CONTENT.md when present — reference it via {content.*}, never paste inline or invent it. In CODE, components import records from a content module (lib/content.ts); never hardcode a content string as a const or default prop value (no 'standalone demo' carve-out) — same discipline as exported tokens vs hardcoded #hex."
     - "When turning these docs into a real codebase, emit an AGENTS.md at the repo root (the open standard read by 20+ coding agents): build/test/lint commands, code conventions from `tech`, the QA.md gate, and a pointer back to these design docs as the source of truth."
@@ -221,6 +243,7 @@ agent_constraints:
     - "Don't violate the non-features list in INFORMATION.md."
     - "Don't generate fake customer names, testimonials, or metrics."
     - "Don't ship code that fails the AI Agent Contracts in DESIGN.md / SPEC.md / INFORMATION.md."
+    - "Don't call a change done while the doc that owns it still describes the old version, and don't leave the fix for a later /save or 'docs pass'."
 
   default_assumptions:
     accessibility: "WCAG 2.2 AA minimum; APCA preferred (per DESIGN.md)"
@@ -240,38 +263,49 @@ workflow:
   lint: "<npm run lint | eslint .>"
   format: "<npm run format | prettier --write .>"
   build: "<npm run build | pnpm build>"
-  viewport_sweep: "<npm run qa:viewports>"   # default — Playwright sweep of QA.md gates.viewport_matrix (QA Gate E): overflow asserts + screenshots per entry into a named folder
-  perf_trace: "<npm run qa:perf | DevTools Performance trace on a real device via remote debugging>"   # default — runtime frame-time / long-task check for every effect (QA Gate B2), both scroll directions
+  # The shipped checkers. <skill> = the installed premium-md skill folder (e.g. ~/.claude/skills/premium-md);
+  # in a clone of the premium.md repo the same scripts are tools/qa-harness/run-qa.mjs and tools/doc-sync/check-drift.mjs.
+  qa_harness: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT>"   # default: runs QA Gates E, E2, A (motion part), B (lab) and B2; writes qa/results/<date>.{json,md} + qa/viewports/<date>/. Needs Playwright as a project devDependency. Flags: [--root .] [--out qa] [--only E,E2,A,B,B2] [--paths /] [--expect <css>] [--shots full] [--concurrency 4]
+  viewport_sweep: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT> --only E,E2"   # default: the harness's sweep of QA.md gates.viewport_matrix (QA Gate E + E2): overflow and edge asserts + screenshots per entry into qa/viewports/<date>/
+  perf_trace: "node <skill>/reference/qa-harness/run-qa.mjs --url http://localhost:<PORT> --only B,B2; then a DevTools Performance trace on each real device in QA.md runtime.devices via remote debugging"   # default: lab pass from the harness; the real-device frame-time numbers for every effect (QA Gate B2), both scroll directions, are still required
+  doc_sync: "node <skill>/reference/doc-sync/check-drift.mjs --root ."   # default: QA Gate H: copy drift (SPEC/CONTENT strings under `copy_keys` missing from the code), code changed with no doc update, stale token export. Flags: [--since <ref>] [--src ...] [--keys ...] [--min 12] [--json]
 
   ai_collaboration_pattern:
-    # How the human + AI typically work together on this project
+    # How the human + AI typically work together on this project. Every workflow ends with the doc-sync
+    # step (QA Gate H), so the docs and the code never describe different versions.
     design_system_workflow:
       - "Fill INFORMATION.md + DESIGN.md (brand identity + visual tokens)"
       - "Generate the color palette with the bundled generator: tools/brand-kit → `npm run gen -- --base \"oklch(L C H)\"` (do NOT hand-roll the OKLCH math)"
       - "FINAL STEP: review in the brand-kit viewer — `tools/brand-kit` → `npm run dev` — and iterate before building product code"
-      - "Once product code exists, a token change (type scale, spacing, radius, section_padding) is a change at every viewport: viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green, in the same turn"
+      - "Once product code exists, a token change (type scale, spacing, radius, section_padding) is a change at every viewport: edit DESIGN.md, re-run the token export (`npm run export`), then viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green, in the same turn"
+      - "Doc sync (QA Gate H), the last AI step, before the human commits: every doc that owns part of this change is updated in the SAME change (owners per `agent_constraints.must` → \"The docs move with the code\", status markers per §Status protocol); run `workflow.doc_sync`; fix or explain each finding in the QA results"
     new_page_workflow:
       - "Add page entry to SPEC.md (sitemap + page block with sections, each with its required `responsive:` block)"
       - "Hand SPEC.md + DESIGN.md + INFORMATION.md to AI"
       - "Any effect on the page: plan it in DESIGN `effects.registry` (tier, fallback, reduced_motion) BEFORE building it"
       - "AI generates Next.js page component using DESIGN tokens + SPEC content"
-      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
-      - "Human reviews + commits"
+      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace` (the shipped harness; never write your own sweep); fix; re-sweep until green. Same turn as the change, never after the human asks"
+      - "Doc sync (QA Gate H), the last AI step, before the human commits: every doc that owns part of this change is updated in the SAME change (owners per `agent_constraints.must` → \"The docs move with the code\", status markers per §Status protocol); run `workflow.doc_sync`; fix or explain each finding in the QA results"
+      - "Human reviews + commits (code and docs in the same commit)"
     new_component_workflow:
       - "Define component spec in DESIGN.md if it's a new type (incl. touch/:active state and its narrow-container behaviour)"
       - "AI generates component using existing DESIGN tokens"
-      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
-      - "Human reviews + commits"
+      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace` (the shipped harness; never write your own sweep); fix; re-sweep until green. Same turn as the change, never after the human asks"
+      - "Doc sync (QA Gate H), the last AI step, before the human commits: every doc that owns part of this change is updated in the SAME change (owners per `agent_constraints.must` → \"The docs move with the code\", status markers per §Status protocol); run `workflow.doc_sync`; fix or explain each finding in the QA results"
+      - "Human reviews + commits (code and docs in the same commit)"
     design_change_workflow:
       # The common case: the human changes something while looking at ONE screen (usually a laptop).
       - "Apply the change, then derive what it means at every QA.md gates.viewport_matrix entry from the SPEC `responsive:` block + DESIGN tokens; ask only where behaviour is genuinely unclear"
       - "New or changed effect: update its DESIGN `effects.registry` entry first (tier, fallback, reduced_motion)"
-      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
-      - "Report the Gate E matrix result (+ B2 numbers for effects) with the change, then human reviews + commits"
+      - "Write the change into the doc that owns it: tokens, components, layout rules → DESIGN (then re-run the token export); per-class behaviour → the SPEC `responsive:` block; a reversal of a locked choice → a superseding DECISIONS entry (after the confirmation the DECISIONS rule requires)"
+      - "Viewport sweep (QA Gate E, + E2 on touch) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace` (the shipped harness; never write your own sweep); fix; re-sweep until green. Same turn as the change, never after the human asks"
+      - "Doc sync (QA Gate H), the last AI step, before the human commits: every doc that owns part of this change is updated in the SAME change (owners per `agent_constraints.must` → \"The docs move with the code\", status markers per §Status protocol); run `workflow.doc_sync`; fix or explain each finding in the QA results"
+      - "Report the Gate E matrix result (+ B2 numbers for effects, + the Gate H result) with the change, then human reviews + commits (code and docs in the same commit)"
     copy_change_workflow:
-      - "Update copy in SPEC.md (the source of truth)"
-      - "AI propagates change to component if needed"
-      - "Viewport sweep (QA Gate E, + E2 on touch; copy reflows, so check the longest title at 320 px) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace`; fix; re-sweep until green. Same turn as the change, never after the human asks"
+      - "Update copy in SPEC.md / SPEC_MOBILE.md, or the CONTENT.md record (the source of truth), verbatim under its copy key"
+      - "AI propagates change to component if needed. Copy changed in code first, or asked for while looking at the page? Write the shipped line into SPEC/CONTENT in the same change (`# draft` if you wrote it, unmarked if it is the human's own words); a copy change in code alone fails Gate H"
+      - "Viewport sweep (QA Gate E, + E2 on touch; copy reflows, so check the longest title at 320 px) and runtime check for any effect (QA Gate B2) — `workflow.viewport_sweep` + `workflow.perf_trace` (the shipped harness); fix; re-sweep until green. Same turn as the change, never after the human asks"
+      - "Doc sync (QA Gate H), the last AI step, before the human commits: every doc that owns part of this change is updated in the SAME change (owners per `agent_constraints.must` → \"The docs move with the code\", status markers per §Status protocol); run `workflow.doc_sync`; fix or explain each finding in the QA results"
 
 # ═══════════════════════════════════════════════════════════════
 # CROSS-REFERENCES (explicit file relationships)
@@ -311,7 +345,7 @@ deployment:
 
 **Instantiation steps:**
 
-1. Copy this file to your project as `PROJECT.md`. (If your AI tool prefers `AGENTS.md` or `CLAUDE.md`, rename accordingly — the content is the same. `AGENTS.md` is an open standard, stewarded under the Linux Foundation and read by 20+ coding agents — Codex, Cursor, Copilot, Gemini CLI, Zed, and others.)
+1. Copy this file to your project as `PROJECT.md`, **inside the project's git repo** (the root or `docs/`, recorded in `repository.conventions.docs`) together with its sibling docs, so every doc change is tracked in the same commit as the code it describes. (If your AI tool prefers `AGENTS.md` or `CLAUDE.md`, rename accordingly — the content is the same. `AGENTS.md` is an open standard, stewarded under the Linux Foundation and read by 20+ coding agents — Codex, Cursor, Copilot, Gemini CLI, Zed, and others.)
 2. Fill every `<slot>` value. Verify with `grep -n "<[^>]*>" PROJECT.md`.
 3. For each `source_files.*.exists` field, mark `true` only for files actually present. The AI will skip referencing files marked `false`.
 4. Reference `PROJECT.md` (or have your tool auto-discover it) in every AI prompt for this project.
@@ -332,7 +366,8 @@ When working on this project, an AI agent **must** follow these rules:
 7. **Use the declared workflow patterns** (`workflow.ai_collaboration_pattern`) as the default way to approach common tasks.
 8. **Never bypass the design system for expediency.** If a design system token doesn't exist for what you need, surface that — don't inline a one-off value.
 9. **Honor the Interactive Population Protocol.** When the user invokes any of the trigger phrases listed in `§Interactive Population Protocol`, produce the structured intake form exactly as specified there — same shape every time. Don't improvise the format. Don't ask one question at a time when the user wants the full list. After receiving answers, fill templates progressively in the declared file order (PROJECT → INFORMATION → CONTENT → DESIGN web/mobile → SPEC web/mobile → SEO), derive computed values in the declared order (profiles → palettes → APCA verification → propagation → voice samples with approval gate), and run all five final verification checks (multi-pattern slot fill including stub detection, cross-template consistency, YAML validity, propagation integrity, completeness summary). Before producing PART 1, run the slot state audit (§"Behavioral protocol" Step 3) so PART 1 lists every actually-unfilled item — not just placeholder-syntax ones. Use semantic reasoning per §"What counts as 'filled' vs 'unfilled'" alongside the mechanical patterns; surface suspected stubs with confirmation framing rather than silently treating them as filled. **Also surface AI-drafted values (any slot carrying a `# DRAFT` / `confirm/refine` marker) as PART 0 "Drafts awaiting your approval" — so "what do I have to fill out or approve" returns both the empty slots AND the unapproved drafts; never treat a `# DRAFT` value as approved.** The Protocol section defines authoritative behavior — when in doubt, return there rather than improvise. **Honor the §Status protocol:** mark AI-inferred values `# draft` and accepted out-of-box defaults `# default` at fill time, emit the state ledger on every audit, and never let an unmarked value imply an approval it didn't get.
-10. **Every change ships at every viewport, and every effect ships performance-ready.** These are the two enforced rules in `agent_constraints.must`: a change is checked across the whole QA.md `gates.viewport_matrix` (Gate E/E2) in the same turn it is made, and an effect is planned in DESIGN `effects.registry` and measured against QA.md `gates.performance.runtime` (Gate B2) before it ships. Neither is a follow-up task the human has to request.
+10. **Every change ships at every viewport, and every effect ships performance-ready.** These are two of the enforced rules in `agent_constraints.must`: a change is checked across the whole QA.md `gates.viewport_matrix` (Gate E/E2) in the same turn it is made, and an effect is planned in DESIGN `effects.registry` and measured against QA.md `gates.performance.runtime` (Gate B2) before it ships. Neither is a follow-up task the human has to request.
+11. **The docs move with the code.** The third enforced rule in `agent_constraints.must`: a change is not done until the doc that owns it (copy → SPEC/CONTENT, visual system → DESIGN, locked choice or reversal → DECISIONS, brand and voice → INFORMATION, SEO → SEO, new check or result → QA) says what the code now does, in the same change, with its status markers. This holds whichever side the change started on. Run `workflow.doc_sync` (QA Gate H) at the end of every change and fix or explain each finding; run the shipped QA harness (`workflow.qa_harness`) rather than writing one. A /save or handoff at the end of a session is a backstop, not a substitute.
 
 ---
 
@@ -791,7 +826,7 @@ Verify each propagation rule from the table below. Report ✅ rules verified + �
 Run `yaml.safe_load` on each frontmatter. Surface and offer to fix any errors.
 
 **Check D — propagation integrity:**
-Walk the propagation table (below). For each row, the source value must match all targets exactly. Surface any drift, even if it would otherwise pass Check A.
+Walk the propagation table (below). For each row, the source value must match all targets exactly. Surface any drift, even if it would otherwise pass Check A. Once product code exists, also run `workflow.doc_sync` (QA Gate H) so the code side of the table is checked too.
 
 **Check E — completeness summary + state ledger:**
 Emit the **state ledger** — every must-fill slot classified into exactly ONE of the six states (`unfilled / draft / default / approved / locked / given`); if any value can't be classified, surface it rather than guessing. Then per-file counts: `total / given+approved+locked / unfilled / draft / unconfirmed-default / suspected-stub / user-deferred / skipped`. **If anything sits in `unfilled`, `draft`, or `suspected-stub`, the templates are NOT verified — do NOT declare done.** An `unconfirmed-default` is shippable but must be shown, not hidden. This ledger is the guarantee that every value's state is known — nothing fabricated is left behind unverified.
@@ -827,6 +862,7 @@ Frame these as menu options. Wait for the user to choose.
 | Entity (brand/people/social) | INFORMATION.md `project.name`, `people.*`, `social.*` | SEO.md `structured_data.organization` (name/logo/**sameAs**) + Person schema for founders (E-E-A-T) — keep identical for GEO entity consistency |
 | Page list + copy | SPEC.md `sitemap` + `pages.*` | SEO.md `page_type_schema` (which schema per page) + answer-first page copy; SEO `social_cards` pull SPEC page title/description |
 | Content records (testimonials/stats/FAQs/team/pricing) | CONTENT.md `testimonials.*`, `stats.*`, `faqs.*`, … | SPEC pages reference via `{content.*}` (single-sourced — no inline duplication); SEO.md uses `stats`/`testimonials` for GEO, `faqs` for FAQPage, `team_members` for Person schema; voice-checked vs INFORMATION |
+| **Docs ↔ code** (shipped copy, tokens, locked choices) | The owning doc: SPEC/CONTENT (copy, verbatim under `copy_keys`), DESIGN (tokens, components, layout), DECISIONS (locked choices and reversals) | The code that renders it, and back the other way: an edit made in code (a copy tweak, a token change, a reversal) is written into its owning doc in the same change, then onward through the rows above. A DESIGN token change re-runs the token export. Verified by `workflow.doc_sync` (QA Gate H) |
 
 When the AI fills any field on the left, it also fills the propagation targets without asking the user again.
 
@@ -836,6 +872,8 @@ When the AI fills any field on the left, it also fills the propagation targets w
 - **"Change the body font"** → update `typography.families.*` in both DESIGN.md and DESIGN_MOBILE.md.
 
 After any such change, say which sibling documents you updated. If you update one document and its siblings would now be stale, that is a bug — fix all of them in the same pass.
+
+**The same continuous rule covers code ↔ doc, not only doc ↔ doc.** The table keeps the docs in agreement with each other; the "Docs ↔ code" row and `agent_constraints.must` → "The docs move with the code" keep them in agreement with the build. A change that starts in code (copy edited in a component, a token nudged in CSS, a locked choice undone in a commit) goes back into its owning doc in the same change, with its status marker, and from there through the rows above; a change that starts in a doc is built in the same change. A doc that still describes the old version after the code moved on is the same bug as a stale sibling. `check-drift.mjs` (`workflow.doc_sync`, QA Gate H) checks the code side mechanically: SPEC/CONTENT copy missing from the code, code changed with no doc update, a token export older than DESIGN.md.
 
 ## Edge cases
 
@@ -909,6 +947,8 @@ This is the project-wide "rules of the road." Sub-files have their own narrower 
 
 The `ai_collaboration_pattern` block documents how humans and AI typically work together on this project. This helps the AI propose appropriate next steps rather than freelancing.
 
+Every workflow ends with the same doc-sync step (QA Gate H), so keep it when you add a project-specific workflow. Fill `qa_harness`, `viewport_sweep`, `perf_trace` and `doc_sync` with the real path to the shipped scripts (the installed skill's `reference/` folder, or `tools/` in a clone of the premium.md repo). Uncomment `copy_keys:` only when your SPEC or CONTENT uses copy keys beyond the defaults.
+
 ---
 
 # Anti-patterns — never do this in PROJECT.md
@@ -918,12 +958,13 @@ The `ai_collaboration_pattern` block documents how humans and AI typically work 
 - **Don't lie about file existence.** Mark `exists: false` if a file genuinely isn't in the repo — the AI uses this to avoid hallucinating references.
 - **Don't make this file long.** Target ≤ 200 lines. If you find yourself writing essays here, the content belongs in a sub-file.
 - **Don't omit tech stack.** Without it, the AI assumes generic defaults that may not match your project.
+- **Don't keep the docs outside the project's git repo.** Docs in another folder are not tracked with the code, so nobody sees them go stale. Put them at the repo root or in `docs/`.
 
 ---
 
 # Versioning
 
-`template_version: 1.22.0`. Per-project `PROJECT.md` instances should preserve this field.
+`template_version: 1.23.0`. Per-project `PROJECT.md` instances should preserve this field.
 
 # Source
 

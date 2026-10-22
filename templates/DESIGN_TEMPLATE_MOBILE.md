@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_MOBILE.md — Premium mobile design system template
-# Version: 1.22.0
+# Version: 1.23.0
 # Platform: mobile (iOS HIG + Android Material 3)
 # Companion: DESIGN_TEMPLATE_WEB.md (separate file for marketing + product sites)
 #
@@ -24,7 +24,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 platform: "mobile"
 
 # ─── Brand identity (REQUIRED — must match DESIGN.md web instance if project has both) ───
@@ -229,6 +229,11 @@ colors:
     default: "{colors.neutral.7}"
     strong: "{colors.neutral.8}"
     hairline: "1px / @1x, 0.5pt @2x+"      # iOS hairline convention
+    # Dark-mode role override, optional: a role that must point at a different step in dark mode
+    # (usually to meet APCA) goes in a `dark:` map inside its group, the same shape as a palette's
+    # `dark:`, listing only those roles. The token export writes it into [data-theme="dark"].
+    # dark:
+    #   subtle: "{colors.neutral.7}"   # e.g. step 6 measured too faint on the dark canvas
 
   text:
     primary: "{colors.neutral.12}"
@@ -1276,6 +1281,8 @@ derivation:
   # Brand-kit viewer: also renders THIS file — `tools/brand-kit` → `npm run load -- --root <project>`
   # finds DESIGN_MOBILE.md when there's no web DESIGN.md (mobile-only projects). Mobile-only surfaces
   # (haptics, gestures) aren't drawn, but colors / type / spacing / radius / elevation are. `npm run dev` to review.
+  # A token change here re-runs the token export in the same change (`npm run export`, or the project's own
+  # native token step) and is committed with it; QA Gate H (`check-drift.mjs`) flags an export older than its DESIGN file.
 
 ---
 
@@ -1998,7 +2005,7 @@ Avoid all banned words from web template's microcopy section. Same forbidden lis
 
 # Versioning
 
-`template_version: 1.22.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
+`template_version: 1.23.0`. Shares versioning conventions with the web template. When the template evolves, both files version together to preserve cross-platform parity of brand identity.
 
 # Source
 

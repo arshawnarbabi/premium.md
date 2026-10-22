@@ -3643,9 +3643,19 @@ The human frequently supplies **reference material**: images of work they admire
 ### X4.4 The combined build loop
 Putting it together (this extends the PROJECT "build as a loop" rule):
 
-**read docs (+ references) → plan → generate against exported tokens → view in the running dev server → compare to design/reference → fix → repeat → self-QA against `QA.md` → done.**
+**read docs (+ references) → plan → generate against exported tokens → view in the running dev server → compare to design/reference → fix → repeat → self-QA against `QA.md` (the shipped harness) → doc sync (Gate H) → done.**
 
-Mode A starts at "read docs." Mode B starts with the exploratory build, then *back-fills the docs*, then runs this loop for production. The **"view in the running app"** step is what makes *"iterate until it looks perfect"* actually achievable — without it, "done" is a guess.
+Mode A starts at "read docs." Mode B starts with the exploratory build, then *back-fills the docs*, then runs this loop for production. The **"view in the running app"** step is what makes *"iterate until it looks perfect"* actually achievable — without it, "done" is a guess. Every pass through the loop ends with the doc-sync step of §X4.5.
+
+### X4.5 Docs stay in sync with the code: the same change, not a later sweep
+The docs are only a source of truth while they describe what ships. Once real code exists, most changes no longer start in a doc: the human tweaks a headline while looking at the page, nudges a token in CSS, or reverses a choice in chat, and the agent edits the component. Each of those leaves the doc describing the previous version unless the doc is updated in the same change. Three failure patterns observed in projects built on these templates:
+- **Copy changed in code, SPEC kept the old line.** The next agent reads SPEC, treats its copy as final (SPEC contract rule 1) and "fixes" the page back to the stale line, or a reviewer approves copy that no longer ships.
+- **Docs kept outside the git repo.** A doc folder beside the repo instead of inside it never appears in a diff or a commit, so nobody sees it fall behind, and there is no history to tell which version is current.
+- **Relying on an end-of-session sweep.** A /save or handoff only helps when someone runs it, and it rebuilds the changes from memory after the fact. Sessions that end abruptly, and changes made between sweeps, are lost.
+
+What works is the same rule as every other gate in the system: a change is not done until it is checked, and the check runs on every change. The owning doc is updated in the same change (copy → SPEC/CONTENT, visual system → DESIGN plus a re-run token export, locked choices and reversals → DECISIONS, brand and voice → INFORMATION, discoverability → SEO, new checks and results → QA), the docs live inside the repo so the doc edit and the code edit land in one commit, and a mechanical check (QA Gate H, `check-drift.mjs`) compares the two: shipped copy missing from the code, code that changed with no doc change beside it, and a token export older than its DESIGN file. A mechanical check catches what a reviewer skims past; its cost is a list of findings that are either fixed or explained in the QA results. An end-of-session sweep stays useful as a backstop for what the check cannot see (a decision made in conversation that touched no file), never as the primary mechanism.
+
+The same logic is why a QA harness ships with the templates: an agent that must first write its own viewport sweep or frame-time logger spends much of a session on tooling (a fresh-agent build test took about 56 minutes, partly for that reason), and every hand-written checker differs. A shipped harness makes the check identical across projects and leaves hand-written checks for what it does not cover.
 
 **Source.** Build-workflow practice for AI-assisted design — docs-first vs explore-from-scaffold vs section-by-section; reference-driven translation (structure not brand); browser-in-the-loop visual iteration. Tooling: Claude in Chrome / Claude Code browser integration ([Claude Code — Chrome docs](https://code.claude.com/docs/en/chrome), [setup at claude.ai/chrome](https://claude.ai/chrome)). Ties to the PROJECT build-loop contract, DESIGN component specs, `DECISIONS.md` (capturing reference-driven choices), and `QA.md` (the bar the visual loop satisfies).
 

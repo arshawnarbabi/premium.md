@@ -4,7 +4,7 @@
 
 > A markdown template system that turns any AI agent into a reliable premium-grade product builder.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.22.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) ![Version](https://img.shields.io/badge/version-1.23.0-green) ![Status](https://img.shields.io/badge/status-stable-brightgreen)
 
 Brand identity slots into ~30 fields per project. The rest — design tokens, component specs, page patterns, voice rules, accessibility floors — is pre-decided based on what premium design teams actually do. Hand the filled-in files to any AI tool (Claude, Cursor, ChatGPT, Cody, others) as the single source of truth.
 
@@ -28,7 +28,7 @@ The ten templates live in [`templates/`](templates/). (The release download flat
 
 | File | Purpose | Lines |
 | --- | --- | --- |
-| **`PROJECT_TEMPLATE.md`** | Entry-point orchestration — tells the AI which sibling files exist and in what priority, the intake and status protocols, and the build loop (every change swept across the viewport matrix, every effect measured). | ~930 |
+| **`PROJECT_TEMPLATE.md`** | Entry-point orchestration — tells the AI which sibling files exist and in what priority, the intake and status protocols, and the build loop (every change swept across the viewport matrix, every effect measured, and every change written into the doc that owns it in the same change). | ~960 |
 | **`INFORMATION_TEMPLATE.md`** | Brand identity, audience persona (with anti-personas), business model, voice principles, product features + non-features, social, SEO defaults. The "why" and "who." Shared between web and mobile. | ~630 |
 | **`CONTENT_TEMPLATE.md`** | **Reusable content model** — typed records (testimonials, stats, features, FAQs, team, case studies, integrations, pricing) the AI maintains *once* and pages reference via `{content.*}`. Single source of content truth; no drift across pages. Shared web + mobile. | ~170 |
 | **`DESIGN_TEMPLATE_WEB.md`** | Visual design system for web — colors (OKLCH), typography, spacing, ~25 component specs, motion, the effect cost ladder and effects registry, viewport units and safe areas, input modality, accessibility (APCA + WCAG 2.2). | ~2,840 |
@@ -36,19 +36,21 @@ The ten templates live in [`templates/`](templates/). (The release download flat
 | **`SPEC_TEMPLATE_WEB.md`** | Site map + per-page content/layout/copy (with a `responsive:` block per section for every device class) + forms + system messages + transactional email + legal pages + analytics events. | ~1,200 |
 | **`SPEC_TEMPLATE_MOBILE.md`** | App map + per-screen content/copy/states + onboarding + auth + permission pre-prompts + push notifications + app store metadata, with a `responsive:` block per screen for every size class. | ~1,070 |
 | **`SEO_TEMPLATE.md`** | **Discoverability** — SEO + AEO + GEO: JSON-LD structured data (page-type schema map), answer-first content patterns, generative-engine citability (stats / quotes / citations / entity consistency), freshness, social cards, `llms.txt`. The discoverability layer over `INFORMATION.seo` + `SPEC`. | ~140 |
-| **`QA_TEMPLATE.md`** | Premium **acceptance gate** the AI runs against its own build before "done" — WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget, runtime smoothness budgets for every effect (Gate B2), the full viewport matrix incl. phone landscape, tablets and ultra-wide (Gate E) and real iOS Safari (Gate E2), token fidelity (no hardcoded values), content-matches-SPEC, security. The single owner of every performance number. | ~260 |
+| **`QA_TEMPLATE.md`** | Premium **acceptance gate** the AI runs against its own build before "done" — WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget, runtime smoothness budgets for every effect (Gate B2), the full viewport matrix incl. phone landscape, tablets and ultra-wide (Gate E) and real iOS Safari (Gate E2), token fidelity (no hardcoded values), content-matches-SPEC, security, and docs that match the build (Gate H). The single owner of every performance number. | ~290 |
 | **`DECISIONS_TEMPLATE.md`** | **Decision log** — an append-only ADR-style record of locked choices + rationale. A fresh agent reads it before proposing changes, so settled decisions aren't relitigated each session. | ~110 |
 
 Plus one reference file:
 
 | File | Purpose |
 | --- | --- |
-| `research.md` | The brand-agnostic premium-standard research (29 sections, §A to §Z, ~4,190 lines) covering **design, copy, discoverability, and the build process** (incl. §X2 Marketing & Conversion Copy, §X3 SEO + AEO + GEO, and §X4 Build Modes / reference-driven design / visual iteration) — the explanatory backing for everything in the templates. DESIGN / SPEC / SEO templates cite specific sections. |
+| `research.md` | The brand-agnostic premium-standard research (29 sections, §A to §Z, ~4,200 lines) covering **design, copy, discoverability, and the build process** (incl. §X2 Marketing & Conversion Copy, §X3 SEO + AEO + GEO, and §X4 Build Modes / reference-driven design / visual iteration) — the explanatory backing for everything in the templates. DESIGN / SPEC / SEO templates cite specific sections. |
 
 Plus optional tooling (the markdown templates stay dependency-free):
 
 | Folder | Purpose |
 | --- | --- |
+| `tools/qa-harness/` | The shipped QA harness: `node tools/qa-harness/run-qa.mjs --url http://localhost:<PORT> [--root .] [--out qa] [--only E,E2,A,B,B2] [--paths /] [--expect <css>] [--shots full] [--concurrency 4]` runs QA Gates E, E2, A (motion part), B (lab) and B2 against your running dev server and writes `qa/results/<date>.{json,md}` plus screenshots in `qa/viewports/<date>/`. Needs Playwright as a devDependency of the project it checks. Agents run it instead of writing their own sweep. |
+| `tools/doc-sync/` | The doc-sync check, QA Gate H: `node tools/doc-sync/check-drift.mjs [--root .] [--since <ref>] [--src ...] [--keys ...] [--min 12] [--json]` reports copy drift (SPEC/CONTENT strings missing from the code), code changed with no doc update, and a stale token export. An optional `copy_keys:` list in PROJECT.md frontmatter overrides the default copy keys. |
 | `tools/brand-kit/` | Needs Node ≥ 22.18. An OKLCH **palette generator** (model-only) + a **brand-kit viewer** that reads a project's `DESIGN.md` + `INFORMATION.md` and renders the whole design system (specimen + composition, light/dark, the project's real fonts + icon family). Run `npm run dev` to review before building. See `tools/brand-kit/README.md`. **Note:** the tooling lives in the repo — **clone it** to use the generator/viewer. It is intentionally excluded from the lean release download (the markdown templates are self-contained and can be handed to any AI without it). |
 
 ---
@@ -91,7 +93,8 @@ Each template is operational, not aspirational. Specifically:
 - **AI Agent Contract** — 29 hard rules (web) / 18 hard rules (mobile) the AI must follow
 - **Content model** (`CONTENT.md`) — reusable typed records (testimonials, stats, features, FAQs, team, case studies, pricing) maintained *once* and referenced by pages via `{content.*}` — the same mechanism as design tokens, so the same quote or metric never drifts across pages
 - **Discoverability** (`SEO.md`, backed by `research.md §X3`) — three layers: **SEO** (rank — crawlability, structured data, E-E-A-T, Core Web Vitals), **AEO** (be the direct answer in AI Overviews — answer-first, FAQ markup), **GEO** (be cited by ChatGPT / Claude / Perplexity / Gemini — stats / quotes / citations / entity consistency / freshness): JSON-LD per page type, social cards, `llms.txt`
-- **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), runtime frame budgets, token fidelity, a **viewport sweep on every change** (phone portrait and landscape, tablet portrait and landscape, short laptop, desktop through **ultra-wide / 4K**, plus real iOS Safari), content-matches-SPEC, security
+- **QA acceptance gate** (`QA.md`) — the AI self-audits its build before "done": WCAG 2.2 AA (axe zero-critical), Core Web Vitals budget (LCP/INP/CLS), runtime frame budgets, token fidelity, a **viewport sweep on every change** (phone portrait and landscape, tablet portrait and landscape, short laptop, desktop through **ultra-wide / 4K**, plus real iOS Safari), content-matches-SPEC, security, and **docs that match the build** (Gate H)
+- **Docs that move with the code**: a change is done only when the doc that owns it (copy → SPEC/CONTENT, visual system → DESIGN, locked choices and reversals → DECISIONS, brand → INFORMATION, SEO → SEO, checks → QA) is updated in the same change, whichever side the change started on. The docs live inside the project's git repo, and `check-drift.mjs` (QA Gate H) catches copy that changed in code but not in SPEC, code changed with no doc update, and a stale token export (`research.md §X4.5`)
 - **Every viewport, built with desktop**: each SPEC section carries a `responsive:` block for every device class, written in the same change as the desktop design, so the other viewports are never an afterthought (`research.md §F.5`)
 - **Performance-ready effects**: a cost ladder from compositor-only CSS to WebGL, an effects registry (tier, why nothing cheaper works, fallback, reduced-motion path, measured frame-time p95 per device), adaptive quality that steps down only on measured frame misses, and runtime budgets in `QA.md` (`research.md §I.14`). Effects ship at full quality and measured, not pre-degraded
 - **Decision log** (`DECISIONS.md`) — append-only ADR-style record of locked choices + rationale, so a fresh agent reads what's settled before reopening it; plus an `AGENTS.md` emitted to the built repo (the open standard 20+ coding agents read) for the docs→code handoff
@@ -132,6 +135,10 @@ grep -n "<[^>]*>" PROJECT.md INFORMATION.md DESIGN.md SPEC.md
 # 5. Hand all four files to your AI tool. PROJECT.md is the entry point.
 
 # 6. Review the result in the brand-kit viewer: cd tools/brand-kit && npm run dev
+
+# 7. Once code exists, every change runs the shipped checkers (from a clone of this repo):
+#    node tools/qa-harness/run-qa.mjs --url http://localhost:3000   (Gates E, E2, A motion, B lab, B2)
+#    node tools/doc-sync/check-drift.mjs --root .                   (Gate H: docs match the build)
 ```
 
 ### Mobile project
@@ -170,7 +177,7 @@ cp -r premium.md/skills/premium-md ~/.claude/skills/    # Claude Code
 cp -r premium.md/skills/premium-md ~/.agents/skills/    # Codex / Cursor
 ```
 
-Either way you get the same thing the raw templates give you — just auto-loaded and kept together. The skill's bundled brand-kit scripts (`reference/brand-kit/scripts/`) run on plain Node ≥ 22.18 with no `npm install`; the templates themselves need nothing. The plain-template path above still works for any tool or for browsing.
+Either way you get the same thing the raw templates give you — just auto-loaded and kept together. The skill's bundled brand-kit scripts (`reference/brand-kit/scripts/`) run on plain Node ≥ 22.18 with no `npm install`; the skill also carries the QA harness (`reference/qa-harness/run-qa.mjs`, which needs Playwright in the project it checks) and the doc-sync check (`reference/doc-sync/check-drift.mjs`, Gate H); the templates themselves need nothing. The plain-template path above still works for any tool or for browsing.
 
 ---
 
@@ -275,16 +282,16 @@ The research file is informational — you don't need it to use the templates. I
 
 ## Versioning
 
-All templates carry `template_version: "1.22.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
+All templates carry `template_version: "1.23.0"` in their YAML frontmatter. Per-project instances should preserve this field — when the template family evolves, projects can track which version they were authored against.
 
-This release: **v1.22.0** — stable. Future updates follow [semantic versioning](https://semver.org/). Release notes for every version are on the [GitHub releases page](https://github.com/arshawnarbabi/premium.md/releases).
+This release: **v1.23.0** — stable. Future updates follow [semantic versioning](https://semver.org/). Release notes for every version are on the [GitHub releases page](https://github.com/arshawnarbabi/premium.md/releases).
 
-**What changed in v1.22.0:**
-- **Every viewport, enforced.** QA.md owns a canonical `gates.viewport_matrix` (phone portrait, phone landscape, tablet portrait, tablet landscape, short laptop, desktop, each with the SPEC key it maps to). Gate E is rewritten as a sweep that runs on every change to layout, type, spacing, motion or imagery, and new Gate E2 covers touch and real iOS Safari. Every SPEC section (and every mobile screen) carries a required `responsive:` block, written in the same change as the desktop design, and the PROJECT build loop runs the sweep before a change counts as done.
-- **Performance-ready effects.** DESIGN gains `effects:` (a cost ladder, limits, adaptive quality and a registry where each effect records its tier, why nothing cheaper works, its fallback, its reduced-motion path and its measured frame-time p95 per device), plus `# Effects & performance`, `## Viewport units & safe areas` and `## Input modality`. QA.md adds runtime budgets at `gates.performance.runtime` and Gate B2, and research §I.14 holds the reasoning. Effects ship at full quality and step down only on measured frame misses.
-- **Research freshness.** research.md's Freshness protocol now governs time-sensitive claims, new §F.5 (viewport matrix, device classes, iOS Safari behaviour) and §I.14 (runtime performance) were added, old §F.5 to §F.8 moved to §F.6 to §F.9 and old §I.14 to §I.15, and stale claims were corrected.
-- **Skill bundle fixed.** The bundled brand-kit scripts now run from the skill with plain `node` and no install: the YAML parser is vendored and the OKLCH library ships with them, and `scripts/build-skill.sh` smoke-tests all three scripts on every build. The release zip and the skill now include `docs/SYSTEM_RESEARCH.md`, which the templates cite.
-- **Dot-safe tokens.** `export-tokens.ts` writes scale steps that contain a dot with an underscore (`--space-0_5`, not the invalid `--space-0.5`), in CSS, Tailwind and DTCG output alike.
+**What changed in v1.23.0:**
+- **The QA harness ships.** `tools/qa-harness/run-qa.mjs` runs the automated half of QA.md against a running site: Gates E and E2 (every `gates.viewport_matrix` size and theme, the in-between sweep, WebKit on the touch sizes), the motion part of Gate A, Gate B lab numbers and the Gate B2 frame-time pass, all read from the project's own QA.md and DESIGN.md. It writes `qa/results/<date>.{json,md}` plus screenshots in `qa/viewports/<date>/`, and reports anything that needs a real device as unverified. It needs Playwright in the project it checks. QA.md and PROJECT.md now point at it (`tools.qa_harness`, `workflow.qa_harness`), so agents run it instead of writing their own sweep.
+- **Docs match the build: Gate H and the drift check.** New QA Gate H runs at the end of every change. `tools/doc-sync/check-drift.mjs` reports copy in SPEC or CONTENT that the code does not ship, code that changed with no doc update, and a token export older than DESIGN.md (exit 0 clean, 1 drift, 2 setup problem). Its default copy keys cover every key the SPEC and CONTENT templates use for shipped copy (`headline`, `heading`, `copy`, `body`, `cta`, `label`, FAQ `question` / `answer` and `q` / `a`, system messages, email subjects and more); an optional `copy_keys:` list in PROJECT.md frontmatter replaces them.
+- **The docs move with the code.** A new must rule in PROJECT.md: a change is done only when the doc that owns it is updated in the same change, whichever side the change started on (shipped copy to SPEC or CONTENT, the visual system to DESIGN, locked choices and reversals to DECISIONS, brand to INFORMATION, SEO to SEO, checks to QA). Every workflow ends with the doc-sync step, and research §X4.5 explains why.
+- **Exporter fixes.** `export-tokens.ts` now emits `letter_spacing` for every type role and every other token group the CSS needs: font fallback stacks, measure, spacing roles, component radii and elevations, motion durations with the profile multiplier, easings, containers, section padding, focus ring, touch targets, z-index, icon sizes and component dimensions. Dark-mode role overrides go in a `dark:` map inside a role group, now documented in the DESIGN templates. Names stay dot-safe everywhere, type role names in `tokens.json` included, and the brand-kit README lists everything it emits.
+- **Bundled and tested.** The skill and the release zip carry both new tools, and `scripts/build-skill.sh` smoke-tests them on every build (copy drift caught, code-without-doc caught, dark overrides exported, no dotted token names).
 
 ---
 

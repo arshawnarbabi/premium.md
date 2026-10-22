@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # SPEC_TEMPLATE_WEB.md — Site map + content/layout/COPY for a web project
-# Version: 1.22.0
+# Version: 1.23.0
 # Scope: web (marketing sites, product/SaaS websites, hybrid)
 # Companions: DESIGN_TEMPLATE_WEB.md (visual system), INFORMATION_TEMPLATE.md (brand)
 #
@@ -16,6 +16,11 @@
 # to write (e.g., "<≤44 chars, brand voice, one sharp value claim>"). REPLACE
 # each one with the actual final sentence. The guidance describes the slot;
 # the value you put there IS the copy.
+#
+# SHIPPED COPY LIVES HERE VERBATIM, under the copy keys (PROJECT.md `copy_keys:` when
+# set, else the defaults listed beside it there), so QA Gate H (check-drift.mjs) can find
+# every string in the code. A copy change made in code without the same change
+# here fails Gate H: the docs move with the code (PROJECT.md agent_constraints.must).
 #
 # HOW TO USE:
 # 1. Copy this file to your project as `SPEC.md`.
@@ -37,7 +42,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 file_role: "spec"          # information | design | spec | project
 platform: "web"
 
@@ -466,7 +471,8 @@ pages:
           subhead: "<the why behind the company>"
       - type: "long-form-prose"
         responsive: "<required — the six device classes per section_schema.responsive>"
-        content: "<2-4 paragraphs of origin story — uses {information.brand.story.origin} as raw material>"
+        content:
+          body: "<2-4 paragraphs of origin story — uses {information.brand.story.origin} as raw material>"
       - type: "team-grid"
         responsive: "<required — the six device classes per section_schema.responsive>"
         members:
@@ -1107,6 +1113,7 @@ When generating any page, copy, form, email, or content from this document, an A
 9. **Legal pages need lawyer-reviewed text.** Generate the structural outline declared here, but never invent legal language. Use a placeholder ("[legal text TBD]") and flag for human review.
 10. **A11y notes are non-negotiable.** Apply both DESIGN.md's universal a11y floor and the per-page notes here.
 11. **Every device class is specified with the desktop design, in the same change.** Every section carries a `responsive:` block with all six non-desktop classes (`phone`, `phone_landscape`, `tablet_portrait`, `tablet_landscape`, `laptop_short`, `desktop_wide`), each stating `layout` / `order` / `hidden` / `motion` (shape in `section_schema`). Every media item whose `motion` is not `static` names its `effect_ref` (a DESIGN `effects.registry[].name`), its `fallback` and its `reduced_motion` variant. **A section without a `responsive:` block, a class left out of it, or an animated media item without `effect_ref` / `fallback` / `reduced_motion` is UNFILLED** and is reported as such, never built from guesses. Values follow DESIGN's rules (`## Viewport units & safe areas`, `## Input modality`, `# Effects & performance`); classes are QA's `viewport_matrix`, not width breakpoints (research.md §F.5); QA Gate E verifies them. When a desktop change lands, update every class's entry in the same change.
+12. **Shipped copy and this file change together.** Every string that ships lives here verbatim under its copy key (PROJECT.md `copy_keys:` when set, else the defaults listed there: headline, heading, body, copy, cta, label, question and answer among them), so QA Gate H (`check-drift.mjs`) can find it in the code. When copy changes in code first (a tweak made while looking at the page, a line the human dictated), write the shipped line here in the same change, marked per PROJECT.md §Status protocol (`# draft` if you wrote it, unmarked if it is the human's own words). A copy change in code without the same change here fails Gate H.
 
 ---
 
@@ -1181,6 +1188,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 - **Don't ship a section desktop-only.** A section without a complete `responsive:` block is unfilled (AI Agent Contract rule 11), not "mobile later". DESIGN.md provides the rules, QA Gate E checks them.
 - **Don't name an effect without its registry entry.** Animated media point at DESIGN `effects.registry` via `effect_ref` and declare `fallback` + `reduced_motion`; an effect described only in prose here is unfilled.
 - **Don't write generic SaaS copy.** Anchor every sentence in `voice_samples`. If you don't have samples, write them first before writing pages.
+- **Don't let the page and this file disagree.** Copy edited in a component and not here fails QA Gate H; the next agent would "fix" the page back to the stale line.
 - **Don't define new section types ad hoc.** If you need one, add it to DESIGN.md first.
 - **Don't omit legal pages.** Even simple sites need privacy + terms. Plan for them from day one.
 - **Don't forget transactional email.** Sign-up, password reset, billing — these are part of UX and need brand-voice copy.
@@ -1189,7 +1197,7 @@ The structural outline is fine in SPEC.md. The actual legal text needs a lawyer 
 
 # Versioning
 
-`template_version: 1.22.0`. Per-project `SPEC.md` instances should preserve this field.
+`template_version: 1.23.0`. Per-project `SPEC.md` instances should preserve this field.
 
 # Source
 

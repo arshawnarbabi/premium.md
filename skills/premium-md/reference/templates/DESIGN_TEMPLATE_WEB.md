@@ -1,7 +1,7 @@
 ---
 # ─────────────────────────────────────────────────────────────
 # DESIGN_TEMPLATE_WEB.md — Premium web design system template
-# Version: 1.22.0
+# Version: 1.23.0
 # Platform: web (marketing sites + product/SaaS websites)
 # Companion: DESIGN_TEMPLATE_MOBILE.md (separate file for iOS/Android)
 #
@@ -27,7 +27,7 @@
 # Rule: the AI never writes an inferred value without `# draft`, nor accepts a default without `# default`
 # — so an unmarked filled value is, by construction, the user's. Nothing fabricated slips through unverified.
 
-template_version: "1.22.0"
+template_version: "1.23.0"
 platform: "web"
 
 # ─── Brand identity (REQUIRED inputs) ───
@@ -250,6 +250,13 @@ colors:
     subtle: "{colors.neutral.6}"   # non-interactive separators
     default: "{colors.neutral.7}"  # interactive borders (inputs, buttons)
     strong: "{colors.neutral.8}"   # hovered/focused interactive
+    # Dark-mode role override, optional. Every role ref above already switches with its palette's
+    # `dark:` ramp. When a role must point at a DIFFERENT step in dark mode (usually to meet APCA),
+    # give its group a `dark:` map, the same shape as a palette's `dark:`, listing only those roles.
+    # Any role group can carry one (surface, border, text, semantic). The token export writes it into
+    # [data-theme="dark"] as the same var (here --border-subtle). See §Colors → Dark mode.
+    # dark:
+    #   subtle: "{colors.neutral.7}"   # e.g. step 6 measured too faint on the dark canvas
 
   # Text role tokens
   text:
@@ -1778,6 +1785,8 @@ Dark mode is a **separately authored palette**, never an inversion. Three reason
 
 Use the same token names across modes; only the underlying palette differs. The browser switches automatically via `prefers-color-scheme` or via a `[data-theme]` attribute selector.
 
+**Dark-mode tokens in this file.** Each palette carries its dark ramp in a nested `dark:` map (`colors.primary.dark.1` to `.12`). Role tokens (`surface`, `border`, `text`, `semantic`) are written once as refs to palette steps, and those refs switch with the palette, so most roles need nothing more. When a role must point at a different step in dark mode (APCA fails on the dark canvas, a border vanishes), add a `dark:` map inside that role group listing only the overridden roles, the same shape as a palette's `dark:` (`colors.border.dark.subtle: "{colors.neutral.7}"`). `npm run export` writes both kinds into the `[data-theme="dark"]` block of `tokens.css` under the same variable names as light mode (`--primary-9`, `--border-subtle`), so components never branch on the mode. Record the measured contrast next to an override, like any other derived value.
+
 ## Contrast
 
 WCAG 2.2 AA is the floor (4.5:1 for normal text, 3:1 for large or UI). Additionally test against APCA (perceptual). Reject any pairing below:
@@ -2797,7 +2806,7 @@ npm run dev                              # review;  npm run build → static exp
 npm run export -- --root <your project> # docs→code: emit tokens.css + Tailwind v4 theme.css + DTCG tokens.json
 ```
 
-**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). Exported names are dot-safe: a scale key with a dot is written with an underscore (`spacing.scale.0.5` → `--space-0_5`, Tailwind `--spacing-0_5`, DTCG `spacing.0_5`), because a dot is invalid in a CSS custom-property name; reference it in code by that name. The export scripts need Node ≥ 22.18 and no `npm install` (only the viewer does). See `tools/brand-kit/README.md → Token export`.
+**Token export (docs → code).** `npm run export` turns this file's `colors`/`typography`/`spacing`/`radius`/`elevation`/`surface_separation` into build-ready **`tokens.css`** (CSS vars, light + dark), a **Tailwind v4 `@theme`** (`theme.css`), and a **W3C DTCG `tokens.json`** — so tokens reach code without hand-transcription (the #1 drift source). Exported names are dot-safe: a scale key with a dot is written with an underscore (`spacing.scale.0.5` → `--space-0_5`, Tailwind `--spacing-0_5`, DTCG `spacing.0_5`), because a dot is invalid in a CSS custom-property name; reference it in code by that name. The export scripts need Node ≥ 22.18 and no `npm install` (only the viewer does). See `tools/brand-kit/README.md → Token export`. **A token change here re-runs the export in the same change** (commit DESIGN.md and the exported files together); QA Gate H (`check-drift.mjs`) fails when the export is older than DESIGN.md.
 
 The kit has two sections:
 
@@ -2828,7 +2837,7 @@ so every project routes cleanly into the kit:
 
 # Versioning
 
-This template is on `template_version: 1.22.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
+This template is on `template_version: 1.23.0`. Per-project `DESIGN.md` instances should preserve this field; when the template evolves, projects can migrate or stay on prior versions.
 
 # Source
 
